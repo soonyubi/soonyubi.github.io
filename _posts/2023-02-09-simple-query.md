@@ -1,0 +1,49 @@
+## null 처리하기
+
+```mysql
+SELECT IFNULL(NAME AS 'No name')
+FROM TABLE
+```
+
+## Datetime 에서 date로 형변환
+
+시분초를 제외한 날짜만 보여주기
+
+```mysql
+SELECT ANIMAL_ID, NAME, DATE_FORMAT(DATETIME, "%Y-%m-%d") AS '날짜'
+FROM ANIMAL_INS
+```
+
+### 컬럼에 특정 문자열이 포함되는지 확인
+
+```mysql
+SELECT ANIMAL_ID,NAME,
+CASE
+    WHEN SEX_UPON_INTAKE LIKE '%Neutered%' OR SEX_UPON_INTAKE LIKE '%Spayed%'
+    THEN 'O'
+    ELSE 'X'
+END AS '중성화'
+FROM ANIMAL_INS
+ORDER BY ANIMAL_ID
+```
+
+### HOUR 함수로 DATETIME에서 시간만 뽑아내기
+
+```mysql
+SELECT HOUR(DATETIME) AS HOUR, COUNT(DATETIME) AS COUNT
+FROM ANIMAL_OUTS
+GROUP BY HOUR
+HAVING HOUR >=9 AND HOUR <20
+ORDER BY HOUR
+```
+
+### A 에는 있지만, B에는 없는 결과 + 출력 갯수 제한
+
+Left Join on + limit 
+
+```mysql
+SELECT A.NAME, A.DATETIME
+FROM ANIMAL_INS A LEFT JOIN ANIMAL_OUTS B ON A.ANIMAL_ID = B.ANIMAL_ID 
+WHERE B.ANIMAL_ID IS NULL
+ORDER BY A.DATETIME
+LIMIT 3```
