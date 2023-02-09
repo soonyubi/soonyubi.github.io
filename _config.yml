@@ -24,7 +24,7 @@ title: Soonyubing                          # the main title
 tagline: 데브옵스 엔지니어를 꿈꾸고 있습니다.   # it will display as the sub-title
 
 description: >-                        # used by seo meta and the atom feed
-  A minimal, responsive, and powerful Jekyll theme for presenting professional writing.
+  최대한 정확한 내용을 기술하고자 노력은 하고 있으나, 틀렸다면 바로 수정하겠습니다.
 
 # fill in the protocol & hostname for your site, e.g., 'https://username.github.io'
 url: 'https://soonyubi.github.io'
@@ -32,8 +32,8 @@ url: 'https://soonyubi.github.io'
 github:
   username: soonyubi            # change to your github username
 
-twitter:
-  username: twitter_username            # change to your twitter username
+# twitter:
+#   username: twitter_username            # change to your twitter username
 
 social:
   # Change to your full name.
@@ -42,7 +42,7 @@ social:
   email: soonyubi1@naver.com             # change to your email address
   links:
     # The first element serves as the copyright owner's link
-    - https://twitter.com/username      # change to your twitter homepage
+    # - https://twitter.com/username      # change to your twitter homepage
     - https://github.com/soonyubi       # change to your github homepage
     # Uncomment below to add more social links
     # - https://www.facebook.com/username
@@ -81,7 +81,7 @@ theme_mode:   # [light|dark]
 img_cdn:
 
 # the avatar on sidebar, support local or CORS resources
-avatar:
+avatar: '/assets/img/me.png'
 
 # boolean type, the global switch for ToC in posts.
 toc: true
