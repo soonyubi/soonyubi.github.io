@@ -19,7 +19,7 @@ r { color: Red }
 o { color: Orange }
 g { color: Green }
 bgr {background-color:Red}
-bgy {background-color : Yellow}
+bgy {background-color : #FFE536; color : Black}
 bg {background-color: #83f5ef; color : Green}
 </style>
 
@@ -186,6 +186,13 @@ export const handler = middy(lambdaHandler)
 
 해당 프로젝트에서는 사용자 전화번호로 보내진 인증코드로 해당 유저가 맞는지 재인증하는 로직이 포함되어 있다. 
 
-이를 위해 우리는 <bg>twilio</bg> 라는 모듈을 사용할 예정이다.
+이를 위해 우리는 <bgy>twilio</bgy> 라는 모듈을 사용할 예정이다. twilio 모듈을 다운받아주고, twilio 사이트에서 회원가입을 진행한 이후 간단한 documentaion 을 따라가 주면 된다.
+
+## 6. class-transformer / class-validator module
+
+`class-transformer` 모듈에는 `plainToClass(A,B)` 라는 메서드가 존재한다. B라는 실제 객체를 A라는 class로 변환시켜서 A가 가지고 있는 method를 사용할 수 있도록 변환시켜준다. 
+그래서 해당 프로젝트에서는 User Input을 body request에 심었을 때, 해당 실 객체를 dto 클래스로 변환시키고, 해당 클래스에 정의된 validation에 충족하는지 확인하는 로직을 구성했다.
+
+
 
 
