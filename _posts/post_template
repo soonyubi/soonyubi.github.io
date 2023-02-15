@@ -1,0 +1,24 @@
+---
+layout: post
+title: serverless + typescript
+author: soonyubing
+description: serverless, typescript 
+featuredImage: null
+img: null
+tags: serverless nodejs typescript middy aws-lambda
+categories: backend
+date: '2023-02-13 11:17:00 +0900'
+# image:
+#   src: /assets/img/Chirpy-title-image.jpg
+#   width: 1000   # in pixels
+#   height: 400   # in pixels
+#   alt: image alternative text
+---
+<style>
+r { color: Red }
+o { color: Orange }
+g { color: Green }
+bgr {background-color:Red}
+bgy {background-color : Yellow}
+bg {background-color: #83f5ef; color : Green}
+</style>

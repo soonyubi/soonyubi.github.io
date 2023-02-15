@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Microservice with Serverless
+title: serverless + typescript
 author: soonyubing
 description: serverless, typescript 
 featuredImage: null
@@ -14,6 +14,18 @@ date: '2023-02-13 11:17:00 +0900'
 #   height: 400   # in pixels
 #   alt: image alternative text
 ---
+<style>
+r { color: Red }
+o { color: Orange }
+g { color: Green }
+bgr {background-color:Red}
+bgy {background-color : Yellow}
+bg {background-color: #83f5ef; color : Green}
+</style>
+
+
+## 개요
+특정 부분을 설명하는 것이 아니라, node.js(typescript) 를 기반으로 serverless 환경을 구성하는 프로젝트를 경험하면서 새롭게 알게된 부분을 간략하게 설명하는 포스팅입니다. 
 
 ## 1. Serverless Framework, typescript 설치
 
@@ -124,4 +136,56 @@ describe('Users service', () => {
   });
 });
 ```
+## 4. middy
+
+the stylish node.js engine for aws lambda 
+
+```javascript
+export const handler (event, context) => {
+  // BOILERPLATE!
+  // E.g. decrypt environment variables with KMS
+  // deserialize the content of the event
+  // validate input, authentication, authorization
+  
+  // REAL BUSINESS LOGIC
+  let response = doSomethingUsefulWith(event)
+  
+  // MORE BOILERPLATE
+  // E.g.
+  // validate output
+  // serialize response
+  // handle errors
+  return response
+}
+```
+
+반복되는 수많은 non-functional 코드를 재작성해야 하는 경우가 많았을 것이다. 그렇게 하면 코드는 보기 어렵고 테스트하기 어렵다. 그러면 재사용 가능하지만 기능이 없는 로직을 다른 핸들러에 등록하면 어떨까? 라는 생각에서 나온 것이 middy이다. 
+
+middy를 사용하면 다음과 같이 미들웨어로 등록해주면 된다.
+
+``` javascript
+import middy from '@middy/core'
+
+const lambdaHandler = (event, context) => {
+  // REAL BUSINESS LOGIC
+  return doSomethingUsefulWith(event)
+}
+
+export const handler = middy(lambdaHandler)
+  .use(/* Your own behaviour in a reusable fashion */)
+  .use(/* logging and tracing */)
+  .use(/* input validation */)
+  .use(/* authentication */)
+  .use(/* error handling */)
+  .use(/* other behaviour */)
+```
+
+공식문서는 [여기](https://middy.js.org/ "middy") 를 참고하면 되겠다.
+
+## 5. SMS verification code
+
+해당 프로젝트에서는 사용자 전화번호로 보내진 인증코드로 해당 유저가 맞는지 재인증하는 로직이 포함되어 있다. 
+
+이를 위해 우리는 <bg>twilio</bg> 라는 모듈을 사용할 예정이다.
+
 
