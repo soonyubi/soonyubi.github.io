@@ -6,7 +6,7 @@ description: serverless, typescript
 featuredImage: null
 img: null
 tags: serverless nodejs typescript middy aws-lambda
-categories: serverless nodejs typescript middy aws-lambda
+categories: backend
 date: '2023-02-13 11:17:00 +0900'
 # image:
 #   src: /assets/img/Chirpy-title-image.jpg

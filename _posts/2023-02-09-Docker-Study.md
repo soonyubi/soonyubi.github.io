@@ -6,7 +6,7 @@ description: container-basic
 featuredImage: null
 img: null
 tags: container
-categories: container
+categories: devops
 date: '2021-12-22 11:17:00 +0900'
 # image:
 #   src: /assets/img/Chirpy-title-image.jpg
