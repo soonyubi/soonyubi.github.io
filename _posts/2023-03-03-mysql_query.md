@@ -45,6 +45,7 @@ select percent_rank() over (order by [column]) as prank
 from table
 where prank=0.5
 ```
+
 ## 문자열
 1. CONCAT(str1, str2, ....) 모든 문자열을 합쳐서 리턴
 2. CONCAT_WS(구분자, str1, str2, str3....) 문자열을 구분자를 사이에 넣어 리턴
