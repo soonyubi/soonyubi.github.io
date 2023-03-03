@@ -1,12 +1,12 @@
 ---
 layout: post
-title: serverless + typescript
+title: 
 author: soonyubing
-description: serverless, typescript 
+description:  
 featuredImage: null
 img: null
-tags: serverless nodejs typescript middy aws-lambda
-categories: backend
+tags: 
+categories: 
 date: '2023-02-13 11:17:00 +0900'
 # image:
 #   src: /assets/img/Chirpy-title-image.jpg
