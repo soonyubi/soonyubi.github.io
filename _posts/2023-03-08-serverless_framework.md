@@ -26,6 +26,11 @@ bg {background-color: #83f5ef; color : Green}
 ## 개요
 해당 포스트는 serverless framework를 사용해 프로젝트를 구성하기 앞서 유튜브 강의를 통해 새롭게 알게 된 내용과 까먹지 않기 위해 정리한 포스트 입니다.
 
+---
+
+
+
+
 ## Prerequisite
 
 ```shell
@@ -99,3 +104,103 @@ typescript 프로젝트를 초기화하기 위해 사용하는데, 해당 명령
 - "skipLibCheck": true <br> 라이브러리 파일을 체크하지 않습니다. 이를 true로 설정하면 컴파일 속도를 높일 수 있습니다.
 - "include": ["app/**/", ".ts"] <br> 컴파일 대상 파일을 지정합니다. 
 
+---
+
+## API 생성
+
+일단 serverless yml에 함수를 정의해야 합니다. 함수를 정의하게 되면 이벤트 트리거를 연결하고 필요한 리소스를 구성할 수 있습니다. 
+
+```javascript
+functions:
+  signup:
+    handler: app/handler.Signup
+    events:
+      - httpApi:
+          path: /signup
+          method: get
+```
+
+현재 저는 signup 이벤트에 대한 함수는 app/handler에 작성했습니다. 
+
+app/handelr.ts 의 내용은 다음과 같습니다.
+```javascript
+export const Signup = (event : APIGatewayProxyEventV2) =>{
+  // some bussiness logig
+  // return response
+}
+```
+
+여기서 parameter로 들어오는 `APIGatewayProxyEventV2` 에는 여러 정보가 포함되어 있습니다. header, body, cookies 등 많은 정보가 포함되어 있습니다.
+
+이 때 body에 들어온 json 객체를 parsing 하기 위해 `middy` 에서 제공하는 미들웨어를 설치하고자 합니다. 
+`middy`는 node.js 에서 aws-lambda를 사용할 때 사용할 수 있는 미들웨어 패키지입니다. 현재 저희 목표는 json 을 parsing 하는 것이므로 다음과 같은 명령어를 설치한 후 app/handler.ts 파일을 다음과 같이 수정합니다.
+
+```shell
+yarn add @middy/http-json-body-parser
+```
+
+```javascript
+
+import bodyParser from "@middy/http-json-body-parser";
+
+export const Signup = middy((event : APIGatewayProxyEventV2) =>{
+  // some bussiness logig
+  // return response
+}).use(bodyParser());
+```
+
+handler 에서 모든 비지니스로직을 처리하고, 데이터베이스에 연결을 요청하고 데이터를 fetch 하는 작업을 모두 쓴다면 유지보수가 힘들기 때문에, service/userService.ts repository/userRepository.ts 로 구분하여 작성하도록 하겠습니다. 
+
+이때, userService에서는 repository 객체가 필요한데, userService class 내에서 새로운 repository 객체를 생성할 수 도 있지만, 나중에 테스트할 때 3rd party 모듈을 사용해 mock 객체를 생성하는 번거로움이 생깁니다. 그러므로 `tsyringe` 모듈을 사용해 userService로 userRepository에 대한 객체의 의존성을 주입하도록 하겠습니다. 
+
+```javascript
+import autoInjectable from "tsyringe"
+
+@autoInjectable
+export class userServcie {
+  repository : UserRepository;
+  constructor(repository : UserRepository){
+    this.repository = repository;
+  }
+}
+```
+
+reflect-metadata 를 import 해줘야 하는데 해당 이유는 컴파일 타임에 데코레이터와 메타데이터를 전달할 수 있도록 도와주는 기능을 추가해준다고 생각하면 되겠습니다. 
+(자세한 내용은 나중에 추가 예정)
+
+---
+
+## 배포
+배포를 하기 위해선 serverless.yml 파일을 수정해야 합니다. 
+
+```javascript
+service: aws-node-http-api-project
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  versionFunctions: false
+  stage: "dev"
+  region: "ap-northeast-2"
+  httpApi:
+    cors: true
+
+functions:
+  signup:
+    handler: app/handler.Signup
+    events:
+      - httpApi:
+          path: /signup
+          method: get
+```
+
+aws provider를 사용할 예정이고, 실행환경은 node.js 18.x 입니다. lambda 함수의 versioning은 false로 하고 현재 배포 단계는 dev이고, 서울 리전에 배포합니다. `httpApi`  필드는 주로 API Gateway를 구성하는 데 사용합니다. 현재 `cors : true`로 세팅 되어 있으며, cross-origin request를 허용한다는 의미 입니다.
+
+배포 과정에서 다음과 같은 에러가 발생할 수 있습니다. 
+```shell
+npm Error : EBUSY resource busy or locked
+```
+이럴경우 해결책은 다음과 같습니다. 
+1. [해결법 링크](https://github.com/npm/npm/issues/13461)
+2. vscode를 종료시키고 관리자 terminal에서 배포해봅니다.
