@@ -6,7 +6,7 @@ description: serverless framework 프로젝트를 준비하기 앞서 공부한 
 featuredImage: null
 img: null
 tags: [serverless lambda]
-categories: [backend nodejs]
+categories: [backend]
 date: '2023-02-13 11:17:00 +0900'
 # image:
 #   src: /assets/img/Chirpy-title-image.jpg
@@ -204,3 +204,83 @@ npm Error : EBUSY resource busy or locked
 이럴경우 해결책은 다음과 같습니다. 
 1. [해결법 링크](https://github.com/npm/npm/issues/13461)
 2. vscode를 종료시키고 관리자 terminal에서 배포해봅니다.
+
+--- 
+
+## DynamoDB에 대한 접근 권한과 DB 생성
+
+먼저, AWS Lambda에 DynamoDB에 대해 접근 권한을 생성해주도록 하겠습니다. 
+
+```javascript
+provider:
+  name: aws
+  runtime: nodejs4.3
+  stage: dev
+  region: us-east-1
+  environment:
+    CANDIDATE_TABLE: ${self:service}-${opt:stage, self:provider.stage}
+    CANDIDATE_EMAIL_TABLE: "candidate-email-${opt:stage, self:provider.stage}"
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+      Resource: "*"
+```
+
+위 코드를 보면, dynamoDB의 모든 리소스에 대한 Query, Sacn, GetItem, PutItem 접근을 허용하고 있습니다. 
+추가로 provider 내 환경변수로 CANDIDATE_TABLE, CANDIDATE_EMAIL_TABLE 명을 동적으로 생성해주었습니다.
+
+다음으로 CloudFormation이 DynamoDB 테이블을 생성해주도록 하는 코드를 만들겠습니다. 
+
+```javascript
+resources:
+  Resources:
+    CandidatesDynamoDbTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: "id"
+            AttributeType: "S"   
+        KeySchema:
+          -
+            AttributeName: "id"
+            KeyType: "HASH"
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        StreamSpecification:
+          StreamViewType: "NEW_AND_OLD_IMAGES"
+        TableName: ${self:provider.environment.CANDIDATE_TABLE}
+```
+
+그 다음 코드에서 DynamoDB를 어떻게 사용하는지 설명하겠습니다. 
+일단 AWS-SDK는 Promise기반이 아닌, callback 방식기반으로 작성되어 있습니다. 'bluebird' 라이브러리는 AWS-SDK가 Promise 기반으로 동작하도록 래핑해주는 역할을 하기 때문에 설치합니다. 
+
+```shell
+npm install --save bluebird
+```
+
+```javascript
+const AWS = require('aws-sdk'); 
+
+AWS.config.setPromisesDependency(require('bluebird'));
+
+const dynamoDb = new AWS.DynamoDB.DocumentClient();
+
+const submitCandidateP = candidate => {
+  console.log('Submitting candidate');
+  const candidateInfo = {
+    TableName: process.env.CANDIDATE_TABLE,
+    Item: candidate,
+  };
+  return dynamoDb.put(candidateInfo).promise()
+    .then(res => candidate);
+};
+```
+
+이렇게 하고 `sls deploy` 를 하게 되면 dynamoDB 테이블이 생성되고 api를 호출할 수 있게 됩니다.
