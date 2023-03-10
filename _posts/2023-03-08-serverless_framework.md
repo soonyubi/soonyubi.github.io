@@ -283,4 +283,4 @@ const submitCandidateP = candidate => {
 };
 ```
 
-이렇게 하고 `sls deploy` 를 하게 되면 dynamoDB 테이블이 생성되고 api를 호출할 수 있게 됩니다.
+이렇게 하고 `sls deploy` 를 하게 되면 dynamoDB 테이블이 생성되고 api를 호출할 수 있게 됩니다. 
