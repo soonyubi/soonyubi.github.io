@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Flutter UI - 채팅앱을 보고 따라해보기 - (1)
+title: Flutter UI - 채팅앱을 보고 따라해보기 - (2)
 author: soonyubing
 description:  
 featuredImage: null
@@ -23,9 +23,16 @@ bgy {background-color : Yellow}
 bg {background-color: #83f5ef; color : Green}
 </style>
 
-![Desktop View](/assets/img/ui1.png){: width="1200" height="700" }
+![Desktop View](/assets/img/chatpage.png){: width="1200" height="700" }
 
-다음은 코드로 생략하겠음.
+대부분 코드로 생략하겠음.
+
+몇가지만 보자면, 일단 키보드를 치다가 빈 화면을 눌렀을 때 키보드가 내려가게 하기 위해서 body를 `GestureDetector` 로 감싸고 tap 되었을 때 키보드 controller인 focusNode.unfocus 하도록 하였음.
+
+Emoji picker는 다음 사이트에서 가져올 수 있음. 
+configure 값은 demo에 있는 값 그대로 가져온거임. 
+
+새로 알게된 위젯이 있는데, `willpopscope` . 얘는 현재 페이지에서 emoji picker가 켜진채로 뒤로가기 버튼 (안드로이드의 경우) 를 눌렀을 때 emoji picker가 내려가는 게 아니라 페이지가 pop 되는 것을 방지하기 위해 추가함.
 
 ```dart
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
