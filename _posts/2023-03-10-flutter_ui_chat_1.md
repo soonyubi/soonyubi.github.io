@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Flutter UI - 채팅앱을 보고 따라해보기 - (1)
+title: Flutter - TabBar, ListView, ListTile, Inkwell
 author: soonyubing
 description:  
 featuredImage: null

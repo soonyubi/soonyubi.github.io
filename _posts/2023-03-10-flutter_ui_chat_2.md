@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Flutter UI - 채팅앱을 보고 따라해보기 - (2)
+title: Flutter - chatUI, WillPopScope, FocusNode, EmojiPicker
 author: soonyubing
 description:  
 featuredImage: null
