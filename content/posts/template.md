@@ -10,6 +10,7 @@ tags:
     # - authentication
     # - authorization
 featuredImage: 
+hiddenFromHomePage : true
 images :
 draft: false
 ---
