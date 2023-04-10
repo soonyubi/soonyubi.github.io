@@ -1,6 +1,6 @@
 ---
 title: "Nestjs: Gaurd를 이용해 Authentication/ Authorization 구현"
-author: Richard
+author: 홍순엽
 date: 2023-04-05T20:50:23+09:00
 categories:
     - backend
