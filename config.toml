@@ -77,9 +77,9 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
   #  date format
   dateFormat = "2006-01-02"
   # website title for Open Graph and Twitter Cards
-  title = "My cool site"
+  title = "soonyubing"
   # website description for RSS, SEO, Open Graph and Twitter Cards
-  description = "This is my cool site"
+  description = "soonyub + ing (진행중이란 소리)"
   # website images for Open Graph and Twitter Cards
   images = ["/logo.png"]
 
@@ -185,11 +185,11 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
       # Gravatar Email for preferred avatar in home page
       gravatarEmail = ""
       # URL of avatar shown in home page
-      avatarURL = "/images/avatar.png"
+      avatarURL = "/images/profile.png"
       #  title shown in home page (HTML format is supported)
-      title = ""
+      title = "soonyubing"
       # subtitle shown in home page (HTML format is supported)
-      subtitle = "This is My New Hugo Site"
+      subtitle = "soonyub + ing"
       # whether to use typeit animation for subtitle
       typeit = true
       # whether to show social links
@@ -207,17 +207,17 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
 
   # Social config about the author
   [params.social]
-    GitHub = "xxxx"
-    Linkedin = ""
-    Twitter = "xxxx"
-    Instagram = "xxxx"
-    Facebook = "xxxx"
-    Telegram = "xxxx"
+    GitHub = "soonyubi"
+    Linkedin = "학생-컴퓨터공학-홍순엽-79458524b"
+    Twitter = ""
+    Instagram = "hongcruise"
+    Facebook = ""
+    Telegram = ""
     Medium = ""
     Gitlab = ""
     Youtubelegacy = ""
     Youtubecustom = ""
-    Youtubechannel = ""
+    Youtubechannel = "UCpyPJmYvjR7lyfa2mRrkN9g"
     Tumblr = ""
     Quora = ""
     Keybase = ""
@@ -374,11 +374,11 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
       Mix = false
     #  Comment config
     [params.page.comment]
-      enable = false
+      enable = true
       # Disqus comment config
       [params.page.comment.disqus]
         # 
-        enable = false
+        enable = true
         # Disqus shortname to use Disqus in posts
         shortname = ""
       # Gitalk comment config
@@ -431,20 +431,20 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
         outlined = false
       #  Commento comment config
       [params.page.comment.commento]
-        enable = false
+        enable = true
       #  utterances comment config
       [params.page.comment.utterances]
-        enable = false
+        enable = true
         # owner/repo
-        repo = ""
+        repo = "soonyubi/comment"
         issueTerm = "pathname"
-        label = ""
+        label = "Comment"
         lightTheme = "github-light"
         darkTheme = "github-dark"
       # giscus comment config (https://giscus.app/)
       [params.page.comment.giscus]
         # You can refer to the official documentation of giscus to use the following configuration.
-        enable = false
+        enable = true
         repo = ""
         repoId = ""
         category = "Announcements"
