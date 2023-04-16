@@ -4,7 +4,7 @@ baseURL = "http://example.org/"
 theme = "LoveIt"
 
 # website title
-title = "My New Hugo Site"
+title = "👨‍💻성장중독자"
 
 # language code ["en", "zh-CN", "fr", "pl", ...]
 languageCode = "en"
@@ -32,8 +32,8 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
 
 # Author config
 [author]
-  name = "xxxx"
-  email = ""
+  name = "soonyubing"
+  email = "soonyubi1@naver.com"
   link = ""
 
 # Menu config
@@ -141,7 +141,7 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
   #  App icon config
   [params.app]
     # optional site title override for the app when added to an iOS home screen or Android launcher
-    title = "My cool site"
+    title = "soonyubing"
     # whether to omit favicon resource links
     noFavicon = false
     # modern SVG favicon to use in place of older style .png and .ico files
@@ -209,78 +209,14 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
   [params.social]
     GitHub = "soonyubi"
     Linkedin = "학생-컴퓨터공학-홍순엽-79458524b"
-    Twitter = ""
     Instagram = "hongcruise"
-    Facebook = ""
-    Telegram = ""
     Medium = ""
     Gitlab = ""
-    Youtubelegacy = ""
-    Youtubecustom = ""
     Youtubechannel = "UCpyPJmYvjR7lyfa2mRrkN9g"
-    Tumblr = ""
-    Quora = ""
-    Keybase = ""
-    Pinterest = ""
     Reddit = ""
-    Codepen = ""
-    FreeCodeCamp = ""
     Bitbucket = ""
     Stackoverflow = ""
-    Weibo = ""
-    Odnoklassniki = ""
-    VK = ""
-    Flickr = ""
-    Xing = ""
-    Snapchat = ""
-    Soundcloud = ""
-    Spotify = ""
-    Bandcamp = ""
-    Paypal = ""
-    Fivehundredpx = ""
-    Mix = ""
-    Goodreads = ""
-    Lastfm = ""
-    Foursquare = ""
-    Hackernews = ""
-    Kickstarter = ""
-    Patreon = ""
-    Steam = ""
-    Twitch = ""
-    Strava = ""
-    Skype = ""
-    Whatsapp = ""
-    Zhihu = ""
-    Douban = ""
-    Angellist = ""
-    Slidershare = ""
-    Jsfiddle = ""
-    Deviantart = ""
-    Behance = ""
-    Dribbble = ""
-    Wordpress = ""
-    Vine = ""
-    Googlescholar = ""
-    Researchgate = ""
-    Mastodon = ""
-    Thingiverse = ""
-    Devto = ""
-    Gitea = ""
-    XMPP = ""
-    Matrix = ""
-    Bilibili = ""
-    Discord = ""
-    DiscordInvite = ""
-    Lichess = ""
-    ORCID = ""
-    Pleroma = ""
-    Kaggle = ""
-    MediaWiki= ""
-    Plume = ""
-    HackTheBox = ""
-    RootMe= ""
-    Phone = ""
-    Email = "xxxx@xxxx.com"
+    Email = "soonyubi1@naver.com"
     RSS = true # 
 
   #  Page global config
@@ -507,10 +443,10 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
 
   #  Analytics config
   [params.analytics]
-    enable = false
+    enable = true
     # Google Analytics
     [params.analytics.google]
-      id = ""
+      id = "G-06522HQ23W"
       # whether to anonymize IP
       anonymizeIP = true
     # Fathom Analytics
@@ -583,7 +519,7 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
 [sitemap]
   changefreq = "weekly"
   filename = "sitemap.xml"
-  priority = 0.5
+  priority = 1
 
 # Permalinks config
 [Permalinks]
