@@ -2,6 +2,7 @@
 title: "Dependency Injection (feat:Nest)"
 date: 2023-04-16T21:46:07+09:00
 author: 홍순엽
+featuredImage: /images/di.jpg
 categories:
     - nest.js
 tags:
