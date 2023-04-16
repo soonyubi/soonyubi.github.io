@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://soonyubi.github.io/sitemap.xml
