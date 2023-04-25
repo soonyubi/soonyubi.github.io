@@ -16,8 +16,8 @@ categories: ["nest.js"]
 featuredImage: ""
 featuredImagePreview: ""
 
-hiddenFromHomePage: false
-hiddenFromSearch: false
+hiddenFromHomePage: true
+hiddenFromSearch: true
 twemoji: false
 lightgallery: true
 ruby: true
@@ -235,3 +235,4 @@ export class HttpCacheInterceptor extends CacheInterceptor {
 [코드](https://github.com/soonyubi/nestjs-typescript/tree/master/src/posts)
 
 ## 2. Redis를 이용한 caching
+

@@ -16,7 +16,7 @@ categories: ["personal"]
 featuredImage: ""
 featuredImagePreview: ""
 
-hiddenFromHomePage: false
+hiddenFromHomePage: true
 hiddenFromSearch: false
 twemoji: false
 lightgallery: true
