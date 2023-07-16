@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>public/private s3 를 생성하고 파일 업로드 기능 구현 - 👨‍💻성장중독자</title><meta name="Description" content="soonyub &#43; ing (진행중이란 소리)"><meta property="og:title" content="public/private s3 를 생성하고 파일 업로드 기능 구현" />
+<meta property="og:description" content="개요 이번 포스팅에서는 public/private s3를 생성하고 각각 어떻게 접근하는지, 그리고 코드로서는 어떻게 구현하는지에 대해 알아보겠다.
+IAM User 생성 AWS Root user는 모든 서비스에 대한 권한을 가지고 있기 때문에 at least privilege 의 원칙에 어긋난다. 따라서 IAM User 를 생성해 S3에 대한 접근 권한만을 부여하도록 한다.
+Public/Private S3 생성 Public 모든 퍼블릭 엑세스 차단 체크박스를 해제하고 생성한다. 추가로, Bucket Policy 에 다음과 같이 작성하여, url을 통해 bucket에 접근할 수 있도록 한다." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://example.org/upload_file_to_s3/" /><meta property="og:image" content="http://example.org/logo.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-04-19T14:16:34+09:00" />
+<meta property="article:modified_time" content="2023-04-19T14:48:05+09:00" /><meta property="og:site_name" content="soonyubing" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="http://example.org/logo.png"/>
+
+<meta name="twitter:title" content="public/private s3 를 생성하고 파일 업로드 기능 구현"/>
+<meta name="twitter:description" content="개요 이번 포스팅에서는 public/private s3를 생성하고 각각 어떻게 접근하는지, 그리고 코드로서는 어떻게 구현하는지에 대해 알아보겠다.
+IAM User 생성 AWS Root user는 모든 서비스에 대한 권한을 가지고 있기 때문에 at least privilege 의 원칙에 어긋난다. 따라서 IAM User 를 생성해 S3에 대한 접근 권한만을 부여하도록 한다.
+Public/Private S3 생성 Public 모든 퍼블릭 엑세스 차단 체크박스를 해제하고 생성한다. 추가로, Bucket Policy 에 다음과 같이 작성하여, url을 통해 bucket에 접근할 수 있도록 한다."/>
+<meta name="application-name" content="soonyubing">
+<meta name="apple-mobile-web-app-title" content="soonyubing"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/upload_file_to_s3/" /><link rel="prev" href="http://example.org/nestjs_unit_test/" /><link rel="next" href="http://example.org/jwt-refresh-token/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "public/private s3 를 생성하고 파일 업로드 기능 구현",
+        "inLanguage": "en",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/example.org\/upload_file_to_s3\/"
+        },"genre": "posts","keywords": "nest.js, backend, aws, s3","wordcount":  660 ,
+        "url": "http:\/\/example.org\/upload_file_to_s3\/","datePublished": "2023-04-19T14:16:34+09:00","dateModified": "2023-04-19T14:48:05+09:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "홍순엽"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="👨‍💻성장중독자"></a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> Posts </a><a class="menu-item" href="/tags/"> Tags </a><a class="menu-item" href="/categories/"> Categories </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="Search titles or contents..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="Search">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="Clear">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="👨‍💻성장중독자"></a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="Search titles or contents..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="Search">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="Clear">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        Cancel
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">Posts</a><a class="menu-item" href="/tags/" title="">Tags</a><a class="menu-item" href="/categories/" title="">Categories</a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">Contents</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">public/private s3 를 생성하고 파일 업로드 기능 구현</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>홍순엽</a></span>&nbsp;<span class="post-category">included in <a href="/categories/backend/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>backend</a>&nbsp;<a href="/categories/nest.js/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>nest.js</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-04-19">2023-04-19</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;660 words&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;4 minutes&nbsp;</div>
+        </div><div class="featured-image"><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="images/s3.jpg"
+        data-srcset="images/s3.jpg, images/s3.jpg 1.5x, images/s3.jpg 2x"
+        data-sizes="auto"
+        alt="images/s3.jpg"
+        title="images/s3.jpg" /></div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>Contents</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#개요">개요</a></li>
+    <li><a href="#iam-user-생성">IAM User 생성</a></li>
+    <li><a href="#publicprivate-s3-생성">Public/Private S3 생성</a>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#public">Public</a></li>
+            <li><a href="#private">private</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#구현">구현</a>
+      <ul>
+        <li><a href="#config">config</a></li>
+        <li><a href="#엔티티">엔티티</a>
+          <ul>
+            <li><a href="#private-1">private</a></li>
+            <li><a href="#public-1">public</a></li>
+          </ul>
+        </li>
+        <li><a href="#업로드-기능">업로드 기능</a>
+          <ul>
+            <li><a href="#private-2">private</a></li>
+            <li><a href="#public-2">public</a></li>
+          </ul>
+        </li>
+        <li><a href="#fetch-기능">Fetch 기능</a>
+          <ul>
+            <li><a href="#private-3">private</a></li>
+          </ul>
+        </li>
+        <li><a href="#컨트롤러">컨트롤러</a></li>
+      </ul>
+    </li>
+    <li><a href="#마무리">마무리</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="개요">개요</h2>
+<p>이번 포스팅에서는 public/private s3를 생성하고 각각 어떻게 접근하는지, 그리고 코드로서는 어떻게 구현하는지에 대해 알아보겠다.</p>
+<h2 id="iam-user-생성">IAM User 생성</h2>
+<p>AWS Root user는 모든 서비스에 대한 권한을 가지고 있기 때문에 <code>at least privilege</code> 의 원칙에 어긋난다. 따라서 <code>IAM User</code> 를 생성해 S3에 대한 접근 권한만을 부여하도록 한다.</p>
+<h2 id="publicprivate-s3-생성">Public/Private S3 생성</h2>
+<h4 id="public">Public</h4>
+<p>모든 퍼블릭 엑세스 차단 체크박스를 해제하고 생성한다.
+추가로, <code>Bucket Policy</code> 에 다음과 같이 작성하여, url을 통해 bucket에 접근할 수 있도록 한다.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">{
+</span></span><span class="line"><span class="cl">    &#34;Version&#34;: &#34;2012-10-17&#34;,
+</span></span><span class="line"><span class="cl">    &#34;Statement&#34;: [
+</span></span><span class="line"><span class="cl">        {
+</span></span><span class="line"><span class="cl">            &#34;Sid&#34;: &#34;AddPerm&#34;,
+</span></span><span class="line"><span class="cl">            &#34;Effect&#34;: &#34;Allow&#34;,
+</span></span><span class="line"><span class="cl">            &#34;Principal&#34;: &#34;*&#34;,
+</span></span><span class="line"><span class="cl">            &#34;Action&#34;: &#34;s3:GetObject&#34;,
+</span></span><span class="line"><span class="cl">            &#34;Resource&#34;: &#34;[생성한 S3 ARN]/*&#34;
+</span></span><span class="line"><span class="cl">        }
+</span></span><span class="line"><span class="cl">    ]
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="private">private</h4>
+<p>모든 퍼블릭 액세스 차단 체크박스를 체크하고 생성한다.</p>
+<h2 id="구현">구현</h2>
+<h3 id="config">config</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="kr">import</span> <span class="p">{</span> <span class="nx">ConfigService</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;@nestjs/config&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="p">{</span> <span class="nx">config</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;aws-sdk&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">configService</span> <span class="o">=</span> <span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">ConfigService</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nx">config</span><span class="p">.</span><span class="nx">update</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">accessKeyId</span><span class="o">:</span> <span class="nx">configService</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;AWS_ACCESS_KEY_ID&#39;</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">secretAccessKey</span><span class="o">:</span> <span class="nx">configService</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;AWS_SECRET_ACCESS_KEY&#39;</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">region</span><span class="o">:</span> <span class="nx">configService</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;AWS_REGION&#39;</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl"><span class="p">});</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="엔티티">엔티티</h3>
+<h4 id="private-1">private</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="err">@</span><span class="nx">Entity</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="kr">export</span> <span class="kr">class</span> <span class="nx">PrivateFile</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="err">@</span><span class="nx">PrimaryGeneratedColumn</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">public</span> <span class="nx">id</span><span class="o">:</span> <span class="nx">number</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="err">@</span><span class="nx">Column</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">public</span> <span class="nx">key</span><span class="o">:</span> <span class="nx">string</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="err">@</span><span class="nx">ManyToOne</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="nx">User</span><span class="p">,</span> <span class="p">(</span><span class="nx">owner</span><span class="o">:</span> <span class="nx">User</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="nx">owner</span><span class="p">.</span><span class="nx">files</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">public</span> <span class="nx">owner</span><span class="o">?:</span> <span class="nx">User</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="public-1">public</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="err">@</span><span class="nx">Entity</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="kr">class</span> <span class="nx">PublicFile</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="err">@</span><span class="nx">PrimaryGeneratedColumn</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">public</span> <span class="nx">id</span><span class="o">:</span> <span class="nx">number</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="err">@</span><span class="nx">Column</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">public</span> <span class="nx">url</span><span class="o">:</span> <span class="nx">string</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="err">@</span><span class="nx">Column</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">public</span> <span class="nx">key</span><span class="o">:</span> <span class="nx">string</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="업로드-기능">업로드 기능</h3>
+<p>거의 차이는 없지만 주목할 부분은, public에서는 해당 entity에 <code>location을</code> 저장하고 private에서는 해당 객체의 소유자를 저장하는 모습을 볼 수 있다.</p>
+<h4 id="private-2">private</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="kr">async</span> <span class="nx">uploadPrivateFiles</span><span class="p">(</span><span class="nx">dataBuffer</span> <span class="o">:</span> <span class="nx">Buffer</span><span class="p">,</span> <span class="nx">ownerId</span> <span class="o">:</span> <span class="nx">number</span><span class="p">,</span> <span class="nx">filename</span> <span class="o">:</span> <span class="nx">string</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">        <span class="kr">const</span> <span class="nx">s3</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">S3</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">        <span class="kr">const</span> <span class="nx">uploadResult</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">s3</span><span class="p">.</span><span class="nx">upload</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">Bucket</span> <span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">configService</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&#34;AWS_PRIVATE_BUCKET_NAME&#34;</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">Body</span><span class="o">:</span> <span class="nx">dataBuffer</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">Key</span><span class="o">:</span> <span class="sb">`</span><span class="si">${</span><span class="nx">uuid</span><span class="p">()</span><span class="si">}</span><span class="sb">-</span><span class="si">${</span><span class="nx">filename</span><span class="si">}</span><span class="sb">`</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}).</span><span class="nx">promise</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="kr">const</span> <span class="nx">newFile</span> <span class="o">=</span> <span class="kr">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">privateFilesRepository</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">key</span><span class="o">:</span> <span class="nx">uploadResult</span><span class="p">.</span><span class="nx">Key</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">owner</span> <span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="nx">id</span> <span class="o">:</span> <span class="nx">ownerId</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">});</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="kr">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">privateFilesRepository</span><span class="p">.</span><span class="nx">save</span><span class="p">(</span><span class="nx">newFile</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="nx">newFile</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="public-2">public</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="kr">async</span> <span class="nx">uploadPublicFile</span><span class="p">(</span><span class="nx">dataBuffer</span> <span class="o">:</span> <span class="nx">Buffer</span><span class="p">,</span> <span class="nx">filename</span> <span class="o">:</span> <span class="nx">string</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">        <span class="kr">const</span> <span class="nx">s3</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">S3</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">        <span class="kr">const</span> <span class="nx">uploadResult</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">s3</span><span class="p">.</span><span class="nx">upload</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">Bucket</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">configService</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&#34;AWS_PUBLIC_BUCKET_NAME&#34;</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">Body</span><span class="o">:</span> <span class="nx">dataBuffer</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">Key</span><span class="o">:</span><span class="sb">`</span><span class="si">${</span><span class="nx">uuid</span><span class="p">()</span><span class="si">}</span><span class="sb">-</span><span class="si">${</span><span class="nx">filename</span><span class="si">}</span><span class="sb">`</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}).</span><span class="nx">promise</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="kr">const</span> <span class="nx">newFile</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">publicFilesRepository</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">key</span> <span class="o">:</span> <span class="nx">uploadResult</span><span class="p">.</span><span class="nx">Key</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">url</span><span class="o">:</span> <span class="nx">uploadResult</span><span class="p">.</span><span class="nx">Location</span>
+</span></span><span class="line"><span class="cl">        <span class="p">});</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="kr">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">publicFilesRepository</span><span class="p">.</span><span class="nx">save</span><span class="p">(</span><span class="nx">newFile</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="nx">newFile</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="details admonition note open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-pencil-alt fa-fw" aria-hidden="true"></i>promise()를 붙여주는 이유<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content">aws-sdk는 node.js 환경에서 비동기적으로 작동하며, callback 함수를 사용하는 것보다 더 가독성 있게 코드를 만들 수 있기 때문</div>
+        </div>
+    </div>
+<h3 id="fetch-기능">Fetch 기능</h3>
+<p>public s3의 업로드된 파일을 fetch하는 과정은 필요없다. 왜냐하면 url로 해당 객체에 대한 접근을 할 수 있기 때문이다.
+만약 파일이 브라우저에서 해석할 수 있는 포맷이라면 바로 보여주고, 그렇지 않다면 다운로드를 하게 된다.</p>
+<h4 id="private-3">private</h4>
+<ol>
+<li>presigned url 을 생성해서 가져오기</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="kr">public</span> <span class="kr">async</span> <span class="nx">generatePresignedUrl</span><span class="p">(</span><span class="nx">key</span><span class="o">:</span> <span class="nx">string</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">s3</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">S3</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">s3</span><span class="p">.</span><span class="nx">getSignedUrlPromise</span><span class="p">(</span><span class="s1">&#39;getObject&#39;</span><span class="p">,</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">Bucket</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">configService</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;AWS_PRIVATE_BUCKET_NAME&#39;</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">Key</span><span class="o">:</span> <span class="nx">key</span>
+</span></span><span class="line"><span class="cl">    <span class="p">})</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><br>
+2. readable stream을 생성하기 <br>
+AWS SDK에서 얻은 readable stream을 사용하여 파일을 다운로드하지 않고도 서버의 메모리를 절약할 수 있다는 것을 설명하고 있습니다. '스트림'은 데이터를 일정한 크기의 '조각'으로 나누어 전송하는 방식을 말하며, 이는 대용량의 데이터를 처리할 때 효율적인 방법입니다. '파이프'는 두 개의 스트림을 연결하여 데이터의 이동을 용이하게 하는 방식을 말합니다. 따라서, 이 문장은 스트림을 사용하여 데이터를 처리하고 서버의 메모리를 절약하는 방법을 제시하고 있습니다.
+<br>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="kr">public</span> <span class="kr">async</span> <span class="nx">getPrivateFile</span><span class="p">(</span><span class="nx">fileId</span><span class="o">:</span> <span class="nx">number</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">s3</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">S3</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">fileInfo</span> <span class="o">=</span> <span class="kr">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">privateFilesRepository</span><span class="p">.</span><span class="nx">findOne</span><span class="p">({</span> <span class="nx">id</span><span class="o">:</span> <span class="nx">fileId</span> <span class="p">},</span> <span class="p">{</span> <span class="nx">relations</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;owner&#39;</span><span class="p">]});</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="nx">fileInfo</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="kr">const</span> <span class="nx">stream</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">s3</span><span class="p">.</span><span class="nx">getObject</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">Bucket</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">configService</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;AWS_PRIVATE_BUCKET_NAME&#39;</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">Key</span><span class="o">:</span> <span class="nx">fileInfo</span><span class="p">.</span><span class="nx">key</span>
+</span></span><span class="line"><span class="cl">      <span class="p">})</span>
+</span></span><span class="line"><span class="cl">        <span class="p">.</span><span class="nx">createReadStream</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">      <span class="k">return</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">stream</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">info</span><span class="o">:</span> <span class="nx">fileInfo</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">throw</span> <span class="k">new</span> <span class="nx">NotFoundException</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="컨트롤러">컨트롤러</h3>
+<p><code>@UseInterceptors(FileInterceptor('file'))</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="err">@</span><span class="nx">Delete</span><span class="p">(</span><span class="s1">&#39;avatar&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="err">@</span><span class="nx">UseGuards</span><span class="p">(</span><span class="nx">JwtAuthenticationGuard</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="kr">async</span> <span class="nx">deleteAvatar</span><span class="p">(</span><span class="err">@</span><span class="nx">Req</span><span class="p">()</span> <span class="nx">request</span><span class="o">:</span> <span class="nx">RequestWithUser</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">usersService</span><span class="p">.</span><span class="nx">deleteAvatar</span><span class="p">(</span><span class="nx">request</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="err">@</span><span class="nx">Get</span><span class="p">(</span><span class="s1">&#39;files&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="err">@</span><span class="nx">UseGuards</span><span class="p">(</span><span class="nx">JwtAuthenticationGuard</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="kr">async</span> <span class="nx">getAllPrivateFiles</span><span class="p">(</span><span class="err">@</span><span class="nx">Req</span><span class="p">()</span> <span class="nx">request</span><span class="o">:</span> <span class="nx">RequestWithUser</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">usersService</span><span class="p">.</span><span class="nx">getAllPrivateFiles</span><span class="p">(</span><span class="nx">request</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="err">@</span><span class="nx">Post</span><span class="p">(</span><span class="s1">&#39;files&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="err">@</span><span class="nx">UseGuards</span><span class="p">(</span><span class="nx">JwtAuthenticationGuard</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="err">@</span><span class="nx">UseInterceptors</span><span class="p">(</span><span class="nx">FileInterceptor</span><span class="p">(</span><span class="s1">&#39;file&#39;</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">  <span class="kr">async</span> <span class="nx">addPrivateFile</span><span class="p">(</span><span class="err">@</span><span class="nx">Req</span><span class="p">()</span> <span class="nx">request</span><span class="o">:</span> <span class="nx">RequestWithUser</span><span class="p">,</span> <span class="err">@</span><span class="nx">UploadedFile</span><span class="p">()</span> <span class="nx">file</span><span class="o">:</span> <span class="nx">Express</span><span class="p">.</span><span class="nx">Multer</span><span class="p">.</span><span class="nx">File</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">usersService</span><span class="p">.</span><span class="nx">addPrivateFile</span><span class="p">(</span><span class="nx">request</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span> <span class="nx">file</span><span class="p">.</span><span class="nx">buffer</span><span class="p">,</span> <span class="nx">file</span><span class="p">.</span><span class="nx">originalname</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="err">@</span><span class="nx">Get</span><span class="p">(</span><span class="s1">&#39;files/:id&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="err">@</span><span class="nx">UseGuards</span><span class="p">(</span><span class="nx">JwtAuthenticationGuard</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="kr">async</span> <span class="nx">getPrivateFile</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="err">@</span><span class="nx">Req</span><span class="p">()</span> <span class="nx">request</span><span class="o">:</span> <span class="nx">RequestWithUser</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="err">@</span><span class="nx">Param</span><span class="p">()</span> <span class="p">{</span> <span class="nx">id</span> <span class="p">}</span><span class="o">:</span> <span class="nx">FindOneParams</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="err">@</span><span class="nx">Res</span><span class="p">()</span> <span class="nx">res</span><span class="o">:</span> <span class="nx">Response</span>
+</span></span><span class="line"><span class="cl">  <span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">file</span> <span class="o">=</span> <span class="kr">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">usersService</span><span class="p">.</span><span class="nx">getPrivateFile</span><span class="p">(</span><span class="nx">request</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span> <span class="nb">Number</span><span class="p">(</span><span class="nx">id</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">file</span><span class="p">.</span><span class="nx">stream</span><span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">res</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="마무리">마무리</h2>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>Updated on 2023-04-19&nbsp;<a class="git-hash" href="https://github.com/soonyubi/commit/2dc9558b5585dbbdb66121bc471f5f2b01c31a7a" target="_blank" title="commit by turtlerace97(soonyubi@naver.com) 2dc9558b5585dbbdb66121bc471f5f2b01c31a7a: new posts: s3">
+                                    <i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>2dc9558</a></span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/upload_file_to_s3/index.md" target="_blank">Read Markdown</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="Share on Twitter" data-sharer="twitter" data-url="http://example.org/upload_file_to_s3/" data-title="public/private s3 를 생성하고 파일 업로드 기능 구현" data-hashtags="nest.js,backend,aws,s3"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="http://example.org/upload_file_to_s3/" data-hashtag="nest.js"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Hacker News" data-sharer="hackernews" data-url="http://example.org/upload_file_to_s3/" data-title="public/private s3 를 생성하고 파일 업로드 기능 구현"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Line" data-sharer="line" data-url="http://example.org/upload_file_to_s3/" data-title="public/private s3 를 생성하고 파일 업로드 기능 구현"><i data-svg-src="/lib/simple-icons/icons/line.min.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="http://example.org/upload_file_to_s3/" data-title="public/private s3 를 생성하고 파일 업로드 기능 구현" data-image="images/s3.jpg"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/nest.js/">nest.js</a>,&nbsp;<a href="/tags/backend/">backend</a>,&nbsp;<a href="/tags/aws/">aws</a>,&nbsp;<a href="/tags/s3/">s3</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/nestjs_unit_test/" class="prev" rel="prev" title="Unit Test"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>Unit Test</a>
+            <a href="/jwt-refresh-token/" class="next" rel="next" title="Nest.js : Jwt Refresh Token">Nest.js : Jwt Refresh Token<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+<div id="comments"><div id="disqus_thread" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://disqus.com/?ref_noscript">Disqus</a>.
+            </noscript><div id="commento" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://commento.io/">Commento</a>.
+            </noscript><div id="utterances" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://utteranc.es/">utterances</a>.
+            </noscript><div id="giscus" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://giscus.app">Giscus</a>.
+            </noscript></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.115.1">Hugo</a> | Theme - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2023</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">soonyubing</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="Back to Top">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/lightgallery/css/lightgallery-bundle.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="https://.disqus.com/embed.js" defer></script><script type="text/javascript" src="https://cdn.commento.io/js/commento.js" defer></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/lightgallery/lightgallery.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/thumbnail/lg-thumbnail.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/zoom/lg-zoom.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{"giscus":{"category":"Announcements","categoryId":"","darkTheme":"dark","emitMetadata":"0","inputPosition":"bottom","lang":"en","lazyLoading":false,"lightTheme":"light","mapping":"pathname","reactionsEnabled":"1","repo":"","repoId":""},"utterances":{"darkTheme":"github-dark","issueTerm":"pathname","label":"Comment","lightTheme":"github-light","repo":"soonyubi/comment"}},"cookieconsent":{"content":{"dismiss":"Got it!","link":"Learn more","message":"This website uses Cookies to improve your experience."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"lightgallery":true,"search":{"highlightTag":"em","lunrIndexURL":"/index.json","maxResultLength":10,"noResultsFound":"No results found","snippetLength":30,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script><script type="text/javascript">
+            window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());
+            gtag('config', 'G-06522HQ23W', { 'anonymize_ip': true });
+        </script><script type="text/javascript" src="https://www.googletagmanager.com/gtag/js?id=G-06522HQ23W" async></script></body>
+</html>

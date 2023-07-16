@@ -67,7 +67,9 @@ seo:
 
 B-Tree 인덱스는 Root / Branch / Leaf 의 3가지의 노드로 구분된다. 여기서 Leaf 노드는 실제 데이터가 저장된 데이터 파일의 주소를 가르키고 있다.
 
-![B-tree structure](/images/btree-structure.png)
+<p align='center'>
+<img src="/images/btree-structure.png" width="80%"/>
+</p>
 
 위 그림을 보면, 인덱스는 항상 정렬된 채로 유지되지만, 데이터 파일은 무작위의 순서로 저장된 것을 볼 수 있다. 이 이유는 데이터 파일의 일부 레코드가 삭제되어 빈 공간이 생기게 되면 해당 공간을 재활용하기 때문이다.
 

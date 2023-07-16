@@ -1,7 +1,48 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
-        <title>Categories - Category - My New Hugo Site</title>
-        <link>http://soonyubi.github.io/categories/</link>
-        <description>Categories - Category - My New Hugo Site</description>
-        <generator>Hugo -- gohugo.io</generator><language>en</language><atom:link href="http://soonyubi.github.io/categories/" rel="self" type="application/rss+xml" /></channel>
+        <title>Categories - Category - 👨‍💻성장중독자</title>
+        <link>http://example.org/categories/</link>
+        <description>Categories - Category - 👨‍💻성장중독자</description>
+        <generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>soonyubi1@naver.com (soonyubing)</managingEditor>
+            <webMaster>soonyubi1@naver.com (soonyubing)</webMaster><lastBuildDate>Sat, 08 Jul 2023 21:52:52 &#43;0900</lastBuildDate><atom:link href="http://example.org/categories/" rel="self" type="application/rss+xml" /><item>
+    <title>database</title>
+    <link>http://example.org/categories/database/</link>
+    <pubDate>Sat, 08 Jul 2023 21:52:52 &#43;0900</pubDate>
+    <author>soonyubing</author>
+    <guid>http://example.org/categories/database/</guid>
+    <description><![CDATA[]]></description>
+</item>
+<item>
+    <title>mysql</title>
+    <link>http://example.org/categories/mysql/</link>
+    <pubDate>Sat, 08 Jul 2023 21:52:52 &#43;0900</pubDate>
+    <author>soonyubing</author>
+    <guid>http://example.org/categories/mysql/</guid>
+    <description><![CDATA[]]></description>
+</item>
+<item>
+    <title>backend</title>
+    <link>http://example.org/categories/backend/</link>
+    <pubDate>Mon, 29 May 2023 23:25:32 &#43;0900</pubDate>
+    <author>soonyubing</author>
+    <guid>http://example.org/categories/backend/</guid>
+    <description><![CDATA[]]></description>
+</item>
+<item>
+    <title>nest.js</title>
+    <link>http://example.org/categories/nest.js/</link>
+    <pubDate>Tue, 25 Apr 2023 18:01:35 &#43;0900</pubDate>
+    <author>soonyubing</author>
+    <guid>http://example.org/categories/nest.js/</guid>
+    <description><![CDATA[]]></description>
+</item>
+<item>
+    <title>personal</title>
+    <link>http://example.org/categories/personal/</link>
+    <pubDate>Mon, 24 Apr 2023 13:52:03 &#43;0900</pubDate>
+    <author>soonyubing</author>
+    <guid>http://example.org/categories/personal/</guid>
+    <description><![CDATA[]]></description>
+</item>
+</channel>
 </rss>

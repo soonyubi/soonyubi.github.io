@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>Index (간략버전) - 👨‍💻성장중독자</title><meta name="Description" content="soonyub &#43; ing (진행중이란 소리)"><meta property="og:title" content="Index (간략버전)" />
+<meta property="og:description" content="개요 index는 어떤 column에 대해 특정 기준을 적용해서 정렬함으로써 데이터를 더 빠르게 찾을 수 있는 방법을 말한다.
+이와 같은 방법을 적용하는 사례는 사실 우리 주변에도 존재한다. 예를 들어 주민등록번호, 살고있는 주소, 학번 등 이미 인덱스를 활용하고 있고 그렇게 어려운 개념은 아니다.
+개발면접에서 인덱스를 물어보는 질문은 꽤나 많다. 단순히 index에 대한 개념을 묻는 질문은 아니라고 생각한다. DB에서 인덱스를 어떻게 사용하고, 어떤 자료구조를 이용하고, 인덱스를 사용함으로써 어떻게 최적화를 이뤄낼 수 있는지에 대한 경험이나 지식을 물어보는 것이라 생각한다." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://example.org/index_short_version/" /><meta property="og:image" content="http://example.org/logo.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-04-20T17:41:38+09:00" />
+<meta property="article:modified_time" content="2023-04-20T18:42:38+09:00" /><meta property="og:site_name" content="soonyubing" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="http://example.org/logo.png"/>
+
+<meta name="twitter:title" content="Index (간략버전)"/>
+<meta name="twitter:description" content="개요 index는 어떤 column에 대해 특정 기준을 적용해서 정렬함으로써 데이터를 더 빠르게 찾을 수 있는 방법을 말한다.
+이와 같은 방법을 적용하는 사례는 사실 우리 주변에도 존재한다. 예를 들어 주민등록번호, 살고있는 주소, 학번 등 이미 인덱스를 활용하고 있고 그렇게 어려운 개념은 아니다.
+개발면접에서 인덱스를 물어보는 질문은 꽤나 많다. 단순히 index에 대한 개념을 묻는 질문은 아니라고 생각한다. DB에서 인덱스를 어떻게 사용하고, 어떤 자료구조를 이용하고, 인덱스를 사용함으로써 어떻게 최적화를 이뤄낼 수 있는지에 대한 경험이나 지식을 물어보는 것이라 생각한다."/>
+<meta name="application-name" content="soonyubing">
+<meta name="apple-mobile-web-app-title" content="soonyubing"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/index_short_version/" /><link rel="prev" href="http://example.org/jwt-refresh-token/" /><link rel="next" href="http://example.org/2023/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Index (간략버전)",
+        "inLanguage": "en",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/example.org\/index_short_version\/"
+        },"genre": "posts","keywords": "index, elastic-search","wordcount":  478 ,
+        "url": "http:\/\/example.org\/index_short_version\/","datePublished": "2023-04-20T17:41:38+09:00","dateModified": "2023-04-20T18:42:38+09:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "홍순엽"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="👨‍💻성장중독자"></a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> Posts </a><a class="menu-item" href="/tags/"> Tags </a><a class="menu-item" href="/categories/"> Categories </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="Search titles or contents..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="Search">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="Clear">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="👨‍💻성장중독자"></a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="Search titles or contents..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="Search">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="Clear">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        Cancel
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">Posts</a><a class="menu-item" href="/tags/" title="">Tags</a><a class="menu-item" href="/categories/" title="">Categories</a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">Contents</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Index (간략버전)</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>홍순엽</a></span>&nbsp;<span class="post-category">included in <a href="/categories/database/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>database</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-04-20">2023-04-20</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;478 words&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;3 minutes&nbsp;</div>
+        </div><div class="featured-image"><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="images/index.jpg"
+        data-srcset="images/index.jpg, images/index.jpg 1.5x, images/index.jpg 2x"
+        data-sizes="auto"
+        alt="images/index.jpg"
+        title="images/index.jpg" /></div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>Contents</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#개요">개요</a></li>
+    <li><a href="#clustered-index-vs-non-clustered-index">clustered index vs non-clustered index</a>
+      <ul>
+        <li><a href="#clustered-index">clustered index</a></li>
+        <li><a href="#non-clustered-index">non-clustered index</a></li>
+      </ul>
+    </li>
+    <li><a href="#mysql-최적화와-관련해서-생각해볼-것들">Mysql 최적화와 관련해서 생각해볼 것들</a></li>
+    <li><a href="#elastic-search-for-indexing">Elastic Search for Indexing</a>
+      <ul>
+        <li><a href="#get--게시글-요청">/GET : 게시글 요청</a></li>
+        <li><a href="#post--게시글-생성">/POST : 게시글 생성</a></li>
+        <li><a href="#patch--게시글-업데이트">/PATCH : 게시글 업데이트</a></li>
+        <li><a href="#delete--게시글-삭제">/DELETE : 게시글 삭제</a></li>
+      </ul>
+    </li>
+    <li><a href="#참고자료">참고자료</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="개요">개요</h2>
+<blockquote>
+<p>index는 어떤 column에 대해 특정 기준을 적용해서 <code>정렬</code>함으로써 데이터를 더 빠르게 찾을 수 있는 방법을 말한다.</p>
+</blockquote>
+<p>이와 같은 방법을 적용하는 사례는 사실 우리 주변에도 존재한다. 예를 들어 주민등록번호, 살고있는 주소, 학번 등 이미 인덱스를 활용하고 있고 그렇게 어려운 개념은 아니다.</p>
+<p>개발면접에서 인덱스를 물어보는 질문은 꽤나 많다. 단순히 index에 대한 개념을 묻는 질문은 아니라고 생각한다. DB에서 인덱스를 어떻게 사용하고, 어떤 자료구조를 이용하고, 인덱스를 사용함으로써 어떻게 최적화를 이뤄낼 수 있는지에 대한 경험이나 지식을 물어보는 것이라 생각한다.</p>
+<h2 id="clustered-index-vs-non-clustered-index">clustered index vs non-clustered index</h2>
+<h3 id="clustered-index">clustered index</h3>
+<p>pk 값이 비슷한 레코드끼리 묶어서 저장되고 사용하는 것을 말한다. pk를 기준으로 쿼리를 수행하기 때문에, pk 선택에 있어서 신중히 해야 한다. 가급적 거의 업데이트 되지 않거나, 전혀 업데이트 되지 않는 column을 선택해야 한다. 순서를 유지하고 범위 검색에 유리하고 데이터가 많아질수록 삽입 성능이 떨어지는 특징이 있다.<br><br></p>
+<figure><a class="lightgallery" href="/images/clustered_index.png" title="/images/clustered_index.png" data-thumbnail="/images/clustered_index.png" data-sub-html="<h2>clustered index</h2>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/clustered_index.png"
+            data-srcset="/images/clustered_index.png, /images/clustered_index.png 1.5x, /images/clustered_index.png 2x"
+            data-sizes="auto"
+            alt="/images/clustered_index.png" width="100%" />
+    </a><figcaption class="image-caption">clustered index</figcaption>
+    </figure>
+<h3 id="non-clustered-index">non-clustered index</h3>
+<p><code>secondaryt index</code>라고 불리우는데, 테이블 데이터와 함께 테이블에 저장되는 것이 아니라 별도의 저장소에 저장되고 그 저장된 값은 포인터로써 실제 저장된 데이터를 가르킨다. 순서를 유지하지 않고, 한 테이블에 여러개 존재할 수 있고, index를 저장할 추가적인 공간(약 10%)이 필요하다는 특징이 있다. <br><br></p>
+<figure><a class="lightgallery" href="/images/secondary_index.png" title="/images/secondary_index.png" data-thumbnail="/images/secondary_index.png" data-sub-html="<h2>secondary index</h2>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/images/secondary_index.png"
+            data-srcset="/images/secondary_index.png, /images/secondary_index.png 1.5x, /images/secondary_index.png 2x"
+            data-sizes="auto"
+            alt="/images/secondary_index.png" width="100%" />
+    </a><figcaption class="image-caption">secondary index</figcaption>
+    </figure>
+<h2 id="mysql-최적화와-관련해서-생각해볼-것들">Mysql 최적화와 관련해서 생각해볼 것들</h2>
+<p>이 부분은 직접 내가 경험해보지 않았고, 나중에 최적화가 필요할 때 찾아볼 개념들이다. <a href="https://crystalcube.co.kr/163" target="_blank" rel="noopener noreffer ">여기</a>에서는 인덱스를 활용해서 몇몇 실험을 한 결과를 볼 수 있다. 다음을 이용해서 최적화를 경험할 경우 별도의 포스트에 해당 경험을 공유하려고 한다.</p>
+<ul>
+<li><code>Explain</code> keyword</li>
+<li>B-tree, page in InnoDB</li>
+<li><code>Cardinality</code> : index 선택 기준에 대한 지표</li>
+<li><code>Composite Key</code></li>
+<li><code>innoDB_buffer_pool_size</code></li>
+<li><code>log_throttle_queries_not_using_indexes</code></li>
+</ul>
+<h2 id="elastic-search-for-indexing">Elastic Search for Indexing</h2>
+<p>토이 프로젝트에 게시글을 더 빠르게 검색하기 위해서 postgre DB 앞단에 Elastic Search를 별도로 사용중이다. elastic search는 restful api로 서비스를 이용할 수 있다.</p>
+<h3 id="get--게시글-요청">/GET : 게시글 요청</h3>
+<p>검색란에 text를 써서 요청하면, 다음 함수가 실행된다.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="kr">async</span> <span class="nx">search</span><span class="p">(</span><span class="nx">text</span><span class="o">:</span> <span class="nx">string</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">  <span class="kr">const</span> <span class="p">{</span><span class="nx">body</span><span class="p">}</span> <span class="o">=</span> <span class="kr">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">elasticSearchService</span><span class="p">.</span><span class="nx">search</span><span class="o">&lt;</span><span class="nx">PostSearchResult</span><span class="o">&gt;</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">index</span> <span class="o">:</span> <span class="s1">&#39;index&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">body</span> <span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">query</span> <span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">multi_match</span> <span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">          <span class="nx">query</span> <span class="o">:</span> <span class="nx">text</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">          <span class="nx">fields</span> <span class="o">:</span> <span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">,</span><span class="s1">&#39;content&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="p">});</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="post--게시글-생성">/POST : 게시글 생성</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="kr">async</span> <span class="nx">indexPost</span><span class="p">(</span><span class="nx">post</span><span class="o">:</span> <span class="nx">Post</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">elasticsearchService</span><span class="p">.</span><span class="nx">index</span><span class="o">&lt;</span><span class="nx">PostSearchResult</span><span class="p">,</span> <span class="nx">PostSearchBody</span><span class="o">&gt;</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">index</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">index</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">body</span><span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">id</span><span class="o">:</span> <span class="nx">post</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">title</span><span class="o">:</span> <span class="nx">post</span><span class="p">.</span><span class="nx">title</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">content</span><span class="o">:</span> <span class="nx">post</span><span class="p">.</span><span class="nx">content</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">authorId</span><span class="o">:</span> <span class="nx">post</span><span class="p">.</span><span class="nx">author</span><span class="p">.</span><span class="nx">id</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">})</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="patch--게시글-업데이트">/PATCH : 게시글 업데이트</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="kr">async</span> <span class="nx">update</span><span class="p">(</span><span class="nx">post</span><span class="o">:</span> <span class="nx">Post</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">newBody</span><span class="o">:</span> <span class="nx">PostSearchBody</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">id</span><span class="o">:</span> <span class="nx">post</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">title</span><span class="o">:</span> <span class="nx">post</span><span class="p">.</span><span class="nx">title</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">content</span><span class="o">:</span> <span class="nx">post</span><span class="p">.</span><span class="nx">content</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">authorId</span><span class="o">:</span> <span class="nx">post</span><span class="p">.</span><span class="nx">author</span><span class="p">.</span><span class="nx">id</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">script</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">entries</span><span class="p">(</span><span class="nx">newBody</span><span class="p">).</span><span class="nx">reduce</span><span class="p">((</span><span class="nx">result</span><span class="p">,</span> <span class="p">[</span><span class="nx">key</span><span class="p">,</span> <span class="nx">value</span><span class="p">])</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="k">return</span> <span class="sb">`</span><span class="si">${</span><span class="nx">result</span><span class="si">}</span><span class="sb"> ctx._source.</span><span class="si">${</span><span class="nx">key</span><span class="si">}</span><span class="sb">=&#39;</span><span class="si">${</span><span class="nx">value</span><span class="si">}</span><span class="sb">&#39;;`</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">},</span> <span class="s1">&#39;&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">elasticsearchService</span><span class="p">.</span><span class="nx">updateByQuery</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">index</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">index</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">body</span><span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">query</span><span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">          <span class="nx">match</span><span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">id</span><span class="o">:</span> <span class="nx">post</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">          <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">script</span><span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">          <span class="nx">inline</span><span class="o">:</span> <span class="nx">script</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">})</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>업데이트시에 주목할 부분은, 관련 script를 직접 구성해줘야 한다.</p>
+<h3 id="delete--게시글-삭제">/DELETE : 게시글 삭제</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="kr">async</span> <span class="nx">remove</span><span class="p">(</span><span class="nx">postId</span><span class="o">:</span> <span class="nx">number</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">this</span><span class="p">.</span><span class="nx">elasticsearchService</span><span class="p">.</span><span class="nx">deleteByQuery</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">index</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">index</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">body</span><span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">query</span><span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">          <span class="nx">match</span><span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">id</span><span class="o">:</span> <span class="nx">postId</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">          <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">})</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="참고자료">참고자료</h2>
+<p><a href="https://www.youtube.com/watch?v=NkZ6r6z2pBg" target="_blank" rel="noopener noreffer ">링크1</a></p>
+<p><a href="https://gwang920.github.io/database/clusterednonclustered/" target="_blank" rel="noopener noreffer ">링크2</a></p>
+<p><a href="https://crystalcube.co.kr/163" target="_blank" rel="noopener noreffer ">링크3</a></p>
+<p><a href="http://jidum.com/jidums/view.do?jidumId=183" target="_blank" rel="noopener noreffer ">링크4</a></p>
+<p><a href="https://choseongho93.tistory.com/231" target="_blank" rel="noopener noreffer ">링크5</a></p>
+<p><a href="https://hoing.io/archives/5960#InnoDB_-_PK_-_Clustered_Index" target="_blank" rel="noopener noreffer ">링크6</a></p>
+<p><a href="https://yurimkoo.github.io/db/2020/03/14/db-index.html" target="_blank" rel="noopener noreffer ">링크7</a></p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>Updated on 2023-04-20&nbsp;<a class="git-hash" href="https://github.com/soonyubi/commit/bd5683b75ade911dcaebeb170202e4ced27896cc" target="_blank" title="commit by soonyubi(soonyubi1@naver.com) bd5683b75ade911dcaebeb170202e4ced27896cc: new posts : index">
+                                    <i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>bd5683b</a></span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/index_short_version/index.md" target="_blank">Read Markdown</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="Share on Twitter" data-sharer="twitter" data-url="http://example.org/index_short_version/" data-title="Index (간략버전)" data-hashtags="index,elastic-search"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="http://example.org/index_short_version/" data-hashtag="index"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Hacker News" data-sharer="hackernews" data-url="http://example.org/index_short_version/" data-title="Index (간략버전)"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Line" data-sharer="line" data-url="http://example.org/index_short_version/" data-title="Index (간략버전)"><i data-svg-src="/lib/simple-icons/icons/line.min.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="http://example.org/index_short_version/" data-title="Index (간략버전)" data-image="images/index.jpg"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/index/">index</a>,&nbsp;<a href="/tags/elastic-search/">elastic-search</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/jwt-refresh-token/" class="prev" rel="prev" title="Nest.js : Jwt Refresh Token"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>Nest.js : Jwt Refresh Token</a>
+            <a href="/2023/" class="next" rel="next" title="2023년 목표">2023년 목표<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+<div id="comments"><div id="disqus_thread" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://disqus.com/?ref_noscript">Disqus</a>.
+            </noscript><div id="commento" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://commento.io/">Commento</a>.
+            </noscript><div id="utterances" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://utteranc.es/">utterances</a>.
+            </noscript><div id="giscus" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://giscus.app">Giscus</a>.
+            </noscript></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.115.1">Hugo</a> | Theme - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2023</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">soonyubing</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="Back to Top">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/lightgallery/css/lightgallery-bundle.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="https://.disqus.com/embed.js" defer></script><script type="text/javascript" src="https://cdn.commento.io/js/commento.js" defer></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/lightgallery/lightgallery.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/thumbnail/lg-thumbnail.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/zoom/lg-zoom.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{"giscus":{"category":"Announcements","categoryId":"","darkTheme":"dark","emitMetadata":"0","inputPosition":"bottom","lang":"en","lazyLoading":false,"lightTheme":"light","mapping":"pathname","reactionsEnabled":"1","repo":"","repoId":""},"utterances":{"darkTheme":"github-dark","issueTerm":"pathname","label":"Comment","lightTheme":"github-light","repo":"soonyubi/comment"}},"cookieconsent":{"content":{"dismiss":"Got it!","link":"Learn more","message":"This website uses Cookies to improve your experience."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"lightgallery":true,"search":{"highlightTag":"em","lunrIndexURL":"/index.json","maxResultLength":10,"noResultsFound":"No results found","snippetLength":30,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script><script type="text/javascript">
+            window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());
+            gtag('config', 'G-06522HQ23W', { 'anonymize_ip': true });
+        </script><script type="text/javascript" src="https://www.googletagmanager.com/gtag/js?id=G-06522HQ23W" async></script></body>
+</html>

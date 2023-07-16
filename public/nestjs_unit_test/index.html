@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>Unit Test - 👨‍💻성장중독자</title><meta name="Description" content="soonyub &#43; ing (진행중이란 소리)"><meta property="og:title" content="Unit Test" />
+<meta property="og:description" content="Unit Test (by ChatGPT) 유닛 테스트(Unit test)는 소프트웨어 개발에서 사용되는 테스트의 한 종류로, 개별적인 소스 코드의 최소 단위인 유닛(일반적으로 함수, 메서드, 클래스 등)이 의도한대로 동작하는지 검증하는 테스트입니다. 유닛 테스트는 소스 코드의 특정 부분을 격리시켜 테스트하므로, 다양한 입력값과 상황을 시뮬레이션하여 코드의 정확성, 예외 처리, 경계 조건 등을 확인할 수 있습니다.
+유닛 테스트의 목적은 다음과 같습니다:
+코드의 정확성 검증: 유닛 테스트를 통해 코드가 의도한대로 동작하는지 확인하여 버그와 오류를 발견하고 수정할 수 있습니다. 코드의 안정성 향상: 유닛 테스트를 통해 코드의 예외 처리, 경계 조건 등을 확인하여 코드의 안정성을 향상시킬 수 있습니다." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://example.org/nestjs_unit_test/" /><meta property="og:image" content="http://example.org/logo.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-04-17T22:12:05+09:00" />
+<meta property="article:modified_time" content="2023-04-17T22:53:21+09:00" /><meta property="og:site_name" content="soonyubing" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="http://example.org/logo.png"/>
+
+<meta name="twitter:title" content="Unit Test"/>
+<meta name="twitter:description" content="Unit Test (by ChatGPT) 유닛 테스트(Unit test)는 소프트웨어 개발에서 사용되는 테스트의 한 종류로, 개별적인 소스 코드의 최소 단위인 유닛(일반적으로 함수, 메서드, 클래스 등)이 의도한대로 동작하는지 검증하는 테스트입니다. 유닛 테스트는 소스 코드의 특정 부분을 격리시켜 테스트하므로, 다양한 입력값과 상황을 시뮬레이션하여 코드의 정확성, 예외 처리, 경계 조건 등을 확인할 수 있습니다.
+유닛 테스트의 목적은 다음과 같습니다:
+코드의 정확성 검증: 유닛 테스트를 통해 코드가 의도한대로 동작하는지 확인하여 버그와 오류를 발견하고 수정할 수 있습니다. 코드의 안정성 향상: 유닛 테스트를 통해 코드의 예외 처리, 경계 조건 등을 확인하여 코드의 안정성을 향상시킬 수 있습니다."/>
+<meta name="application-name" content="soonyubing">
+<meta name="apple-mobile-web-app-title" content="soonyubing"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/nestjs_unit_test/" /><link rel="prev" href="http://example.org/dependency_injection/" /><link rel="next" href="http://example.org/upload_file_to_s3/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Unit Test",
+        "inLanguage": "en",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/example.org\/nestjs_unit_test\/"
+        },"genre": "posts","keywords": "nest.js, unit-test","wordcount":  1016 ,
+        "url": "http:\/\/example.org\/nestjs_unit_test\/","datePublished": "2023-04-17T22:12:05+09:00","dateModified": "2023-04-17T22:53:21+09:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "홍순엽"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="👨‍💻성장중독자"></a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> Posts </a><a class="menu-item" href="/tags/"> Tags </a><a class="menu-item" href="/categories/"> Categories </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="Search titles or contents..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="Search">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="Clear">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="👨‍💻성장중독자"></a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="Search titles or contents..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="Search">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="Clear">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        Cancel
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">Posts</a><a class="menu-item" href="/tags/" title="">Tags</a><a class="menu-item" href="/categories/" title="">Categories</a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">Contents</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Unit Test</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>홍순엽</a></span>&nbsp;<span class="post-category">included in <a href="/categories/nest.js/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>nest.js</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-04-17">2023-04-17</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;1016 words&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;5 minutes&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>Contents</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#unit-test-by-chatgpt">Unit Test (by ChatGPT)</a></li>
+    <li><a href="#example">Example</a>
+      <ul>
+        <li><a href="#실제-객체를-선언하면서-유닛테스트-작성">실제 객체를 선언하면서 유닛테스트 작성</a></li>
+        <li><a href="#dependency를-수동으로-넣어야-하는-이슈-해결">dependency를 수동으로 넣어야 하는 이슈 해결</a></li>
+        <li><a href="#실제-db를-사용하지-않고-db-mock-객체를-생성">실제 DB를 사용하지 않고 DB mock 객체를 생성</a></li>
+        <li><a href="#configservice--jwtservice에-대한-mock-객체-생성">ConfigService / JwtService에 대한 mock 객체 생성</a></li>
+        <li><a href="#jestfn-을-이용해-mock-객체-생성">Jest.fn() 을 이용해 mock 객체 생성</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="unit-test-by-chatgpt">Unit Test (by ChatGPT)</h2>
+<p>유닛 테스트(Unit test)는 소프트웨어 개발에서 사용되는 테스트의 한 종류로, 개별적인 소스 코드의 최소 단위인 유닛(일반적으로 함수, 메서드, 클래스 등)이 의도한대로 동작하는지 검증하는 테스트입니다. 유닛 테스트는 소스 코드의 특정 부분을 격리시켜 테스트하므로, 다양한 입력값과 상황을 시뮬레이션하여 코드의 정확성, 예외 처리, 경계 조건 등을 확인할 수 있습니다.</p>
+<p>유닛 테스트의 목적은 다음과 같습니다:</p>
+<ol>
+<li><code>코드의 정확성 검증</code>: 유닛 테스트를 통해 코드가 의도한대로 동작하는지 확인하여 버그와 오류를 발견하고 수정할 수 있습니다.</li>
+<li><code>코드의 안정성 향상</code>: 유닛 테스트를 통해 코드의 예외 처리, 경계 조건 등을 확인하여 코드의 안정성을 향상시킬 수 있습니다.</li>
+<li><code>리팩토링 지원</code>: 유닛 테스트는 코드를 리팩토링할 때 기존 기능이 올바르게 작동하는지 확인하는 데 도움을 줍니다.
+개발 속도 향상: 유닛 테스트를 통해 버그를 조기에 발견하고 수정하므로, 생산성을 향상시킬 수 있습니다.</li>
+<li><code>협업과 유지보수 용이성 향상</code>: 유닛 테스트는 코드의 동작을 명확하게 문서화하고, 다른 개발자가 코드를 이해하고 유지보수하는 데 도움을 줍니다.</li>
+</ol>
+<br>
+일반적으로 좋은 유닛 테스트는 독립적으로 실행 가능하며, 빠르게 실행되어야 하며, 정확하고 명확한 검증 로직을 가져야 합니다. 유닛 테스트는 개발자가 작성하며, 소프트웨어 개발의 품질과 안정성을 높이는 중요한 도구로 사용됩니다.
+<h2 id="example">Example</h2>
+<p>보통 대부분의 서비스에 존재하는, Authentication/ User service 가 내가 의도하는대로 동작하는지 확인하기 위한 unit test를 작성하려고 한다.</p>
+<h3 id="실제-객체를-선언하면서-유닛테스트-작성">실제 객체를 선언하면서 유닛테스트 작성</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;The AuthenticationService&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="kd">let</span> <span class="nx">authenticationService</span> <span class="o">:</span> <span class="nx">AuthenticationService</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">beforeEach</span><span class="p">(()=&gt;{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">authenticationService</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">AuthenticationService</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">      <span class="k">new</span> <span class="nx">UsersService</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="k">new</span> <span class="nx">Repository</span><span class="o">&lt;</span><span class="nx">User</span><span class="o">&gt;</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">      <span class="p">),</span>
+</span></span><span class="line"><span class="cl">      <span class="k">new</span> <span class="nx">JwtService</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">secretOrPrivateKey</span><span class="o">:</span><span class="s2">&#34;key&#34;</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}),</span>
+</span></span><span class="line"><span class="cl">      <span class="k">new</span> <span class="nx">ConfigService</span><span class="p">(),</span>
+</span></span><span class="line"><span class="cl">    <span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="p">})</span>
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl">  <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;when creating a cookie&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should return a string&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="kr">const</span> <span class="nx">userId</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">expect</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="k">typeof</span> <span class="nx">authenticationService</span><span class="p">.</span><span class="nx">getCookieWithJwtToken</span><span class="p">(</span><span class="nx">userId</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">      <span class="p">).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s1">&#39;string&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">})</span>
+</span></span><span class="line"><span class="cl">  <span class="p">})</span>
+</span></span><span class="line"><span class="cl"><span class="p">});</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>위와 같이 코드를 구성할 경우, Authentication Service에 인스턴스를 생성할 때마다 필요한 dependency를 수동으로 넣어줘야 하므로, 올바른 작성방법은 아니다.</p>
+<br>
+<h3 id="dependency를-수동으로-넣어야-하는-이슈-해결">dependency를 수동으로 넣어야 하는 이슈 해결</h3>
+<p>그러므로, 우리는 <code>@nestjs/testing</code> 라이브러리의 <code>Test.createTestingModule().compile()</code> 메서드를 사용해 dependency를 수동으로 넣어줘야 하는 문제를 해결할 수 있다.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;The AuthenticationService&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="kd">let</span> <span class="nx">authenticationService</span> <span class="o">:</span> <span class="nx">AuthenticationService</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">beforeEach</span><span class="p">(</span><span class="kr">async</span> <span class="p">()=&gt;{</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">module</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">Test</span><span class="p">.</span><span class="nx">createTestingModule</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">imports</span><span class="o">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">UsersModule</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">ConfigModule</span><span class="p">.</span><span class="nx">forRoot</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">          <span class="nx">validationSchema</span><span class="o">:</span> <span class="nx">Joi</span><span class="p">.</span><span class="nx">object</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">POSTGRES_HOST</span><span class="o">:</span> <span class="nx">Joi</span><span class="p">.</span><span class="nx">string</span><span class="p">().</span><span class="nx">required</span><span class="p">(),</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">POSTGRES_PORT</span><span class="o">:</span> <span class="nx">Joi</span><span class="p">.</span><span class="nx">number</span><span class="p">().</span><span class="nx">required</span><span class="p">(),</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">POSTGRES_USER</span><span class="o">:</span> <span class="nx">Joi</span><span class="p">.</span><span class="nx">string</span><span class="p">().</span><span class="nx">required</span><span class="p">(),</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">POSTGRES_PASSWORD</span><span class="o">:</span> <span class="nx">Joi</span><span class="p">.</span><span class="nx">string</span><span class="p">().</span><span class="nx">required</span><span class="p">(),</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">POSTGRES_DB</span><span class="o">:</span> <span class="nx">Joi</span><span class="p">.</span><span class="nx">string</span><span class="p">().</span><span class="nx">required</span><span class="p">(),</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">JWT_SECRET</span><span class="o">:</span> <span class="nx">Joi</span><span class="p">.</span><span class="nx">string</span><span class="p">().</span><span class="nx">required</span><span class="p">(),</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">JWT_EXPIRATION_TIME</span><span class="o">:</span> <span class="nx">Joi</span><span class="p">.</span><span class="nx">string</span><span class="p">().</span><span class="nx">required</span><span class="p">(),</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">PORT</span><span class="o">:</span> <span class="nx">Joi</span><span class="p">.</span><span class="nx">number</span><span class="p">(),</span>
+</span></span><span class="line"><span class="cl">          <span class="p">})</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}),</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">DatabaseModule</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">JwtModule</span><span class="p">.</span><span class="nx">registerAsync</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">          <span class="nx">imports</span><span class="o">:</span> <span class="p">[</span><span class="nx">ConfigModule</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">          <span class="nx">inject</span><span class="o">:</span> <span class="p">[</span><span class="nx">ConfigService</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">          <span class="nx">useFactory</span><span class="o">:</span> <span class="kr">async</span> <span class="p">(</span><span class="nx">configService</span><span class="o">:</span> <span class="nx">ConfigService</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">({</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">secret</span><span class="o">:</span> <span class="nx">configService</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;JWT_SECRET&#39;</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">signOptions</span><span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">              <span class="nx">expiresIn</span><span class="o">:</span> <span class="sb">`</span><span class="si">${</span><span class="nx">configService</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;JWT_EXPIRATION_TIME&#39;</span><span class="p">)</span><span class="si">}</span><span class="sb">s`</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="p">},</span>
+</span></span><span class="line"><span class="cl">          <span class="p">}),</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}),</span>
+</span></span><span class="line"><span class="cl">      <span class="p">],</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">providers</span><span class="o">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">AuthenticationService</span>
+</span></span><span class="line"><span class="cl">      <span class="p">],</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}).</span><span class="nx">compile</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">authenticationService</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">module</span><span class="p">.</span><span class="nx">get</span><span class="o">&lt;</span><span class="nx">AuthenticationService</span><span class="o">&gt;</span><span class="p">(</span><span class="nx">AuthenticationService</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="p">})</span>
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl">  <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;when creating a cookie&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should return a string&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="kr">const</span> <span class="nx">userId</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">expect</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="k">typeof</span> <span class="nx">authenticationService</span><span class="p">.</span><span class="nx">getCookieWithJwtToken</span><span class="p">(</span><span class="nx">userId</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">      <span class="p">).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s1">&#39;string&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">})</span>
+</span></span><span class="line"><span class="cl">  <span class="p">})</span>
+</span></span><span class="line"><span class="cl"><span class="p">});</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="실제-db를-사용하지-않고-db-mock-객체를-생성">실제 DB를 사용하지 않고 DB mock 객체를 생성</h3>
+<p>위와 같이 Test Module 필요한 module들을 미리 import해서 dependency를 매번 수동으로 넣어줘야 하는 문제를 해결할 수 는 있지만, 현재 import되는 모듈 중 Database Module은 실제 DB를 의미하기 때문에 테스트에 적합하지 않다.
+따라서 우리는 DB Module을 <code>mocking</code> 해서 provider로 제공해줘야 한다.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;The AuthenticationService&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="kd">let</span> <span class="nx">authenticationService</span> <span class="o">:</span> <span class="nx">AuthenticationService</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">beforeEach</span><span class="p">(</span><span class="kr">async</span> <span class="p">()=&gt;{</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">module</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">Test</span><span class="p">.</span><span class="nx">createTestingModule</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">imports</span><span class="o">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">UsersModule</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">ConfigModule</span><span class="p">.</span><span class="nx">forRoot</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">          <span class="nx">validationSchema</span><span class="o">:</span> <span class="nx">Joi</span><span class="p">.</span><span class="nx">object</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">POSTGRES_HOST</span><span class="o">:</span> <span class="nx">Joi</span><span class="p">.</span><span class="nx">string</span><span class="p">().</span><span class="nx">required</span><span class="p">(),</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">POSTGRES_PORT</span><span class="o">:</span> <span class="nx">Joi</span><span class="p">.</span><span class="nx">number</span><span class="p">().</span><span class="nx">required</span><span class="p">(),</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">POSTGRES_USER</span><span class="o">:</span> <span class="nx">Joi</span><span class="p">.</span><span class="nx">string</span><span class="p">().</span><span class="nx">required</span><span class="p">(),</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">POSTGRES_PASSWORD</span><span class="o">:</span> <span class="nx">Joi</span><span class="p">.</span><span class="nx">string</span><span class="p">().</span><span class="nx">required</span><span class="p">(),</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">POSTGRES_DB</span><span class="o">:</span> <span class="nx">Joi</span><span class="p">.</span><span class="nx">string</span><span class="p">().</span><span class="nx">required</span><span class="p">(),</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">JWT_SECRET</span><span class="o">:</span> <span class="nx">Joi</span><span class="p">.</span><span class="nx">string</span><span class="p">().</span><span class="nx">required</span><span class="p">(),</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">JWT_EXPIRATION_TIME</span><span class="o">:</span> <span class="nx">Joi</span><span class="p">.</span><span class="nx">string</span><span class="p">().</span><span class="nx">required</span><span class="p">(),</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">PORT</span><span class="o">:</span> <span class="nx">Joi</span><span class="p">.</span><span class="nx">number</span><span class="p">(),</span>
+</span></span><span class="line"><span class="cl">          <span class="p">})</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}),</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">JwtModule</span><span class="p">.</span><span class="nx">registerAsync</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">          <span class="nx">imports</span><span class="o">:</span> <span class="p">[</span><span class="nx">ConfigModule</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">          <span class="nx">inject</span><span class="o">:</span> <span class="p">[</span><span class="nx">ConfigService</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">          <span class="nx">useFactory</span><span class="o">:</span> <span class="kr">async</span> <span class="p">(</span><span class="nx">configService</span><span class="o">:</span> <span class="nx">ConfigService</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">({</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">secret</span><span class="o">:</span> <span class="nx">configService</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;JWT_SECRET&#39;</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">signOptions</span><span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">              <span class="nx">expiresIn</span><span class="o">:</span> <span class="sb">`</span><span class="si">${</span><span class="nx">configService</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;JWT_EXPIRATION_TIME&#39;</span><span class="p">)</span><span class="si">}</span><span class="sb">s`</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="p">},</span>
+</span></span><span class="line"><span class="cl">          <span class="p">}),</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}),</span>
+</span></span><span class="line"><span class="cl">      <span class="p">],</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">providers</span><span class="o">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">UsersService</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">AuthenticationService</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">          <span class="nx">provide</span><span class="o">:</span><span class="nx">getRepositoryToken</span><span class="p">(</span><span class="nx">User</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">          <span class="nx">useValue</span><span class="o">:</span><span class="p">{}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">      <span class="p">],</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}).</span><span class="nx">compile</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">authenticationService</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">module</span><span class="p">.</span><span class="nx">get</span><span class="o">&lt;</span><span class="nx">AuthenticationService</span><span class="o">&gt;</span><span class="p">(</span><span class="nx">AuthenticationService</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="p">})</span>
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl">  <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;when creating a cookie&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should return a string&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="kr">const</span> <span class="nx">userId</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">expect</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="k">typeof</span> <span class="nx">authenticationService</span><span class="p">.</span><span class="nx">getCookieWithJwtToken</span><span class="p">(</span><span class="nx">userId</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">      <span class="p">).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s1">&#39;string&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">})</span>
+</span></span><span class="line"><span class="cl">  <span class="p">})</span>
+</span></span><span class="line"><span class="cl"><span class="p">});</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>위와 같이 mocked User Repository를 제공하기 위해</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">{
+</span></span><span class="line"><span class="cl">    provide:getRepositoryToken(User),
+</span></span><span class="line"><span class="cl">    useValue:{}
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>해당 객체를 provider에 제공해줬다. 추가로, UserRepository는 User Module에서 <code>TypeormModule.forFeature([User])</code>로 import 되고 있기 때문에, UserService도 provider로 제공한 것을 볼 수 있다.
+<br></p>
+<h3 id="configservice--jwtservice에-대한-mock-객체-생성">ConfigService / JwtService에 대한 mock 객체 생성</h3>
+<p>여기서 더 나아가서, <code>ConfigModule</code> 과 <code>JwtModule을</code> 직접 import하는게 아닌, 각각을 mock 객체로 생성해서 이를 provider로 제공하는 작업을 처리하겠다.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">mockedConfigService</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">get</span><span class="p">(</span><span class="nx">key</span><span class="o">:</span> <span class="nx">string</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">switch</span> <span class="p">(</span><span class="nx">key</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="k">case</span> <span class="s1">&#39;JWT_EXPIRATION_TIME&#39;</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="s1">&#39;3600&#39;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">mockedJwtService</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">sign</span><span class="o">:</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="s1">&#39;&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;The AuthenticationService&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="kd">let</span> <span class="nx">authenticationService</span> <span class="o">:</span> <span class="nx">AuthenticationService</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">beforeEach</span><span class="p">(</span><span class="kr">async</span> <span class="p">()=&gt;{</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">module</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">Test</span><span class="p">.</span><span class="nx">createTestingModule</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">providers</span><span class="o">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">UsersService</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">AuthenticationService</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">          <span class="nx">provide</span><span class="o">:</span><span class="nx">getRepositoryToken</span><span class="p">(</span><span class="nx">User</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">          <span class="nx">useValue</span><span class="o">:</span><span class="p">{}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">          <span class="nx">provide</span><span class="o">:</span><span class="nx">ConfigService</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">          <span class="nx">useValue</span><span class="o">:</span> <span class="nx">mockedConfigService</span>
+</span></span><span class="line"><span class="cl">        <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">          <span class="nx">provide</span><span class="o">:</span><span class="nx">JwtService</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">          <span class="nx">useValue</span><span class="o">:</span><span class="nx">mockedJwtService</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">      <span class="p">],</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}).</span><span class="nx">compile</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">authenticationService</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">module</span><span class="p">.</span><span class="nx">get</span><span class="o">&lt;</span><span class="nx">AuthenticationService</span><span class="o">&gt;</span><span class="p">(</span><span class="nx">AuthenticationService</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="p">})</span>
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl">  <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;when creating a cookie&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should return a string&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="kr">const</span> <span class="nx">userId</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">expect</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="k">typeof</span> <span class="nx">authenticationService</span><span class="p">.</span><span class="nx">getCookieWithJwtToken</span><span class="p">(</span><span class="nx">userId</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">      <span class="p">).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s1">&#39;string&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">})</span>
+</span></span><span class="line"><span class="cl">  <span class="p">})</span>
+</span></span><span class="line"><span class="cl"><span class="p">});</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="jestfn-을-이용해-mock-객체-생성">Jest.fn() 을 이용해 mock 객체 생성</h3>
+<p>User Service도 <code>jest.fn()</code> 을 이용해 mock 객체를 생성해서 dependency를 직접 생성하지 않고 해결할 수 있습니다.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;The UsersService&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="kd">let</span> <span class="nx">usersService</span><span class="o">:</span> <span class="nx">UsersService</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="kd">let</span> <span class="nx">findOne</span><span class="o">:</span> <span class="nx">jest</span><span class="p">.</span><span class="nx">Mock</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">beforeEach</span><span class="p">(</span><span class="kr">async</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">findOne</span> <span class="o">=</span> <span class="nx">jest</span><span class="p">.</span><span class="nx">fn</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">module</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">Test</span><span class="p">.</span><span class="nx">createTestingModule</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">providers</span><span class="o">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">UsersService</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">          <span class="nx">provide</span><span class="o">:</span> <span class="nx">getRepositoryToken</span><span class="p">(</span><span class="nx">User</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">          <span class="nx">useValue</span><span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">findOne</span>
+</span></span><span class="line"><span class="cl">          <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">      <span class="p">],</span>
+</span></span><span class="line"><span class="cl">    <span class="p">})</span>
+</span></span><span class="line"><span class="cl">      <span class="p">.</span><span class="nx">compile</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">usersService</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">module</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">UsersService</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="p">})</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;when getting a user by email&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;and the user is matched&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="kd">let</span> <span class="nx">user</span><span class="o">:</span> <span class="nx">User</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">beforeEach</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">user</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">User</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">findOne</span><span class="p">.</span><span class="nx">mockReturnValue</span><span class="p">(</span><span class="nb">Promise</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nx">user</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">      <span class="p">})</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should return the user&#39;</span><span class="p">,</span> <span class="kr">async</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="kr">const</span> <span class="nx">fetchedUser</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">usersService</span><span class="p">.</span><span class="nx">getByEmail</span><span class="p">(</span><span class="s1">&#39;test@test.com&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">expect</span><span class="p">(</span><span class="nx">fetchedUser</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">(</span><span class="nx">user</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">      <span class="p">})</span>
+</span></span><span class="line"><span class="cl">    <span class="p">})</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;and the user is not matched&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">beforeEach</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">findOne</span><span class="p">.</span><span class="nx">mockReturnValue</span><span class="p">(</span><span class="kc">undefined</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">      <span class="p">})</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should throw an error&#39;</span><span class="p">,</span> <span class="kr">async</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="kr">await</span> <span class="nx">expect</span><span class="p">(</span><span class="nx">usersService</span><span class="p">.</span><span class="nx">getByEmail</span><span class="p">(</span><span class="s1">&#39;test@test.com&#39;</span><span class="p">)).</span><span class="nx">rejects</span><span class="p">.</span><span class="nx">toThrow</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">      <span class="p">})</span>
+</span></span><span class="line"><span class="cl">    <span class="p">})</span>
+</span></span><span class="line"><span class="cl">  <span class="p">})</span>
+</span></span><span class="line"><span class="cl"><span class="p">});</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>Updated on 2023-04-17&nbsp;<a class="git-hash" href="https://github.com/soonyubi/commit/17fe5f94eee7c6b2664f9d0dbe96d7faa8a0972a" target="_blank" title="commit by soonyubi(soonyubi1@naver.com) 17fe5f94eee7c6b2664f9d0dbe96d7faa8a0972a: new post : nestjs - unit test">
+                                    <i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>17fe5f9</a></span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/nestjs_unit_test/index.md" target="_blank">Read Markdown</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="Share on Twitter" data-sharer="twitter" data-url="http://example.org/nestjs_unit_test/" data-title="Unit Test" data-hashtags="nest.js,unit-test"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="http://example.org/nestjs_unit_test/" data-hashtag="nest.js"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Hacker News" data-sharer="hackernews" data-url="http://example.org/nestjs_unit_test/" data-title="Unit Test"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Line" data-sharer="line" data-url="http://example.org/nestjs_unit_test/" data-title="Unit Test"><i data-svg-src="/lib/simple-icons/icons/line.min.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="http://example.org/nestjs_unit_test/" data-title="Unit Test"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/nest.js/">nest.js</a>,&nbsp;<a href="/tags/unit-test/">unit-test</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/dependency_injection/" class="prev" rel="prev" title="Dependency Injection (feat:Nest)"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>Dependency Injection (feat:Nest)</a>
+            <a href="/upload_file_to_s3/" class="next" rel="next" title="public/private s3 를 생성하고 파일 업로드 기능 구현">public/private s3 를 생성하고 파일 업로드 기능 구현<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+<div id="comments"><div id="disqus_thread" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://disqus.com/?ref_noscript">Disqus</a>.
+            </noscript><div id="commento" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://commento.io/">Commento</a>.
+            </noscript><div id="utterances" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://utteranc.es/">utterances</a>.
+            </noscript><div id="giscus" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://giscus.app">Giscus</a>.
+            </noscript></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.115.1">Hugo</a> | Theme - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2023</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">soonyubing</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="Back to Top">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/lightgallery/css/lightgallery-bundle.min.css"><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="https://.disqus.com/embed.js" defer></script><script type="text/javascript" src="https://cdn.commento.io/js/commento.js" defer></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/lightgallery/lightgallery.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/thumbnail/lg-thumbnail.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/zoom/lg-zoom.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{"giscus":{"category":"Announcements","categoryId":"","darkTheme":"dark","emitMetadata":"0","inputPosition":"bottom","lang":"en","lazyLoading":false,"lightTheme":"light","mapping":"pathname","reactionsEnabled":"1","repo":"","repoId":""},"utterances":{"darkTheme":"github-dark","issueTerm":"pathname","label":"Comment","lightTheme":"github-light","repo":"soonyubi/comment"}},"cookieconsent":{"content":{"dismiss":"Got it!","link":"Learn more","message":"This website uses Cookies to improve your experience."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"lightgallery":true,"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","maxResultLength":10,"noResultsFound":"No results found","snippetLength":30,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script><script type="text/javascript">
+            window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());
+            gtag('config', 'G-06522HQ23W', { 'anonymize_ip': true });
+        </script><script type="text/javascript" src="https://www.googletagmanager.com/gtag/js?id=G-06522HQ23W" async></script></body>
+</html>

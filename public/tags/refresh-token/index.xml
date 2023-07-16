@@ -1,0 +1,16 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>refresh-token - Tag - 👨‍💻성장중독자</title>
+        <link>http://example.org/tags/refresh-token/</link>
+        <description>refresh-token - Tag - 👨‍💻성장중독자</description>
+        <generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>soonyubi1@naver.com (soonyubing)</managingEditor>
+            <webMaster>soonyubi1@naver.com (soonyubing)</webMaster><lastBuildDate>Thu, 20 Apr 2023 01:01:23 &#43;0900</lastBuildDate><atom:link href="http://example.org/tags/refresh-token/" rel="self" type="application/rss+xml" /><item>
+    <title>Nest.js : Jwt Refresh Token</title>
+    <link>http://example.org/jwt-refresh-token/</link>
+    <pubDate>Thu, 20 Apr 2023 01:01:23 &#43;0900</pubDate>
+    <author>홍순엽</author>
+    <guid>http://example.org/jwt-refresh-token/</guid>
+    <description><![CDATA[개요 유저가 로그인 했을 때, access token 만을 이용해서 권한을 인증하고, 만료가 되면 다시 로그인하는 과정을 거친다면 무슨 일이 일어날까? 만약 만료시간이 짧다면, 유저는 재로그인해야 하는 상황이 계속 올 수 밖에 없다. 그러면 유저입장에서 불편할 수 있다. 만약 access token이 공격자에게 탈취된다면, 공격자는 로그인 없이도 모든 서비스에 접근 권한을 얻을 수 있다. 이것은 상당한 문제이다. 이를 해결하기 위해선 refresh-token 을 하나더 생성하면 된다. refresh-token 은 access-token 을 재발급할 수 있는 토큰이다.]]></description>
+</item>
+</channel>
+</rss>

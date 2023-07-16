@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>B-Tree index - 👨‍💻성장중독자</title><meta name="Description" content="soonyub &#43; ing (진행중이란 소리)"><meta property="og:title" content="B-Tree index" />
+<meta property="og:description" content="B-Tree Index B-Tree 인덱스는 인덱싱 알고리즘 중 가장 범용적으로 사용되는 알고리즘이다. 여기서 B 는 Balanced 를 의미한다. (Binary 아님) B-Tree index는 구조체 내에서 항상 정렬된 상태를 유지한다.
+구조 및 특징 B-Tree 인덱스는 Root / Branch / Leaf 의 3가지의 노드로 구분된다. 여기서 Leaf 노드는 실제 데이터가 저장된 데이터 파일의 주소를 가르키고 있다.
+위 그림을 보면, 인덱스는 항상 정렬된 채로 유지되지만, 데이터 파일은 무작위의 순서로 저장된 것을 볼 수 있다. 이 이유는 데이터 파일의 일부 레코드가 삭제되어 빈 공간이 생기게 되면 해당 공간을 재활용하기 때문이다." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://example.org/b-tree-index/" /><meta property="og:image" content="http://example.org/logo.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-07-08T21:52:52+09:00" />
+<meta property="article:modified_time" content="2023-07-15T23:26:34+09:00" /><meta property="og:site_name" content="soonyubing" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="http://example.org/logo.png"/>
+
+<meta name="twitter:title" content="B-Tree index"/>
+<meta name="twitter:description" content="B-Tree Index B-Tree 인덱스는 인덱싱 알고리즘 중 가장 범용적으로 사용되는 알고리즘이다. 여기서 B 는 Balanced 를 의미한다. (Binary 아님) B-Tree index는 구조체 내에서 항상 정렬된 상태를 유지한다.
+구조 및 특징 B-Tree 인덱스는 Root / Branch / Leaf 의 3가지의 노드로 구분된다. 여기서 Leaf 노드는 실제 데이터가 저장된 데이터 파일의 주소를 가르키고 있다.
+위 그림을 보면, 인덱스는 항상 정렬된 채로 유지되지만, 데이터 파일은 무작위의 순서로 저장된 것을 볼 수 있다. 이 이유는 데이터 파일의 일부 레코드가 삭제되어 빈 공간이 생기게 되면 해당 공간을 재활용하기 때문이다."/>
+<meta name="application-name" content="soonyubing">
+<meta name="apple-mobile-web-app-title" content="soonyubing"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/b-tree-index/" /><link rel="prev" href="http://example.org/typeorm/" /><link rel="next" href="http://example.org/strategy_pattern/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "B-Tree index",
+        "inLanguage": "en",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/example.org\/b-tree-index\/"
+        },"genre": "posts","keywords": "mysql, btree, index","wordcount":  952 ,
+        "url": "http:\/\/example.org\/b-tree-index\/","datePublished": "2023-07-08T21:52:52+09:00","dateModified": "2023-07-15T23:26:34+09:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "soonyubing"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="👨‍💻성장중독자"></a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> Posts </a><a class="menu-item" href="/tags/"> Tags </a><a class="menu-item" href="/categories/"> Categories </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="Search titles or contents..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="Search">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="Clear">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="👨‍💻성장중독자"></a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="Search titles or contents..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="Search">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="Clear">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        Cancel
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">Posts</a><a class="menu-item" href="/tags/" title="">Tags</a><a class="menu-item" href="/categories/" title="">Categories</a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">Contents</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">B-Tree index</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>soonyubing</a></span>&nbsp;<span class="post-category">included in <a href="/categories/database/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>database</a>&nbsp;<a href="/categories/mysql/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>mysql</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-07-08">2023-07-08</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;952 words&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;5 minutes&nbsp;</div>
+        </div><div class="featured-image"><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/images/btree.png"
+        data-srcset="/images/btree.png, /images/btree.png 1.5x, /images/btree.png 2x"
+        data-sizes="auto"
+        alt="/images/btree.png"
+        title="/images/btree.png" /></div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>Contents</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#b-tree-index">B-Tree Index</a>
+      <ul>
+        <li><a href="#구조-및-특징">구조 및 특징</a></li>
+        <li><a href="#데이터가-추가변경삭제-되면-인덱스는-어떻게-작동하는지">데이터가 추가,변경,삭제 되면 인덱스는 어떻게 작동하는지?</a></li>
+        <li><a href="#index에-영향을-미치는-요소">Index에 영향을 미치는 요소</a></li>
+      </ul>
+    </li>
+    <li><a href="#인덱스를-어떤-방식으로-이용하는지-">인덱스를 어떤 방식으로 이용하는지 ?</a>
+      <ul>
+        <li><a href="#index-range-scan">Index Range Scan</a></li>
+        <li><a href="#index-full-scan">Index Full Scan</a></li>
+        <li><a href="#index-loose-scan">Index Loose Scan</a></li>
+        <li><a href="#index-skip-scan">Index Skip Scan</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="b-tree-index">B-Tree Index</h2>
+<p><code>B-Tree</code> 인덱스는 인덱싱 알고리즘 중 가장 범용적으로 사용되는 알고리즘이다. 여기서 B 는 <code>Balanced</code> 를 의미한다. (Binary 아님) B-Tree index는 구조체 내에서 항상 정렬된 상태를 유지한다.</p>
+<h3 id="구조-및-특징">구조 및 특징</h3>
+<p>B-Tree 인덱스는 Root / Branch / Leaf 의 3가지의 노드로 구분된다. 여기서 Leaf 노드는 실제 데이터가 저장된 데이터 파일의 주소를 가르키고 있다.</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/images/btree-structure.png"
+        data-srcset="/images/btree-structure.png, /images/btree-structure.png 1.5x, /images/btree-structure.png 2x"
+        data-sizes="auto"
+        alt="/images/btree-structure.png"
+        title="B-tree structure" /></p>
+<p>위 그림을 보면, 인덱스는 항상 정렬된 채로 유지되지만, 데이터 파일은 무작위의 순서로 저장된 것을 볼 수 있다. 이 이유는 데이터 파일의 일부 레코드가 삭제되어 빈 공간이 생기게 되면 해당 공간을 재활용하기 때문이다.</p>
+<h3 id="데이터가-추가변경삭제-되면-인덱스는-어떻게-작동하는지">데이터가 추가,변경,삭제 되면 인덱스는 어떻게 작동하는지?</h3>
+<ul>
+<li>
+<p>추가</p>
+<ul>
+<li>
+<p>새로운 데이터가 추가되고 해당 데이터를 참조하는 인덱스를 추가할 때 해당 레코드의 key값과 주소정보를 leaf node에 저장한다. 만약, leaf node가 꽉 차서 저장할 수 없을 때는, 리프노드를 분리 시켜야 하는데 이렇게 되는 경우 상위 branch node의 영역까지 확장된다. 이런 이유로, 인덱스를 사용할 경우 write의 작업영역은 cost가 많이 들게 된다.</p>
+</li>
+<li>
+<p>인덱스 추가로 인해 write 작업이 얼만큼 영향을 받을지를 생각하려면, 테이블의 column 수, column의 크기, index column을 고려해야 한다. 대략적으로 레코드를 추가하는 작업의 cost를 1이라 가정하면 인덱스에 키를 추가하는 cost는 1.5로 생각한다. 따라서 인덱스가 3개가 등록된 테이블의 경우 cost가 대략적으로 (1+1.5*3) = 5.5 가 된다.</p>
+</li>
+<li>
+<p>mysql 8.0 이상인 경우, InnoDB 엔진을 사용한다. 해당 엔진은 인덱스를 즉시 추가하는 것이 아니라 좀 더 지연시켜 처리할 수 있다. 하지만, PK나 unique index의 경우 중복 체크를 해야하므로 즉시 인덱스를 추가한다.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>삭제</p>
+<ul>
+<li>삭제를 하는 경우 해당 데이터를 가르키는 리프노드를 찾아 삭제마킹을 해주고, 해당 공간은 방치되거나 재활용할 수 있도록 InnoDB storage engine이 알아서 관리해준다.</li>
+</ul>
+</li>
+<li>
+<p>변경</p>
+<ul>
+<li>변경의 경우 단순히 index의 key값만 변경하는게 아닌, 해당 데이터를 삭제하고 새로운 데이터를 추가하는 형태로 처리해야 한다.</li>
+</ul>
+</li>
+</ul>
+<h3 id="index에-영향을-미치는-요소">Index에 영향을 미치는 요소</h3>
+<ul>
+<li>
+<p>Index column의 크기</p>
+<ul>
+<li>위 그림에서 인덱스는 페이지 단위로 관리가 되는 것을 볼 수 있다. B-tree 인덱스에서 각 노드가 자식 노드를 몇 개를 가지고 있는지가 index에 영향을 미칠 수 있는 요소이다. 페이지는 <code>innodb_page_size</code> 변수를 조정하여 (4~64KB) 까지 조정할 수 있다.</li>
+<li>예를 들어, 인덱스 key의 크기가 16Byte 이고 자식노드의 주소가 12byte라고 한다면, 하나의 인덱스 페이지(16KB)에는 16*1000 / (12+16) = 585개를 저장할 수 있다. 그런데 만약, 인덱스 key의 크기가 32 byte로 늘어날 경우, 하나의 인덱스 페이지에는 16 * 1000 / (12 + 32) = 372개를 저장할 수 있다. <br>
+만약 500개의 record를 읽는 SELECT 쿼리가 존재할 때, 첫번째의 경우엔 하나의 페이지내에서 처리할 수 있지만, 두번째의 경우엔 2개의 인덱스 페이지를 읽어야 처리할 수 있으므로, column의 크기가 인덱스 처리에 영향을 줄 수 있다고 말할 수 있다.</li>
+</ul>
+</li>
+<li>
+<p>record 갯수</p>
+<ul>
+<li>인덱스를 이용해서 조회하는 것은 cost가 드는 작업이다. 대략 레코드를 읽는 것보다 4~5배 정도 cost가 드는 작업이다. 그러므로, 인덱스를 통해 읽어야할 레코드의 갯수가 실제 레코드의 20~25%를 넘어서면 레코드를 읽는 것이 더 효율적이다. 이러한 작업은 Mysql optimizer가 자동으로 처리한다.</li>
+</ul>
+</li>
+<li>
+<p>unique index의 갯수 (=Cardinality, Selectivity)</p>
+<ul>
+<li>모든 인덱스의 key가 100개이고, 그 중 unique한 key의 갯수는 10이라 할 때, cardinality = 10 이라고 할 수 있다.</li>
+<li>cardinality가 높을수록 검색대상이 줄어들기 때문에 속도가 빨라진다. 즉, 전체 index key 갯수 대비 unique key 갯수가 많아야 검색속도가 빨라진다.</li>
+<li>예를 들어, 1만건의 데이터가 저장되어 있고, 첫번째 경우엔, unique column 갯수가 10, 두번째 경우엔 unique column 갯수가 1000이라 하자. <br>
+첫번째의 경우엔 carninality = 1000 이고 1개의 데이터를 읽기 위해 999번의 조회를 한 것이다. 두번째의 cardinality = 10이고, 1건의 데이터를 읽기 위해 9건의 조회를 더 한 것이다.</li>
+</ul>
+</li>
+</ul>
+<h2 id="인덱스를-어떤-방식으로-이용하는지-">인덱스를 어떤 방식으로 이용하는지 ?</h2>
+<h3 id="index-range-scan">Index Range Scan</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">SELECT * FROM employees WHERE first_name between &#39;amy&#39; and &#39;gary&#39;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>employee 테이블에 first_name 컬럼에 index를 적용하고 위 쿼리를 호출한다면 다음과 같이 검색할 것이다. <br><br></p>
+<p align='center'>
+<img src="/images/index_range_scan.png" width="60%"/>
+</p>
+<p>인덱스를 읽을 위치를 찾는 것을 <code>index seek</code> 이라 하고 찾은 순간부터 쭉 읽는 것을 <code>index scan</code> 이라 한다.
+조건에 만족하는 인덱스들을 찾고 난 후엔 데이터 파일로 부터 random IO 가 일어난다. random IO는 데이터를 읽는 속도에 영향을 미치므로, 인덱스를 이용해서 데이터를 찾는 작업은 비용이 많이 드는 작업이다.</p>
+<p>여기서 어떤 경우엔 마지막에 random IO를 통해 데이터 파일에서 데이터를 읽어오지 않아도 되는데 이를 <code>Covering Index</code>라 한다.</p>
+<p>index seek, index scan 을 확인하는 방법은 다음과 같이 쿼리를 보내면 된다. <code>SHOW STATUS LIKE '%Handler'</code></p>
+<div class="details admonition note open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-pencil-alt fa-fw" aria-hidden="true"></i>Covering Index<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content">쿼리 요청 시 인덱스가 걸린 컬럼만으로 쿼리를 완성할 수 있는 걸 의미한다. 예를 들어 (first_name, last_name) 컬럼에 인덱스가 생성되어 있고, 다음과 같이 쿼리를 날릴 경우 데이터 파일에 접근하지 않아도 되므로 성능이 좋다.
+<code>select first_name, last_name from table where first_name between 'amy' and 'gary' and last_name between 'alberts' and 'richard'</code></div>
+        </div>
+    </div>
+<h3 id="index-full-scan">Index Full Scan</h3>
+<p>인덱스가 생성되긴 했지만, 리프 노드의 처음부터 끝까지 모든 인덱스를 읽을 경우를 의미한다. 그렇다는 건 인덱스를 제대로 이용하지 못했다는 걸 의미하고 다음과 같은 상황에서 발생한다.<br>
+(A,B,C) 컬럼에 대해 인덱스를 생성했지만, 쿼리는 B,C 조건을 이용해서 조회할 경우이다. <br>
+<code>index range scan</code> 보다 성능이 좋지 않지만, 인덱스가 생성된 컬럼만 조회하는 경우 <code>table full scan</code> 보다는 성능이 좋다. 왜냐하면, 인덱스의 크기가 테이블의 전체 크기보다는 작기 때문이다.</p>
+<p align="center">
+<img src="/images/index_full_scan.jpg" width="60%"/>
+</p>
+<h3 id="index-loose-scan">Index Loose Scan</h3>
+<p><code>index skip scan</code> 은 <code>index loose scan</code> 과 비슷하게 작동은 하지만, 중간에 필요하지 않은 값은 Skip 하고 넘어간다. 일반적으로 group by 나 max, min 함수에 대해 최적화를 하는 경우에 발생한다.
+// todo : 10장 실행계획 읽고 추가</p>
+<h3 id="index-skip-scan">Index Skip Scan</h3>
+<p>인덱스에서 핵심은 값이 정렬되어 있다는 것이고, 그렇기 때문에 인덱스의 순서도 중요하다는 것이다.<br>
+employee 테이블엔 (gender, birth_date) 라는 순서로 인덱스가 생성되어 있다고 가정할 때 다음 두 쿼리의 성능은 차이가 발생한다. <br></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">SELECT * FROM employees WHERE birth_date &gt;= &#39;1965-01-01&#39;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">SELECT * FROM employees WHERE gender = &#34;M&#34; and birth_date &gt;= &#39;1965-01-01&#39;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>첫번째 쿼리는 <code>Table Full Scan</code>으로 처리하고, 두번째 쿼리는 <code>Index Range Scan</code>으로 처리한다.
+<br>
+쿼리를 요청할 때 인덱스에 포함된 컬럼만을 조회하는 경우는 또 상황이 다르다. 예를 들어 첫번째 쿼리와 비슷하지만 인덱스가 생성된 컬럼만을 조회하는 쿼리가 있다고 해보자.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">SELECT gender, birth_date FROM employees WHERE  birth_date &gt;= &#39;1965-01-01&#39;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>현재 Mysql 8.0 부터는 optimizer가 birth_date 컬럼만으로 <code>index skip scan</code> 을 사용하도록 최적화를 해준다.
+따라서 위 쿼리는 <code>Index Skip Scan</code>을 사용하여 쿼리를 처리한다.</p>
+<p><code>Index Skip Scan</code> 을 사용할 땐 다음과 같은 주의점이 선행된다.</p>
+<ol>
+<li>쿼리가 인덱스에 포함된 컬럼만으로 처리가 가능해야함. (covering index)</li>
+<li>조건이 포함되지 않은 선행 컬럼의 유니크한 것의 갯수가 적어야 함.</li>
+</ol>
+<p>2번의 경우를 예를 들면, (emp_no, dept_no) 로 이루어진 인덱스가 있다고 할 때, dept_no로만 조건을 걸고 조회를 하는 경우, emp_no의 유니크한 갯수가 많기 때문에 skip을 여러번 해야하므로 조회 성능이 좋지 않다.</p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>Updated on 2023-07-15&nbsp;<a class="git-hash" href="https://github.com/soonyubi/commit/1f2f9315983add95814f2eb3cffd9e20e66bd5bf" target="_blank" title="commit by HongSoonyeop(sy.hong@socialinvestinglab.com) 1f2f9315983add95814f2eb3cffd9e20e66bd5bf: btree - 인덱스 까지 저일">
+                                    <i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>1f2f931</a></span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/b-tree-index/index.md" target="_blank">Read Markdown</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="Share on Twitter" data-sharer="twitter" data-url="http://example.org/b-tree-index/" data-title="B-Tree index" data-hashtags="mysql,btree,index"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="http://example.org/b-tree-index/" data-hashtag="mysql"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Hacker News" data-sharer="hackernews" data-url="http://example.org/b-tree-index/" data-title="B-Tree index"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Line" data-sharer="line" data-url="http://example.org/b-tree-index/" data-title="B-Tree index"><i data-svg-src="/lib/simple-icons/icons/line.min.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="http://example.org/b-tree-index/" data-title="B-Tree index" data-image="/images/btree.png"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/mysql/">mysql</a>,&nbsp;<a href="/tags/btree/">btree</a>,&nbsp;<a href="/tags/index/">index</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/typeorm/" class="prev" rel="prev" title="Typeorm을 써보면서"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>Typeorm을 써보면서</a>
+            <a href="/strategy_pattern/" class="next" rel="next" title="Strategy_pattern">Strategy_pattern<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+<div id="comments"><div id="disqus_thread" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://disqus.com/?ref_noscript">Disqus</a>.
+            </noscript><div id="commento" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://commento.io/">Commento</a>.
+            </noscript><div id="utterances" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://utteranc.es/">utterances</a>.
+            </noscript><div id="giscus" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://giscus.app">Giscus</a>.
+            </noscript></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.115.1">Hugo</a> | Theme - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2023</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">soonyubing</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="Back to Top">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/lightgallery/css/lightgallery-bundle.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="https://.disqus.com/embed.js" defer></script><script type="text/javascript" src="https://cdn.commento.io/js/commento.js" defer></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/lightgallery/lightgallery.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/thumbnail/lg-thumbnail.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/zoom/lg-zoom.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{"giscus":{"category":"Announcements","categoryId":"","darkTheme":"dark","emitMetadata":"0","inputPosition":"bottom","lang":"en","lazyLoading":false,"lightTheme":"light","mapping":"pathname","reactionsEnabled":"1","repo":"","repoId":""},"utterances":{"darkTheme":"github-dark","issueTerm":"pathname","label":"Comment","lightTheme":"github-light","repo":"soonyubi/comment"}},"cookieconsent":{"content":{"dismiss":"Got it!","link":"Learn more","message":"This website uses Cookies to improve your experience."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"lightgallery":true,"search":{"highlightTag":"em","lunrIndexURL":"/index.json","maxResultLength":10,"noResultsFound":"No results found","snippetLength":30,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script><script type="text/javascript">
+            window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());
+            gtag('config', 'G-06522HQ23W', { 'anonymize_ip': true });
+        </script><script type="text/javascript" src="https://www.googletagmanager.com/gtag/js?id=G-06522HQ23W" async></script></body>
+</html>

@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>Nest.js - Cache - 👨‍💻성장중독자</title><meta name="Description" content="soonyub &#43; ing (진행중이란 소리)"><meta property="og:title" content="Nest.js - Cache" />
+<meta property="og:description" content="개요 데이터베이스에서 데이터를 조회하는 요청 과정을 살펴보면, 다음과 같은 순서로 진행된다. middleware-guard-interceptor-endpoint-service layer-database layer 데이터베이스까지 가는 과정은 상당히 긴 편이다(사실 pipe, filter 까지 포함하면 더 길다). 똑같은 데이터를 조회하는데 이러한 과정을 계속 반복하는 것은 불필요한 일이다.
+이번 포스트에서는 interceptor layer에서 캐시를 이용해 최근에 조회된 데이터를 더 빠르게 응답하는 방법에 대해 알아보고자 한다.
+1. 내부 라이브러리를 이용한 caching CacheInterceptor 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 @Injectable() export class CacheInterceptor implements NestInterceptor { protected allowedMethods = [&#39;GET&#39;]; constructor( @Inject(CACHE_MANAGER) protected readonly cacheManager: any, @Inject(REFLECTOR) protected readonly reflector: any, ) {} async intercept( context: ExecutionContext, next: CallHandler, ): Promise&lt;Observable&lt;any&gt;&gt; { const key = this." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://example.org/cache/" /><meta property="og:image" content="http://example.org/logo.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-04-24T20:19:55+09:00" />
+<meta property="article:modified_time" content="2023-04-25T18:46:52+09:00" /><meta property="og:site_name" content="soonyubing" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="http://example.org/logo.png"/>
+
+<meta name="twitter:title" content="Nest.js - Cache"/>
+<meta name="twitter:description" content="개요 데이터베이스에서 데이터를 조회하는 요청 과정을 살펴보면, 다음과 같은 순서로 진행된다. middleware-guard-interceptor-endpoint-service layer-database layer 데이터베이스까지 가는 과정은 상당히 긴 편이다(사실 pipe, filter 까지 포함하면 더 길다). 똑같은 데이터를 조회하는데 이러한 과정을 계속 반복하는 것은 불필요한 일이다.
+이번 포스트에서는 interceptor layer에서 캐시를 이용해 최근에 조회된 데이터를 더 빠르게 응답하는 방법에 대해 알아보고자 한다.
+1. 내부 라이브러리를 이용한 caching CacheInterceptor 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 @Injectable() export class CacheInterceptor implements NestInterceptor { protected allowedMethods = [&#39;GET&#39;]; constructor( @Inject(CACHE_MANAGER) protected readonly cacheManager: any, @Inject(REFLECTOR) protected readonly reflector: any, ) {} async intercept( context: ExecutionContext, next: CallHandler, ): Promise&lt;Observable&lt;any&gt;&gt; { const key = this."/>
+<meta name="application-name" content="soonyubing">
+<meta name="apple-mobile-web-app-title" content="soonyubing"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/cache/" /><link rel="prev" href="http://example.org/thinking1/" /><link rel="next" href="http://example.org/schedule-email-with-nodemailer/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Nest.js - Cache",
+        "inLanguage": "en",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/example.org\/cache\/"
+        },"genre": "posts","keywords": "nest.js, cache","wordcount":  807 ,
+        "url": "http:\/\/example.org\/cache\/","datePublished": "2023-04-24T20:19:55+09:00","dateModified": "2023-04-25T18:46:52+09:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "soonyubing"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="👨‍💻성장중독자"></a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> Posts </a><a class="menu-item" href="/tags/"> Tags </a><a class="menu-item" href="/categories/"> Categories </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="Search titles or contents..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="Search">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="Clear">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="👨‍💻성장중독자"></a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="Search titles or contents..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="Search">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="Clear">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        Cancel
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">Posts</a><a class="menu-item" href="/tags/" title="">Tags</a><a class="menu-item" href="/categories/" title="">Categories</a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">Contents</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Nest.js - Cache</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>soonyubing</a></span>&nbsp;<span class="post-category">included in <a href="/categories/nest.js/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>nest.js</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-04-24">2023-04-24</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;807 words&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;4 minutes&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>Contents</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#개요">개요</a></li>
+    <li><a href="#1-내부-라이브러리를-이용한-caching">1. 내부 라이브러리를 이용한 caching</a>
+      <ul>
+        <li><a href="#cacheinterceptor">CacheInterceptor</a></li>
+        <li><a href="#cacheinterceptor-customizing">CacheInterceptor Customizing</a></li>
+        <li><a href="#캐시-무효화">캐시 무효화</a></li>
+      </ul>
+    </li>
+    <li><a href="#2-redis를-이용한-caching">2. Redis를 이용한 caching</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="개요">개요</h2>
+<p>데이터베이스에서 데이터를 조회하는 요청 과정을 살펴보면, 다음과 같은 순서로 진행된다. <br>
+<code>middleware</code>-<code>guard</code>-<code>interceptor</code>-<code>endpoint</code>-<code>service layer</code>-<code>database layer</code> <br></p>
+<p>데이터베이스까지 가는 과정은 상당히 긴 편이다(사실 pipe, filter 까지 포함하면 더 길다). 똑같은 데이터를 조회하는데 이러한 과정을 계속 반복하는 것은 불필요한 일이다.</p>
+<p>이번 포스트에서는 <code>interceptor</code> layer에서 캐시를 이용해 최근에 조회된 데이터를 더 빠르게 응답하는 방법에 대해 알아보고자 한다.</p>
+<h2 id="1-내부-라이브러리를-이용한-caching">1. 내부 라이브러리를 이용한 caching</h2>
+<h3 id="cacheinterceptor">CacheInterceptor</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="err">@</span><span class="nx">Injectable</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="kr">export</span> <span class="kr">class</span> <span class="nx">CacheInterceptor</span> <span class="kr">implements</span> <span class="nx">NestInterceptor</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="kr">protected</span> <span class="nx">allowedMethods</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">constructor</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="err">@</span><span class="nx">Inject</span><span class="p">(</span><span class="nx">CACHE_MANAGER</span><span class="p">)</span> <span class="kr">protected</span> <span class="nx">readonly</span> <span class="nx">cacheManager</span><span class="o">:</span> <span class="nx">any</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="err">@</span><span class="nx">Inject</span><span class="p">(</span><span class="nx">REFLECTOR</span><span class="p">)</span> <span class="kr">protected</span> <span class="nx">readonly</span> <span class="nx">reflector</span><span class="o">:</span> <span class="nx">any</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="p">)</span> <span class="p">{}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kr">async</span> <span class="nx">intercept</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">context</span><span class="o">:</span> <span class="nx">ExecutionContext</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">next</span><span class="o">:</span> <span class="nx">CallHandler</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="p">)</span><span class="o">:</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">Observable</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">key</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">trackBy</span><span class="p">(</span><span class="nx">context</span><span class="p">);</span> <span class="c1">// 캐시 key를 구성, 캐시할 수 없는 경우 falsy값을 반환
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">key</span><span class="p">)</span> <span class="k">return</span> <span class="nx">next</span><span class="p">.</span><span class="nx">handle</span><span class="p">();</span> <span class="c1">// 캐시할 수 없는 경우 비즈니스로직을 처리
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="k">try</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="kr">const</span> <span class="nx">value</span> <span class="o">=</span> <span class="kr">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">cacheManager</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span> <span class="c1">// 캐시된 데이터를 확인
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">isNil</span><span class="p">(</span><span class="nx">value</span><span class="p">))</span> <span class="k">return</span> <span class="k">of</span><span class="p">(</span><span class="nx">value</span><span class="p">);</span> <span class="c1">// 캐시된 데이터가 있는 경우 캐시된 데이터를 응답
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">      <span class="c1">// 캐시된 데이터가 없는 경우
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>      <span class="c1">// @CahceTTL() 데코레이터로 작성한 캐시 TTL(Time To Live) 메타데이터 조회
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>      <span class="kr">const</span> <span class="nx">ttlValueOrFactory</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">reflector</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">CACHE_TTL_METADATA</span><span class="p">,</span> <span class="nx">context</span><span class="p">.</span><span class="nx">getHandler</span><span class="p">())</span> <span class="o">??</span> <span class="kc">null</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">      <span class="kr">const</span> <span class="nx">ttl</span> <span class="o">=</span> <span class="nx">isFunction</span><span class="p">(</span><span class="nx">ttlValueOrFactory</span><span class="p">)</span>  <span class="o">?</span> <span class="kr">await</span> <span class="nx">ttlValueOrFactory</span><span class="p">(</span><span class="nx">context</span><span class="p">)</span> <span class="o">:</span> <span class="nx">ttlValueOrFactory</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">      <span class="k">return</span> <span class="nx">next</span><span class="p">.</span><span class="nx">handle</span><span class="p">().</span><span class="nx">pipe</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">tap</span><span class="p">(</span><span class="nx">response</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">          <span class="c1">// 응답하며 동시에, 응답 데이터 캐싱 처리 진행(입력한 TTL 만큼)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>          <span class="kr">const</span> <span class="nx">args</span> <span class="o">=</span> <span class="nx">isNil</span><span class="p">(</span><span class="nx">ttl</span><span class="p">)</span> <span class="o">?</span> <span class="p">[</span><span class="nx">key</span><span class="p">,</span> <span class="nx">response</span><span class="p">]</span> <span class="o">:</span> <span class="p">[</span><span class="nx">key</span><span class="p">,</span> <span class="nx">response</span><span class="p">,</span> <span class="p">{</span> <span class="nx">ttl</span> <span class="p">}];</span>
+</span></span><span class="line"><span class="cl">          <span class="k">this</span><span class="p">.</span><span class="nx">cacheManager</span><span class="p">.</span><span class="nx">set</span><span class="p">(...</span><span class="nx">args</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}),</span>
+</span></span><span class="line"><span class="cl">      <span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="k">return</span> <span class="nx">next</span><span class="p">.</span><span class="nx">handle</span><span class="p">();</span> <span class="c1">// 캐시 처리, 캐시 조회 과정에서 오류 발생의 경우 비즈니스로직을 그대로 처리
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>CacheInterceptor는 어떤 컨트롤러에서 cache를 사용하게 하고 싶을때, interceptor가 해당 cache 값을 리턴할 수 있을지 없을지 판단한다.</p>
+<p>위 코드는 다음의 내용을 포함한다.</p>
+<ul>
+<li>
+<p><code>trackBy</code> 메서드를 통해 캐시처리할 수 있는 요청인지 확인한다. 기본적으로 GET 엔드포인트에 대해서만 처리하도록 구성되어 있다.</p>
+</li>
+<li>
+<p><code>@CacheKey()</code> 데코레이터로 캐시 값을 설정하지 않았다면, default cache 값은 요청 url이다. trackBy를 cacheKey를 이용하도록 overriding 할 수 있다. 해당 예제는 아래에서.</p>
+</li>
+<li>
+<p>cache key가 존재하는 경우, cache manager를 통해 해당 cache key를 가진 데이터가 존재하는 지 확인한다.</p>
+</li>
+<li>
+<p>일치하는 cache data가 없다면, <code>@CacheKey()</code>/ <code>@CacheTTL()</code> 을 통해 입력한 metadata를 조회한다.</p>
+</li>
+<li>
+<p>해당 cache data를 RxJs 를 이용해 처리한다.</p>
+</li>
+</ul>
+<h3 id="cacheinterceptor-customizing">CacheInterceptor Customizing</h3>
+<p>다음과 같이 내장된 <code>CacheInterceptor를</code> 이용해 캐싱을 처리한다면, <code>/posts/</code> 와 <code>/posts?search=title3</code>를 똑같이 처리할 것이다.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="err">@</span><span class="nx">UseInterceptors</span><span class="p">(</span><span class="nx">CacheInterceptor</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="err">@</span><span class="nx">CacheKey</span><span class="p">(</span><span class="nx">GET_POSTS_CACHE_KEY</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="err">@</span><span class="nx">CacheTTL</span><span class="p">(</span><span class="mi">120</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="err">@</span><span class="nx">Get</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="kr">async</span> <span class="nx">getPosts</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">  <span class="err">@</span><span class="nx">Query</span><span class="p">(</span><span class="s1">&#39;search&#39;</span><span class="p">)</span> <span class="nx">search</span><span class="o">:</span> <span class="nx">string</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="err">@</span><span class="nx">Query</span><span class="p">()</span> <span class="p">{</span> <span class="nx">offset</span><span class="p">,</span> <span class="nx">limit</span><span class="p">,</span> <span class="nx">startId</span> <span class="p">}</span><span class="o">:</span> <span class="nx">PaginationParams</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="p">(</span><span class="nx">search</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">postsService</span><span class="p">.</span><span class="nx">searchForPosts</span><span class="p">(</span><span class="nx">search</span><span class="p">,</span> <span class="nx">offset</span><span class="p">,</span> <span class="nx">limit</span><span class="p">,</span> <span class="nx">startId</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">postsService</span><span class="p">.</span><span class="nx">getAllPosts</span><span class="p">(</span><span class="nx">offset</span><span class="p">,</span> <span class="nx">limit</span><span class="p">,</span> <span class="nx">startId</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>따라서 우리는 <code>CacheInterceptor를</code> 확장해서 사용해야 한다. 다음 코드는 우리가 만약 @CacheKey를 통해 캐시 키를 전달하지 않는다면, CacheInterceptor가 cache를 처리하는 방식으로 동작하고, 캐시 키를 전달하였다면, 새로운 캐시키를 생성해 캐시를 생성할 것이다. (e.g POSTS_CACHE-null / POSTS_CACHE-search=hello)</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="kr">import</span> <span class="p">{</span> <span class="nx">CACHE_KEY_METADATA</span><span class="p">,</span> <span class="nx">CacheInterceptor</span><span class="p">,</span> <span class="nx">ExecutionContext</span><span class="p">,</span> <span class="nx">Injectable</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;@nestjs/common&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"><span class="err">@</span><span class="nx">Injectable</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="kr">export</span> <span class="kr">class</span> <span class="nx">HttpCacheInterceptor</span> <span class="kr">extends</span> <span class="nx">CacheInterceptor</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">trackBy</span><span class="p">(</span><span class="nx">context</span><span class="o">:</span> <span class="nx">ExecutionContext</span><span class="p">)</span><span class="o">:</span> <span class="nx">string</span> <span class="o">|</span> <span class="kc">undefined</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">cacheKey</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">reflector</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">CACHE_KEY_METADATA</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">context</span><span class="p">.</span><span class="nx">getHandler</span><span class="p">(),</span>
+</span></span><span class="line"><span class="cl">    <span class="p">);</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="nx">cacheKey</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="kr">const</span> <span class="nx">request</span> <span class="o">=</span> <span class="nx">context</span><span class="p">.</span><span class="nx">switchToHttp</span><span class="p">().</span><span class="nx">getRequest</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">      <span class="k">return</span> <span class="sb">`</span><span class="si">${</span><span class="nx">cacheKey</span><span class="si">}</span><span class="sb">-</span><span class="si">${</span><span class="nx">request</span><span class="p">.</span><span class="nx">_parsedUrl</span><span class="p">.</span><span class="nx">query</span><span class="si">}</span><span class="sb">`</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="kr">super</span><span class="p">.</span><span class="nx">trackBy</span><span class="p">(</span><span class="nx">context</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>@CacheKey() : 특정 cache key를 지정하기 위한 데코레이터 <br>
+@CacheTTL() : 해당 cache key의 TTL을 지정하기 위한 데코레이터</p>
+</blockquote>
+<h3 id="캐시-무효화">캐시 무효화</h3>
+<p>캐시를 무한정으로 길게 가져가면 데이터를 검색하는 속도를 빠르게 할 수 있으니깐 좋은게 아닌가? 라는 생각도 들 수 있지만, 데이터는 계속 변하기 때문에, 그렇지만도 않는다. 우리는 새로운 데이터가 추가, 삭제, 업데이트 될 때 해당 cache key를 가진 cache 값을 무효화하고, 새로운 캐시 데이터를 생성해야 한다.</p>
+<p>캐시 무효화는 보통 서비스 layer에서 구현하게 되는데, 이는 몇가지 문제점을 가진다.</p>
+<ul>
+<li>캐시를 무효화하는 동일한 코드가 반복됨</li>
+<li>캐시 관리는 주요 로직이 아니라 부가적인 로직에 가까움</li>
+</ul>
+<p>따라서 캐시 무효화를 위한 작업을 위와 같이 <code>CacheInterceptor를</code> 상속받아 별도의 Interceptor 내부에서 구현해 줄 수 있다. <a href="https://hwasurr.io/nestjs/caching/" target="_blank" rel="noopener noreffer ">해당 블로그 참고</a></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="c1">// src/core/httpcache.interceptor.ts
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">import</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">CacheInterceptor</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">CallHandler</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">ExecutionContext</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">Injectable</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;@nestjs/common&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="p">{</span> <span class="nx">Request</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;express&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="p">{</span> <span class="nx">Cluster</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;ioredis&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="p">{</span> <span class="nx">Observable</span><span class="p">,</span> <span class="nx">tap</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;rxjs&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="err">@</span><span class="nx">Injectable</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="kr">export</span> <span class="kr">class</span> <span class="nx">HttpCacheInterceptor</span> <span class="kr">extends</span> <span class="nx">CacheInterceptor</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="kr">private</span> <span class="nx">readonly</span> <span class="nx">CACHE_EVICT_METHODS</span> <span class="o">=</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;POST&#39;</span><span class="p">,</span> <span class="s1">&#39;PATCH&#39;</span><span class="p">,</span> <span class="s1">&#39;PUT&#39;</span><span class="p">,</span> <span class="s1">&#39;DELETE&#39;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">];</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kr">async</span> <span class="nx">intercept</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">context</span><span class="o">:</span> <span class="nx">ExecutionContext</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">next</span><span class="o">:</span> <span class="nx">CallHandler</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="p">)</span><span class="o">:</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">Observable</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">req</span> <span class="o">=</span> <span class="nx">context</span><span class="p">.</span><span class="nx">switchToHttp</span><span class="p">().</span><span class="nx">getRequest</span><span class="o">&lt;</span><span class="nx">Request</span><span class="o">&gt;</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">CACHE_EVICT_METHODS</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">method</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="c1">// 캐시 무효화 처리
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>      <span class="k">return</span> <span class="nx">next</span><span class="p">.</span><span class="nx">handle</span><span class="p">().</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">tap</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">_clearCaches</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">originalUrl</span><span class="p">)));</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 기존 캐싱 처리
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">return</span> <span class="kr">super</span><span class="p">.</span><span class="nx">intercept</span><span class="p">(</span><span class="nx">context</span><span class="p">,</span> <span class="nx">next</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">   * @param cacheKeys 삭제할 캐시 키 목록
+</span></span></span><span class="line"><span class="cl"><span class="cm">   */</span>
+</span></span><span class="line"><span class="cl">  <span class="kr">private</span> <span class="kr">async</span> <span class="nx">_clearCaches</span><span class="p">(</span><span class="nx">cacheKeys</span><span class="o">:</span> <span class="nx">string</span><span class="p">[])</span><span class="o">:</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="kr">boolean</span><span class="o">&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">client</span><span class="o">:</span> <span class="nx">Cluster</span> <span class="o">=</span> <span class="kr">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">cacheManager</span><span class="p">.</span><span class="nx">store</span><span class="p">.</span><span class="nx">getClient</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">redisNodes</span> <span class="o">=</span> <span class="nx">client</span><span class="p">.</span><span class="nx">nodes</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">result2</span> <span class="o">=</span> <span class="kr">await</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">all</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">redisNodes</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="kr">async</span> <span class="p">(</span><span class="nx">redis</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="kr">const</span> <span class="nx">_keys</span> <span class="o">=</span> <span class="kr">await</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">all</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">          <span class="nx">cacheKeys</span><span class="p">.</span><span class="nx">map</span><span class="p">((</span><span class="nx">cacheKey</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="nx">redis</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="sb">`*</span><span class="si">${</span><span class="nx">cacheKey</span><span class="si">}</span><span class="sb">*`</span><span class="p">)),</span>
+</span></span><span class="line"><span class="cl">        <span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="kr">const</span> <span class="nx">keys</span> <span class="o">=</span> <span class="nx">_keys</span><span class="p">.</span><span class="nx">flat</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">all</span><span class="p">(</span><span class="nx">keys</span><span class="p">.</span><span class="nx">map</span><span class="p">((</span><span class="nx">key</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="o">!!</span><span class="k">this</span><span class="p">.</span><span class="nx">cacheManager</span><span class="p">.</span><span class="nx">del</span><span class="p">(</span><span class="nx">key</span><span class="p">)));</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}),</span>
+</span></span><span class="line"><span class="cl">    <span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">result2</span><span class="p">.</span><span class="nx">flat</span><span class="p">().</span><span class="nx">every</span><span class="p">((</span><span class="nx">r</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="o">!!</span><span class="nx">r</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>전체 코드는 다음에서 확인할 수 있다.
+<a href="https://github.com/soonyubi/nestjs-typescript/tree/master/src/posts" target="_blank" rel="noopener noreffer ">코드</a></p>
+<h2 id="2-redis를-이용한-caching">2. Redis를 이용한 caching</h2>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>Updated on 2023-04-25&nbsp;<a class="git-hash" href="https://github.com/soonyubi/commit/be83f3936d8b2da5f8b0659d6b3d12aba2309e82" target="_blank" title="commit by soonyubi(soonyubi1@naver.com) be83f3936d8b2da5f8b0659d6b3d12aba2309e82: new post : schedule email with nodemailer">
+                                    <i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>be83f39</a></span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/cache/index.md" target="_blank">Read Markdown</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="Share on Twitter" data-sharer="twitter" data-url="http://example.org/cache/" data-title="Nest.js - Cache" data-hashtags="nest.js,cache"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="http://example.org/cache/" data-hashtag="nest.js"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Hacker News" data-sharer="hackernews" data-url="http://example.org/cache/" data-title="Nest.js - Cache"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Line" data-sharer="line" data-url="http://example.org/cache/" data-title="Nest.js - Cache"><i data-svg-src="/lib/simple-icons/icons/line.min.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="http://example.org/cache/" data-title="Nest.js - Cache"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/nest.js/">nest.js</a>,&nbsp;<a href="/tags/cache/">cache</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/thinking1/" class="prev" rel="prev" title="Thinking1 : 입사를 앞두고 마음 정리"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>Thinking1 : 입사를 앞두고 마음 정리</a>
+            <a href="/schedule-email-with-nodemailer/" class="next" rel="next" title="Schedule Email With Nodemailer">Schedule Email With Nodemailer<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+<div id="comments"><div id="disqus_thread" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://disqus.com/?ref_noscript">Disqus</a>.
+            </noscript><div id="commento" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://commento.io/">Commento</a>.
+            </noscript><div id="utterances" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://utteranc.es/">utterances</a>.
+            </noscript><div id="giscus" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://giscus.app">Giscus</a>.
+            </noscript></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.115.1">Hugo</a> | Theme - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2023</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">soonyubing</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="Back to Top">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/lightgallery/css/lightgallery-bundle.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="https://.disqus.com/embed.js" defer></script><script type="text/javascript" src="https://cdn.commento.io/js/commento.js" defer></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/lightgallery/lightgallery.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/thumbnail/lg-thumbnail.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/zoom/lg-zoom.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{"giscus":{"category":"Announcements","categoryId":"","darkTheme":"dark","emitMetadata":"0","inputPosition":"bottom","lang":"en","lazyLoading":false,"lightTheme":"light","mapping":"pathname","reactionsEnabled":"1","repo":"","repoId":""},"utterances":{"darkTheme":"github-dark","issueTerm":"pathname","label":"Comment","lightTheme":"github-light","repo":"soonyubi/comment"}},"cookieconsent":{"content":{"dismiss":"Got it!","link":"Learn more","message":"This website uses Cookies to improve your experience."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"lightgallery":true,"search":{"highlightTag":"em","lunrIndexURL":"/index.json","maxResultLength":10,"noResultsFound":"No results found","snippetLength":30,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script><script type="text/javascript">
+            window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());
+            gtag('config', 'G-06522HQ23W', { 'anonymize_ip': true });
+        </script><script type="text/javascript" src="https://www.googletagmanager.com/gtag/js?id=G-06522HQ23W" async></script></body>
+</html>
