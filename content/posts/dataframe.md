@@ -302,3 +302,265 @@ loc[] accessor를 통해 접근하는데 다음과 같이 작동함.
 <img src="../../static/images/dataframe/multi-index-modify
 .png" width="70%" height="50%" title="multi-index">
 </p>
+
+### Aggregating Group
+
+grouping 된 dataframe에는 `agg()` 메서드를 사용해, 집계함수를 적용할 수 있다.
+
+```python
+df.groupby(['store_nbr','family']).agg('sum')
+df.groupby(['store_nbr','family']).agg(['sum','mean'])
+```
+
+<p align='center'>
+<img src="../../static/images/dataframe/multi-index-agg.png" width="70%" height="50%" title="multi-index">
+<img src="../../static/images/dataframe/multi-index-agg-2
+.png" width="70%" height="50%" title="multi-index">
+</p>
+
+이렇게 grouping 된 dataframe에 agg 메서드를 적용해서 각각의 집계함수를 구할 수도 있다. 하지만 위 그림에서 보이는 것과 같이, 2개의 level로 이루어진 column을 생성하므로 직관적이지 않다. 다음은 1개의 level 이루어져있고, column의 이름을 지정하는 방법이다.
+
+```python
+df.groupby(['store_nbr','family']).agg(
+  sales_sum = ('sales','sum'),
+  sales_avg = ('sales','avg'),
+  on_promotion_max = ('promotion','max')
+)
+```
+
+<p align='center'>
+<img src="../../static/images/dataframe/multi-index-agg-3.png" width="70%" height="50%" title="multi-index">
+</p>
+
+transform 메서드를 이용해서, dataframe을 reshaping 하지 않고 aggregate function 을 적용할 수 있다.
+
+```python
+df.assign(new_column = (
+  df.groupby('column')['another_column'].transform('sum')
+))
+```
+
+## Pivot Table
+
+### arguments
+
+- `index` : returns row index with `distinct` values from the specified in columns
+- `columns` : return column index with `distinct` values from the specified in columns
+- `values` : to perform on aggregation on
+- `aggfunc` : aggreagte function to perform on the values
+- `margins` : return row and column total (default is False)
+
+```python
+smaller_retail.pivot(
+  index = 'family',
+  columns = 'store_nbr',
+  values = 'sales',
+  aggfunc = 'sum',
+  margins = True
+)
+# this means select distinct values on store_nbr column as column index, and select distinct values on family column as row index and apply sum to sales column
+```
+
+<p align='center'>
+<img src="../../static/images/dataframe/pivot.png" width="70%" height="50%" title="multi-index">
+</p>
+
+```python
+# multiple aggregation
+smaller_retail.pivot(
+  index='family'
+  columns = 'store_nbr'
+  values = 'sales'
+  aggfunc = ('min','max') # this is tuple ! ! !
+)
+smaller_retail.pivot(
+  index ='family'
+  columns = 'store_nbr'
+  values = 'sales'
+  aggfunc = ({'promotion':'max','sales':['mean','sum']})
+)
+```
+
+<p align='center'>
+<img src="../../static/images/dataframe/pivot-multiple-agg.png" width="70%" height="50%" title="multi-index">
+<img src="../../static/images/dataframe/pivot-multiple-agg2.png" width="70%" height="50%" title="multi-index">
+</p>
+
+### pivot table vs groupby
+
+pivot table은 2개의 level로 이루어진 dataframe을 생성하는데, column이 필요없다면, `groupby().agg(new_column = ())` 을 이용하면 된다.
+
+### heatmap
+
+dataframe을 좀 더 시각화하고 싶다면, `df.style.background_gradient(cmap = 'RdYlGn', axis=?)` 으로 스타일을 적용하면 된다.
+
+### melt
+
+<p align='center'>
+<img src="../../static/images/dataframe/melt.png" width="70%" height="50%" title="multi-index">
+
+</p>
+
+## Importing & Exporting Data
+
+### preprocessing options
+
+`read_csv`
+
+- file ='path/name.csv' : file path or url
+- sep = '/' : 구분자, (default : ,)
+- header = 0 : column names을 어느 row로 쓸지, (default : 'infer')
+- names = ['column1','column2'] : column명을 어떻게 할 지, 만약 names의 길이가 더 길다면, `NaN`으로 필드를 채움
+- index_col = 'date' : index column을 date로 함
+- usecols = ['column1','column2'] : dataframe으로 변환할 때 어떤 column 만 쓸지
+- dtype = {'date' : "datetime64","sales" : "Int32"} : 형변환
+- parse_dates = True : True일 경우 date string을 datetime으로 변환
+- infer_datetime_format = True : date를 datetime 64로 변환해서 date parsing을 더 빠르게 함
+- na_values = ["-","#N/A!"] : NaN으로 처리할 string 값들
+- nrows = 가져올 데이터 갯수
+- skip_rows = [0,2] : 지울 line number
+- converters = {"sales",lambda function} : sales column에 lambda 적용
+
+---
+
+```python
+pd.read_csv("monthly_sales.csv").head(3) # infer the column names in files
+```
+
+<p align='center'>
+<img src="../../static/images/dataframe/read_csv_header_0.png" width="70%" height="50%" title="multi-index">
+</p>
+
+```python
+pd.read_csv("monthly_sales.csv",header=None).head(3) # use column as integers
+```
+
+<p align='center'>
+<img src="../../static/images/dataframe/read_csv_header_None.png" width="70%" height="50%" title="multi-index">
+</p>
+
+```python
+cols = ['Date', 'Grocery Sales', 'Beverage Sales', 'to_drop']
+
+pd.read_csv('monthly_sales.csv', header = 0, names= cols).head(3)
+```
+
+<p align='center'>
+<img src="../../static/images/dataframe/read_csv_use_col.png" width="70%" height="50%" title="multi-index">
+
+</p>
+
+```python
+pd.read_csv("monthly_sales.csv", index_col ="Date")
+```
+
+위와 같이 index를 Date column으로 세팅하게되면, column을 multi-index 로 생성하기 때문에 추천되는 방식은 아니다.
+
+## Read .txt files
+
+### read tap separated files
+
+```python
+pd.read_csv("tap_separated.txt", sep = '/t')
+```
+
+### read xlsx files
+
+```python
+pd.read_csv("monthly_sales.xlsx" , sheet_name = 1)
+```
+
+위와 같이 sheet name을 지정할 수 있다.
+
+```python
+all_sales = pd.concat(
+  pd.read_csv("monthly_sales.xlsx",sheet_name=None),
+  ignore_index = True
+)
+```
+
+- sheet_name = None : pandas가 모든 sheet을 읽어서 dictionary로 저장한다.
+- ignore_index = True : 각각의 row가 unique한 index를 가지도록 한다.
+
+### export dataframe to flat files(csv, txt, xlsx ...)
+
+```python
+my_df.to_csv("cleaned_data.csv") # cleaned_data.csv
+my_df.to_csv("cleaned_data.csv",sep='/t') # cleaned_data.txt
+my_def.to_excel("cleaned_data.csv", sheet_name='october sales') # cleaned_data.xlsx
+```
+
+## Connecting to SQL Database
+
+```python
+from sqlalchemy import create_engine, inspect
+
+engine = create_engine('db_host') # database connection
+inspect(engine).get_table_names() # view database contents
+```
+
+### read sql
+
+```python
+
+league_df = pd.read_sql("select * from league", engine)
+```
+
+### write sql
+
+```python
+from sqlalchemy.types import Integer
+
+premier_league_games.to_sql(
+  name ='pl_games' # define table name
+  con = engine, # database engine
+  if_exists = 'append' # if table already exist append rows
+  index = False # leaving default index
+  dtype = {"HomeGoals" : Integer()}
+)
+
+```
+
+### additional format
+
+<p align='center'>
+<img src="../../static/images/dataframe/additional_format.png" width="70%" height="50%" title="multi-index">
+
+</p>
+
+## Combining Dataframes
+
+### Appending
+
+`concat` 메서드를 사용해 여러개의 dataframe을 붙일 수 있다. 이 때 여러개의 dataframe의 column은 무조건 **동일**해야한다.
+
+```python
+# all dataframe must has identical columns
+pd.concat([dataframe1, dataframe2,dataframe3])
+```
+
+### Joining
+
+`merge` 메서드를 사용해 두 개의 dataframe을 join 할 수 있다. 이 때 두 개의 dataframe은 무조건 공유하는 하나 이상의 column을 가져야 한다.
+
+```python
+left_df.merge(
+  right_df,
+  how, # type of join
+  left_on, # left_df 에서 join에 참여할 column
+  right_on # right_df 에서 join에 참여할 column
+ )
+```
+
+- join types
+  - `inner`
+  - `left`
+  - `right`
+  - `outer`
+
+`join` 메서드는 두개의 dataframe 을 index를 이용해 join한다.
+
+```python
+item_sales_short.join(transactions_short, rsuffix = '2)
+
+```
