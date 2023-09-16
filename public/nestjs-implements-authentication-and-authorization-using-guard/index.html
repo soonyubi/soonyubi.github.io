@@ -4,23 +4,25 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="robots" content="noodp" />
-        <title>Nestjs: Gaurd를 이용해 Authentication/ Authorization 구현 - My New Hugo Site</title><meta name="Description" content="soonyub &#43; ing (진행중이란 소리)"><meta property="og:title" content="Nestjs: Gaurd를 이용해 Authentication/ Authorization 구현" />
-<meta property="og:description" content="big picture passport와 bcrypt를 이용하여 사용자 인증 passport-local 을 이용해 local strategy 생성 local strategy 내부에서 validate() 를 호출하는데, validate 내부에서 bcrypt를 이용해 비밀번호를 암호화 1. passport와 bcrypt를 이용하여 사용자 인증 User module에 User Entity를 생성하고, User service에서 User database에 create / fetch 하는 메서드를 간단히 만들어 줍니다. UserService를 Authentication module에서 사용하길 원하기 때문에, UserService를 @Injectable() 데코레이터로 감싸주고, UserModule에서 UserService를 export해줍니다.
-password는 가장 안전해야 하는 데이터입니다. 그래서 password는 hash 해야 합니다." />
+        <title>Nestjs: Gaurd를 이용해 Authentication/ Authorization 구현 - 👨‍💻성장중독자</title><meta name="Description" content="soonyub &#43; ing (진행중이란 소리)"><meta property="og:title" content="Nestjs: Gaurd를 이용해 Authentication/ Authorization 구현" />
+<meta property="og:description" content="big picture passport와 bcrypt를 이용하여 Authentication passport와 jwt를 이용하여 Authorization 1. passport와 bcrypt를 이용하여 사용자 인증 User module에 User Entity를 생성하고, User service에서 User database에 create / fetch 하는 메서드를 간단히 만들어 줍니다. UserService를 Authentication module에서 사용하길 원하기 때문에, UserService를 @Injectable() 데코레이터로 감싸주고, UserModule에서 UserService를 export해줍니다.
+password는 가장 안전해야 하는 데이터입니다. 그래서 password는 hash 해야 합니다. hash를 하는 과정에서 필요한 값은 random string 인 salt 값이 필요합니다.
+bcrypt 이 모든 과정을 bcrypt 라이브러리를 사용하면 쉽게 할 수 있습니다." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="http://example.org/nestjs-implements-authentication-and-authorization-using-guard/" /><meta property="og:image" content="http://example.org/logo.png"/><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2023-04-05T20:50:23+09:00" />
-<meta property="article:modified_time" content="2023-04-05T20:50:23+09:00" /><meta property="og:site_name" content="soonyubing" />
+<meta property="article:modified_time" content="2023-04-16T03:01:07+09:00" /><meta property="og:site_name" content="soonyubing" />
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:image" content="http://example.org/logo.png"/>
 
 <meta name="twitter:title" content="Nestjs: Gaurd를 이용해 Authentication/ Authorization 구현"/>
-<meta name="twitter:description" content="big picture passport와 bcrypt를 이용하여 사용자 인증 passport-local 을 이용해 local strategy 생성 local strategy 내부에서 validate() 를 호출하는데, validate 내부에서 bcrypt를 이용해 비밀번호를 암호화 1. passport와 bcrypt를 이용하여 사용자 인증 User module에 User Entity를 생성하고, User service에서 User database에 create / fetch 하는 메서드를 간단히 만들어 줍니다. UserService를 Authentication module에서 사용하길 원하기 때문에, UserService를 @Injectable() 데코레이터로 감싸주고, UserModule에서 UserService를 export해줍니다.
-password는 가장 안전해야 하는 데이터입니다. 그래서 password는 hash 해야 합니다."/>
-<meta name="application-name" content="My cool site">
-<meta name="apple-mobile-web-app-title" content="My cool site"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+<meta name="twitter:description" content="big picture passport와 bcrypt를 이용하여 Authentication passport와 jwt를 이용하여 Authorization 1. passport와 bcrypt를 이용하여 사용자 인증 User module에 User Entity를 생성하고, User service에서 User database에 create / fetch 하는 메서드를 간단히 만들어 줍니다. UserService를 Authentication module에서 사용하길 원하기 때문에, UserService를 @Injectable() 데코레이터로 감싸주고, UserModule에서 UserService를 export해줍니다.
+password는 가장 안전해야 하는 데이터입니다. 그래서 password는 hash 해야 합니다. hash를 하는 과정에서 필요한 값은 random string 인 salt 값이 필요합니다.
+bcrypt 이 모든 과정을 bcrypt 라이브러리를 사용하면 쉽게 할 수 있습니다."/>
+<meta name="application-name" content="soonyubing">
+<meta name="apple-mobile-web-app-title" content="soonyubing"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/nestjs-implements-authentication-and-authorization-using-guard/" /><link rel="prev" href="http://example.org/template/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/nestjs-implements-authentication-and-authorization-using-guard/" /><link rel="prev" href="http://example.org/template/" /><link rel="next" href="http://example.org/nestjs-exception/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
         <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
         <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
     {
@@ -31,12 +33,12 @@ password는 가장 안전해야 하는 데이터입니다. 그래서 password는
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "http:\/\/example.org\/nestjs-implements-authentication-and-authorization-using-guard\/"
-        },"genre": "posts","keywords": "nest.js, guard, authentication, authorization","wordcount":  134 ,
-        "url": "http:\/\/example.org\/nestjs-implements-authentication-and-authorization-using-guard\/","datePublished": "2023-04-05T20:50:23+09:00","dateModified": "2023-04-05T20:50:23+09:00","publisher": {
+        },"genre": "posts","keywords": "nest.js, guard, authentication, authorization","wordcount":  1125 ,
+        "url": "http:\/\/example.org\/nestjs-implements-authentication-and-authorization-using-guard\/","datePublished": "2023-04-05T20:50:23+09:00","dateModified": "2023-04-16T03:01:07+09:00","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
                 "@type": "Person",
-                "name": "Richard"
+                "name": "홍순엽"
             },"description": ""
     }
     </script></head>
@@ -45,7 +47,7 @@ password는 가장 안전해야 하는 데이터입니다. 그래서 password는
         <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
     <div class="header-wrapper">
         <div class="header-title">
-            <a href="/" title="My New Hugo Site"></a>
+            <a href="/" title="👨‍💻성장중독자"></a>
         </div>
         <div class="menu">
             <div class="menu-inner"><a class="menu-item" href="/posts/"> Posts </a><a class="menu-item" href="/tags/"> Tags </a><a class="menu-item" href="/categories/"> Categories </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
@@ -68,7 +70,7 @@ password는 가장 안전해야 하는 데이터입니다. 그래서 password는
     <div class="header-container">
         <div class="header-wrapper">
             <div class="header-title">
-                <a href="/" title="My New Hugo Site"></a>
+                <a href="/" title="👨‍💻성장중독자"></a>
             </div>
             <div class="menu-toggle" id="menu-toggle-mobile">
                 <span></span><span></span><span></span>
@@ -104,9 +106,9 @@ password는 가장 안전해야 하는 데이터입니다. 그래서 password는
             <h2 class="toc-title">Contents</h2>
             <div class="toc-content" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Nestjs: Gaurd를 이용해 Authentication/ Authorization 구현</h1><div class="post-meta">
-            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Richard</a></span>&nbsp;<span class="post-category">included in <a href="/categories/backend/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>backend</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-04-05">2023-04-05</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;134 words&nbsp;
-                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;One minute&nbsp;</div>
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>홍순엽</a></span>&nbsp;<span class="post-category">included in <a href="/categories/nest.js/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>nest.js</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-04-05">2023-04-05</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;1125 words&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;6 minutes&nbsp;</div>
         </div><div class="featured-image"><img
         class="lazyload"
         src="/svg/loading.min.svg"
@@ -114,7 +116,7 @@ password는 가장 안전해야 하는 데이터입니다. 그래서 password는
         data-srcset="/images/guard.jpg, /images/guard.jpg 1.5x, /images/guard.jpg 2x"
         data-sizes="auto"
         alt="/images/guard.jpg"
-        title="/images/guard.jpg" /></div><div class="details toc" id="toc-static"  data-kept="true">
+        title="/images/guard.jpg" /></div><div class="details toc" id="toc-static"  data-kept="">
                 <div class="details-summary toc-title">
                     <span>Contents</span>
                     <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
@@ -123,34 +125,499 @@ password는 가장 안전해야 하는 데이터입니다. 그래서 password는
   <ul>
     <li><a href="#big-picture">big picture</a></li>
     <li><a href="#1-passport와-bcrypt를-이용하여-사용자-인증">1. passport와 bcrypt를 이용하여 사용자 인증</a></li>
+    <li><a href="#2-passport와-jwt를-이용하여-authorization">2. passport와 jwt를 이용하여 <code>Authorization</code></a></li>
   </ul>
 </nav></div>
             </div><div class="content" id="content"><h2 id="big-picture">big picture</h2>
-<ol>
-<li>passport와 bcrypt를 이용하여 사용자 인증
 <ul>
-<li>passport-local 을 이용해 local strategy 생성</li>
-<li>local strategy 내부에서 validate() 를 호출하는데, validate 내부에서 bcrypt를 이용해 비밀번호를 암호화</li>
+<li><i class="far fa-check-square fa-fw" aria-hidden="true"></i> passport와 bcrypt를 이용하여 <code>Authentication</code></li>
+<li><i class="far fa-check-square fa-fw" aria-hidden="true"></i> passport와 jwt를 이용하여 <code>Authorization</code></li>
 </ul>
-</li>
-</ol>
 <h2 id="1-passport와-bcrypt를-이용하여-사용자-인증">1. passport와 bcrypt를 이용하여 사용자 인증</h2>
 <p>User module에 User Entity를 생성하고, User service에서 User database에 create / fetch 하는 메서드를 간단히 만들어 줍니다. UserService를 Authentication module에서 사용하길 원하기 때문에, UserService를 <code>@Injectable()</code> 데코레이터로 감싸주고, UserModule에서 UserService를 export해줍니다.</p>
 <p>password는 가장 안전해야 하는 데이터입니다. 그래서 password는 <code>hash</code> 해야 합니다. <code>hash</code>를 하는 과정에서 필요한 값은 random string 인 <code>salt</code> 값이 필요합니다.</p>
-<p>이 모든 과정을 bcrypt 라이브러리를 사용하면 쉽게 할 수 있습니다. bcrypt로 password에 salt값을 적용해 여러번 hash하여 복원하는 것을 어렵게 합니다. bcrypt는 cpu를 잡아먹는 작업이지만, thread pool의 추가적인 thread를 이용해 연산을 수행하므로 암호화하는 과정에서 다른 작업을 수행할 수 있습니다.</p>
 <div class="details admonition note open">
         <div class="details-summary admonition-title">
-            <i class="icon fas fa-pencil-alt fa-fw" aria-hidden="true"></i>How to choose search engine?<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
+            <i class="icon fas fa-pencil-alt fa-fw" aria-hidden="true"></i>bcrypt<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
         </div>
         <div class="details-content">
-            <div class="admonition-content">The following is a comparison of two search engines:</div>
+            <div class="admonition-content">이 모든 과정을 bcrypt 라이브러리를 사용하면 쉽게 할 수 있습니다. bcrypt로 password에 salt값을 적용해 여러번 hash하여 복원하는 것을 어렵게 합니다. bcrypt는 cpu를 잡아먹는 작업이지만, thread pool의 추가적인 thread를 이용해 연산을 수행하므로 암호화하는 과정에서 다른 작업을 수행할 수 있습니다.</div>
         </div>
     </div>
+<p>Authentication module을 생성하고, Authentication Service 에서 bcrypt를 이용해 요청으로 받은 비밀번호를 암호화하고 저장하겠습니다. 저장하기 위해서 user service가 필요하니 생성자에 전에 export한 user service를 불러와줍니다.
+<br><br>
+<strong>authentication/authentication.service.ts</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="kr">export</span> <span class="kr">class</span> <span class="nx">AuthenticationService</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">constructor</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">private</span> <span class="nx">readonly</span> <span class="nx">usersService</span><span class="o">:</span> <span class="nx">UsersService</span>
+</span></span><span class="line"><span class="cl">  <span class="p">)</span> <span class="p">{}</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">  <span class="kr">public</span> <span class="kr">async</span> <span class="nx">register</span><span class="p">(</span><span class="nx">registrationData</span><span class="o">:</span> <span class="nx">RegisterDto</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">hashedPassword</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">bcrypt</span><span class="p">.</span><span class="nx">hash</span><span class="p">(</span><span class="nx">registrationData</span><span class="p">.</span><span class="nx">password</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">try</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="kr">const</span> <span class="nx">createdUser</span> <span class="o">=</span> <span class="kr">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">usersService</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">        <span class="p">...</span><span class="nx">registrationData</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">password</span><span class="o">:</span> <span class="nx">hashedPassword</span>
+</span></span><span class="line"><span class="cl">      <span class="p">});</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">createdUser</span><span class="p">.</span><span class="nx">password</span> <span class="o">=</span> <span class="kc">undefined</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">      <span class="k">return</span> <span class="nx">createdUser</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="k">if</span> <span class="p">(</span><span class="nx">error</span><span class="o">?</span><span class="p">.</span><span class="nx">code</span> <span class="o">===</span> <span class="nx">PostgresErrorCode</span><span class="p">.</span><span class="nx">UniqueViolation</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">throw</span> <span class="k">new</span> <span class="nx">HttpException</span><span class="p">(</span><span class="s1">&#39;User with that email already exists&#39;</span><span class="p">,</span> <span class="nx">HttpStatus</span><span class="p">.</span><span class="nx">BAD_REQUEST</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">      <span class="k">throw</span> <span class="k">new</span> <span class="nx">HttpException</span><span class="p">(</span><span class="s1">&#39;Something went wrong&#39;</span><span class="p">,</span> <span class="nx">HttpStatus</span><span class="p">.</span><span class="nx">INTERNAL_SERVER_ERROR</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl">    <span class="kr">public</span> <span class="kr">async</span> <span class="nx">getAuthenticatedUser</span><span class="p">(</span><span class="nx">email</span><span class="o">:</span> <span class="nx">string</span><span class="p">,</span> <span class="nx">plainTextPassword</span><span class="o">:</span> <span class="nx">string</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">try</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="kr">const</span> <span class="nx">user</span> <span class="o">=</span> <span class="kr">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">usersService</span><span class="p">.</span><span class="nx">getByEmail</span><span class="p">(</span><span class="nx">email</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="kr">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">verifyPassword</span><span class="p">(</span><span class="nx">plainTextPassword</span><span class="p">,</span> <span class="nx">user</span><span class="p">.</span><span class="nx">password</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">user</span><span class="p">.</span><span class="nx">password</span> <span class="o">=</span> <span class="kc">undefined</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="nx">user</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">throw</span> <span class="k">new</span> <span class="nx">HttpException</span><span class="p">(</span><span class="s1">&#39;Wrong credentials provided&#39;</span><span class="p">,</span> <span class="nx">HttpStatus</span><span class="p">.</span><span class="nx">BAD_REQUEST</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="kr">private</span> <span class="kr">async</span> <span class="nx">verifyPassword</span><span class="p">(</span><span class="nx">plainTextPassword</span><span class="o">:</span> <span class="nx">string</span><span class="p">,</span> <span class="nx">hashedPassword</span><span class="o">:</span> <span class="nx">string</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="kr">const</span> <span class="nx">isPasswordMatching</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">bcrypt</span><span class="p">.</span><span class="nx">compare</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">plainTextPassword</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">hashedPassword</span>
+</span></span><span class="line"><span class="cl">        <span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">isPasswordMatching</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">throw</span> <span class="k">new</span> <span class="nx">HttpException</span><span class="p">(</span><span class="s1">&#39;Wrong credentials provided&#39;</span><span class="p">,</span> <span class="nx">HttpStatus</span><span class="p">.</span><span class="nx">BAD_REQUEST</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><br><br></p>
+<blockquote>
+<p><code>createdUser.password = undefined;</code> 는 password를 response로 보내주기 위한 깔끔한 방법은 아닙니다. 나중에 수정하도록 하겠습니다.</p>
+</blockquote>
+<p>위 함수에서 주목할 부분은 회원가입을 할 때는 비밀번호를 <code>bcrypt</code>의 <code>hash</code> 메서드를 이용해 hash 하고 login 할 때는 <code>compare</code> 메서드를 이용해 요청값과 DB에 저장된 비밀번호를 비교하는 것입니다.</p>
+<p>여기까지 인증로직을 구현했으니, passport와 authentication을 통합하는 일만 남았습니다. passport는 authentication을 추상화하여 우리가 좀 더 다른 로직에 집중할 수 있게 해줍니다.
+<br><br></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">npm install @nestjs/passport passport @types/passport-local passport-local @types/express
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><br><br>
+<strong>authentication/local.strategy.ts</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="kr">import</span> <span class="p">{</span> <span class="nx">Strategy</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;passport-local&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="p">{</span> <span class="nx">PassportStrategy</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;@nestjs/passport&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="p">{</span> <span class="nx">Injectable</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;@nestjs/common&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="p">{</span> <span class="nx">AuthenticationService</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;./authentication.service&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="nx">User</span> <span class="nx">from</span> <span class="s1">&#39;../users/user.entity&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"><span class="err">@</span><span class="nx">Injectable</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="kr">export</span> <span class="kr">class</span> <span class="nx">LocalStrategy</span> <span class="kr">extends</span> <span class="nx">PassportStrategy</span><span class="p">(</span><span class="nx">Strategy</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">authenticationService</span><span class="o">:</span> <span class="nx">AuthenticationService</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">super</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">usernameField</span><span class="o">:</span> <span class="s1">&#39;email&#39;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">});</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="kr">async</span> <span class="nx">validate</span><span class="p">(</span><span class="nx">email</span><span class="o">:</span> <span class="nx">string</span><span class="p">,</span> <span class="nx">password</span><span class="o">:</span> <span class="nx">string</span><span class="p">)</span><span class="o">:</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">User</span><span class="o">&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">authenticationService</span><span class="p">.</span><span class="nx">getAuthenticatedUser</span><span class="p">(</span><span class="nx">email</span><span class="p">,</span> <span class="nx">password</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><br><br>
+<div class="details admonition note open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-pencil-alt fa-fw" aria-hidden="true"></i>how LocalStrategy works on nestjs?<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content"><p>NestJs는 Passport 라이브러리를 사용하여 인증을 구현하는데, LocalStrategy는 인증 전략 중 하나로 로그인 폼에서 이름/ 패스워드를 이용해 인증하는 방식을 의미합니다.</p>
+<p>LocalStrategy를 이용하는 경우 사용자를 검증하는 방식을 정의해야 하므로 validate() 함수 내부에 구현하였습니다.</p>
+<p>NestJs에서는 LocalStrategy를 구현하기 위해 <code>@nestjs/passport</code> 모듈을 사용합니다. 이 모듈에서 <code>AuthGuard</code> 클래스를 사용하여 인증된 요청만 허용하는 Guard를 쉽게 생성할 수 있습니다.</p>
+<p><code>@Guard(AuthGuard('local'))</code>을 라우터의 미들웨어로 등록하여 쉽게 인증을 구현할 수 있습니다.</p>
+</div>
+        </div>
+    </div></p>
+<p>LocalStrategy를 구현하고 나서는 Authentication module에 등록해주면 되겠습니다. <br><br></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// Authentication/authentication.module.ts
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="p">{</span> <span class="nx">Module</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;@nestjs/common&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="p">{</span> <span class="nx">AuthenticationService</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;./authentication.service&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="p">{</span> <span class="nx">UsersModule</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;../users/users.module&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="p">{</span> <span class="nx">AuthenticationController</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;./authentication.controller&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="p">{</span> <span class="nx">PassportModule</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;@nestjs/passport&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="p">{</span> <span class="nx">LocalStrategy</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;./local.strategy&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"><span class="err">@</span><span class="nx">Module</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">imports</span><span class="o">:</span> <span class="p">[</span><span class="nx">UsersModule</span><span class="p">,</span> <span class="nx">PassportModule</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">providers</span><span class="o">:</span> <span class="p">[</span><span class="nx">AuthenticationService</span><span class="p">,</span> <span class="nx">LocalStrategy</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">controllers</span><span class="o">:</span> <span class="p">[</span><span class="nx">AuthenticationController</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="p">})</span>
+</span></span><span class="line"><span class="cl"><span class="kr">export</span> <span class="kr">class</span> <span class="nx">AuthenticationModule</span> <span class="p">{}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// authentication/authentication.controller.ts
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="p">{</span> <span class="nx">Body</span><span class="p">,</span> <span class="nx">Req</span><span class="p">,</span> <span class="nx">Controller</span><span class="p">,</span> <span class="nx">HttpCode</span><span class="p">,</span> <span class="nx">Post</span><span class="p">,</span> <span class="nx">UseGuards</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;@nestjs/common&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="p">{</span> <span class="nx">AuthenticationService</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;./authentication.service&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="nx">RegisterDto</span> <span class="nx">from</span> <span class="s1">&#39;./dto/register.dto&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="nx">RequestWithUser</span> <span class="nx">from</span> <span class="s1">&#39;./requestWithUser.interface&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="p">{</span> <span class="nx">LocalAuthenticationGuard</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;./localAuthentication.guard&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"><span class="err">@</span><span class="nx">Controller</span><span class="p">(</span><span class="s1">&#39;authentication&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="kr">export</span> <span class="kr">class</span> <span class="nx">AuthenticationController</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">constructor</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">private</span> <span class="nx">readonly</span> <span class="nx">authenticationService</span><span class="o">:</span> <span class="nx">AuthenticationService</span>
+</span></span><span class="line"><span class="cl">  <span class="p">)</span> <span class="p">{}</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">  <span class="err">@</span><span class="nx">Post</span><span class="p">(</span><span class="s1">&#39;register&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="kr">async</span> <span class="nx">register</span><span class="p">(</span><span class="err">@</span><span class="nx">Body</span><span class="p">()</span> <span class="nx">registrationData</span><span class="o">:</span> <span class="nx">RegisterDto</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">authenticationService</span><span class="p">.</span><span class="nx">register</span><span class="p">(</span><span class="nx">registrationData</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">  <span class="err">@</span><span class="nx">HttpCode</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="err">@</span><span class="nx">UseGuards</span><span class="p">(</span><span class="nx">LocalAuthenticationGuard</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="err">@</span><span class="nx">Post</span><span class="p">(</span><span class="s1">&#39;log-in&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="kr">async</span> <span class="nx">logIn</span><span class="p">(</span><span class="err">@</span><span class="nx">Req</span><span class="p">()</span> <span class="nx">request</span><span class="o">:</span> <span class="nx">RequestWithUser</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">user</span> <span class="o">=</span> <span class="nx">request</span><span class="p">.</span><span class="nx">user</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">user</span><span class="p">.</span><span class="nx">password</span> <span class="o">=</span> <span class="kc">undefined</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">user</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="2-passport와-jwt를-이용하여-authorization">2. passport와 jwt를 이용하여 <code>Authorization</code></h2>
+<p>인증된 사용자는 매번 어플리케이션에 접속하고 뭔가 요청을 보낼때마다 로그인할 수 는 없습니다. 우리는 이런 귀찮은 것들을 막기 위해 <code>jwt</code> 토큰을 사용하여 사용자에게 어떤 권한이 있는지 검사하면 됩니다.
+<code>jwt</code> 토큰을 사용할 때는 2개의 거의 필수적인 변수들이 필요한데, <code>JWT_SECRET</code> 값과 <code>JWT_EXPIRATION_TIME</code> 입니다.
+<code>JWT_SECRET</code> 은 절대 노출되어서는 안됩니다. 이를 이용해 토큰을 decode하거나 encode하여 어플리케이션에 영향을 줄 수 있기 때문입니다. <code>JWT_EXPIRATION_TIME</code> 도 너무 길거나 너무 짧게 가져가면 안됩니다. 만료기한이 너무 길다면, 그 안에 유출될 가능성이 있고, 너무 짧다면 사용자가 여러번 로그인을 수행해야 합니다.</p>
+<p>관련 패키지
+<br></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">npm install @nestjs/jwt passport-jwt @types/passport-jwt cookie-parser @types/cookie-parser
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>authentication module에서 jwt module을 사용해야 하므로, authentication module에 import 해줍니다.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="err">@</span><span class="nx">Module</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">imports</span><span class="o">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">UsersModule</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">PassportModule</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">ConfigModule</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">JwtModule</span><span class="p">.</span><span class="nx">registerAsync</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">imports</span><span class="o">:</span> <span class="p">[</span><span class="nx">ConfigModule</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">inject</span><span class="o">:</span> <span class="p">[</span><span class="nx">ConfigService</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">useFactory</span><span class="o">:</span> <span class="kr">async</span> <span class="p">(</span><span class="nx">configService</span><span class="o">:</span> <span class="nx">ConfigService</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">({</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">secret</span><span class="o">:</span> <span class="nx">configService</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;JWT_SECRET&#39;</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">signOptions</span><span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">          <span class="nx">expiresIn</span><span class="o">:</span> <span class="sb">`</span><span class="si">${</span><span class="nx">configService</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;JWT_EXPIRATION_TIME&#39;</span><span class="p">)</span><span class="si">}</span><span class="sb">s`</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="p">},</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}),</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}),</span>
+</span></span><span class="line"><span class="cl">  <span class="p">],</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">providers</span><span class="o">:</span> <span class="p">[</span><span class="nx">AuthenticationService</span><span class="p">,</span> <span class="nx">LocalStrategy</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">controllers</span><span class="o">:</span> <span class="p">[</span><span class="nx">AuthenticationController</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="p">})</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>authentication service 에서 요청받은 id를 jwt 토큰으로 바꿔주는 메서드를 생성해줍니다.</p>
+<p><strong>authentication/authentication.service.ts</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="kr">public</span> <span class="nx">getCookieWithJwtToken</span><span class="p">(</span><span class="nx">userId</span><span class="o">:</span> <span class="nx">number</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">payload</span><span class="o">:</span> <span class="nx">TokenPayload</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">userId</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">token</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">jwtService</span><span class="p">.</span><span class="nx">sign</span><span class="p">(</span><span class="nx">payload</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="sb">`Authentication=</span><span class="si">${</span><span class="nx">token</span><span class="si">}</span><span class="sb">; HttpOnly; Path=/; Max-Age=</span><span class="si">${</span><span class="k">this</span><span class="p">.</span><span class="nx">configService</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;JWT_EXPIRATION_TIME&#39;</span><span class="p">)</span><span class="si">}</span><span class="sb">`</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>추가로 passport에서 cookie로 부터 jwt를 읽어서 관련 권한이 있는지 validate 하도록 구성해야 합니다.</p>
+<p><strong>authentication/jwt.strategy.ts</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="kr">import</span> <span class="p">{</span> <span class="nx">ExtractJwt</span><span class="p">,</span> <span class="nx">Strategy</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;passport-jwt&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="p">{</span> <span class="nx">PassportStrategy</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;@nestjs/passport&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="p">{</span> <span class="nx">Injectable</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;@nestjs/common&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="p">{</span> <span class="nx">ConfigService</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;@nestjs/config&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="p">{</span> <span class="nx">Request</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;express&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="p">{</span> <span class="nx">UsersService</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;../users/users.service&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="nx">TokenPayload</span> <span class="nx">from</span> <span class="s1">&#39;./tokenPayload.interface&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"><span class="err">@</span><span class="nx">Injectable</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="kr">export</span> <span class="kr">class</span> <span class="nx">JwtStrategy</span> <span class="kr">extends</span> <span class="nx">PassportStrategy</span><span class="p">(</span><span class="nx">Strategy</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">constructor</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">private</span> <span class="nx">readonly</span> <span class="nx">configService</span><span class="o">:</span> <span class="nx">ConfigService</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">private</span> <span class="nx">readonly</span> <span class="nx">userService</span><span class="o">:</span> <span class="nx">UsersService</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">super</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">jwtFromRequest</span><span class="o">:</span> <span class="nx">ExtractJwt</span><span class="p">.</span><span class="nx">fromExtractors</span><span class="p">([(</span><span class="nx">request</span><span class="o">:</span> <span class="nx">Request</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="nx">request</span><span class="o">?</span><span class="p">.</span><span class="nx">cookies</span><span class="o">?</span><span class="p">.</span><span class="nx">Authentication</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}]),</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">secretOrKey</span><span class="o">:</span> <span class="nx">configService</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;JWT_SECRET&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">});</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">  <span class="kr">async</span> <span class="nx">validate</span><span class="p">(</span><span class="nx">payload</span><span class="o">:</span> <span class="nx">TokenPayload</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">userService</span><span class="p">.</span><span class="nx">getById</span><span class="p">(</span><span class="nx">payload</span><span class="p">.</span><span class="nx">userId</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>위 코드는 JWT 토큰을 <code>request?.cookies?.Authentication</code> 으로 부터 읽어서 decode하고 나온 id에 해당하는 값이 데이터베이스에 있는지 확인합니다.</p>
+<p>이렇게 생성한 JwtStrategy를 Authentication service에서 이용할 수 있도록 module에 등록해줍니다.</p>
+<p>추가로, AuthGuard(&lsquo;jwt&rsquo;)를 인증이 필요한 endpoint의 미들웨어로 등록해줍니다.</p>
+<p>예를 들어, 게시글을 작성하는 endpoint가 있다면,</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="err">@</span><span class="nx">Controller</span><span class="p">(</span><span class="s1">&#39;posts&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="kr">export</span> <span class="k">default</span> <span class="kr">class</span> <span class="nx">PostsController</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">constructor</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">private</span> <span class="nx">readonly</span> <span class="nx">postsService</span><span class="o">:</span> <span class="nx">PostsService</span>
+</span></span><span class="line"><span class="cl">  <span class="p">)</span> <span class="p">{}</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">  <span class="err">@</span><span class="nx">Post</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">  <span class="err">@</span><span class="nx">UseGuards</span><span class="p">(</span><span class="nx">JwtAuthenticationGuard</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="kr">async</span> <span class="nx">createPost</span><span class="p">(</span><span class="err">@</span><span class="nx">Body</span><span class="p">()</span> <span class="nx">post</span><span class="o">:</span> <span class="nx">CreatePostDto</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">postsService</span><span class="p">.</span><span class="nx">createPost</span><span class="p">(</span><span class="nx">post</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">  <span class="c1">// (...)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>로그아웃을 하는 endpoint가 있다면,</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="err">@</span><span class="nx">UseGuards</span><span class="p">(</span><span class="nx">JwtAuthenticationGuard</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="err">@</span><span class="nx">Post</span><span class="p">(</span><span class="s1">&#39;log-out&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="kr">async</span> <span class="nx">logOut</span><span class="p">(</span><span class="err">@</span><span class="nx">Req</span><span class="p">()</span> <span class="nx">request</span><span class="o">:</span> <span class="nx">RequestWithUser</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">response</span><span class="p">.</span><span class="nx">setHeader</span><span class="p">(</span><span class="s1">&#39;Set-Cookie&#39;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">authenticationService</span><span class="p">.</span><span class="nx">getCookieForLogOut</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">response</span><span class="p">.</span><span class="nx">sendStatus</span><span class="p">(</span><span class="mi">200</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>마지막으로 NestJS에서 Guard가 어떤 순서상에서 동작하는 지 보여드릴 그림을 가져왔습니다. 이 그림을 끝으로 passport를 이용한 Authentication / Authorization 글을 마칩니다. 감사합니다.<br><br></p>
+<figure><img src="/images/nestjs_lifecycle.png"/><figcaption>
+            <h4>NestJS LifeCycle (figure)</h4>
+        </figcaption>
+</figure>
+
 </div><div class="post-footer" id="post-footer">
     <div class="post-info">
         <div class="post-info-line">
             <div class="post-info-mod">
-                <span>Updated on 2023-04-05</span>
+                <span>Updated on 2023-04-16&nbsp;<a class="git-hash" href="https://github.com/soonyubi/commit/f5dcf3dd27da29f89f55ebfc693f79badd780f49" target="_blank" title="commit by soonyubi(soonyubi1@naver.com) f5dcf3dd27da29f89f55ebfc693f79badd780f49: Add / Update Post Add post : Serializing Response with Interceptors Update Post : Exceptions">
+                                    <i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>f5dcf3d</a></span>
             </div></div>
         <div class="post-info-line">
             <div class="post-info-md"><span>
@@ -169,16 +636,21 @@ password는 가장 안전해야 하는 데이터입니다. 그래서 password는
         </section>
     </div>
 
-    <div class="post-nav"><a href="/template/" class="prev" rel="prev" title="Nestjs: Gaurd를 이용해 Authentication/ Authorization 구현"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>Nestjs: Gaurd를 이용해 Authentication/ Authorization 구현</a></div>
+    <div class="post-nav"><a href="/template/" class="prev" rel="prev" title="Nestjs: Gaurd를 이용해 Authentication/ Authorization 구현"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>Nestjs: Gaurd를 이용해 Authentication/ Authorization 구현</a>
+            <a href="/nestjs-exception/" class="next" rel="next" title="Nestjs Exception / validation">Nestjs Exception / validation<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
 </div>
 <div id="comments"><div id="disqus_thread" class="comment"></div><noscript>
                 Please enable JavaScript to view the comments powered by <a href="https://disqus.com/?ref_noscript">Disqus</a>.
+            </noscript><div id="commento" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://commento.io/">Commento</a>.
             </noscript><div id="utterances" class="comment"></div><noscript>
                 Please enable JavaScript to view the comments powered by <a href="https://utteranc.es/">utterances</a>.
+            </noscript><div id="giscus" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://giscus.app">Giscus</a>.
             </noscript></div></article></div>
             </main><footer class="footer">
-        <div class="footer-container"><div class="footer-line">Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.111.3">Hugo</a> | Theme - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
-                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2023</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">xxxx</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        <div class="footer-container"><div class="footer-line">Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.115.1">Hugo</a> | Theme - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2023</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">soonyubing</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
         </div>
     </footer></div>
 
@@ -187,5 +659,8 @@ password는 가장 안전해야 하는 데이터입니다. 그래서 password는
             </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
                 <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
             </a>
-        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="https://.disqus.com/embed.js" defer></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{"utterances":{"darkTheme":"github-dark","issueTerm":"pathname","label":"Comment","lightTheme":"github-light","repo":""}},"cookieconsent":{"content":{"dismiss":"Got it!","link":"Learn more","message":"This website uses Cookies to improve your experience."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","maxResultLength":10,"noResultsFound":"No results found","snippetLength":30,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+        </div><link rel="stylesheet" href="/lib/lightgallery/css/lightgallery-bundle.min.css"><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="https://.disqus.com/embed.js" defer></script><script type="text/javascript" src="https://cdn.commento.io/js/commento.js" defer></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/lightgallery/lightgallery.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/thumbnail/lg-thumbnail.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/zoom/lg-zoom.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{"giscus":{"category":"Announcements","categoryId":"","darkTheme":"dark","emitMetadata":"0","inputPosition":"bottom","lang":"en","lazyLoading":false,"lightTheme":"light","mapping":"pathname","reactionsEnabled":"1","repo":"","repoId":""},"utterances":{"darkTheme":"github-dark","issueTerm":"pathname","label":"Comment","lightTheme":"github-light","repo":"soonyubi/comment"}},"cookieconsent":{"content":{"dismiss":"Got it!","link":"Learn more","message":"This website uses Cookies to improve your experience."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"lightgallery":true,"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","maxResultLength":10,"noResultsFound":"No results found","snippetLength":30,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script><script type="text/javascript">
+            window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());
+            gtag('config', 'G-06522HQ23W', { 'anonymize_ip': true });
+        </script><script type="text/javascript" src="https://www.googletagmanager.com/gtag/js?id=G-06522HQ23W" async></script></body>
 </html>

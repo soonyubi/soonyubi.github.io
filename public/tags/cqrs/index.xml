@@ -1,0 +1,19 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>cqrs - Tag - 👨‍💻성장중독자</title>
+        <link>http://example.org/tags/cqrs/</link>
+        <description>cqrs - Tag - 👨‍💻성장중독자</description>
+        <generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>soonyubi1@naver.com (soonyubing)</managingEditor>
+            <webMaster>soonyubi1@naver.com (soonyubing)</webMaster><lastBuildDate>Mon, 24 Apr 2023 02:12:03 &#43;0900</lastBuildDate><atom:link href="http://example.org/tags/cqrs/" rel="self" type="application/rss+xml" /><item>
+    <title>쿼리 성능 올리는 방법 1: CQRS</title>
+    <link>http://example.org/cqrs/</link>
+    <pubDate>Mon, 24 Apr 2023 02:12:03 &#43;0900</pubDate>
+    <author>홍순엽</author>
+    <guid>http://example.org/cqrs/</guid>
+    <description><![CDATA[<div class="featured-image">
+                <img src="/images/cqrs_feature.jpg" referrerpolicy="no-referrer">
+            </div>개요 CQRS는 사실 DB에 많은 요청이 있는 서비스를 운영해보지 않으면 경험할 수 없을 거라 생각한다. 나 또한 이번에 배우면서, 나중에 DB 성능을 높이기 위해 이런 패턴도 있었지 하면서 떠올리기 위해 포스트를 작성한다. CQRS what? 읽기와 쓰기(업데이트) 작업을 분리한 디자인 패턴을 의미한다.
+why? 하나의 DB만 운영하게 되면 겪는 비효율적인 join을 제거하고, 복잡한 쿼리를 피할 수 있다. DB에 DB서버가 처리할 수 있는 요청보다 많은 작업이 들어오게 되면 lock이 걸리게 되고, 이는 다른 작업을 처리하지 못함을 의미한다.]]></description>
+</item>
+</channel>
+</rss>

@@ -1,0 +1,19 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>DI - Tag - 👨‍💻성장중독자</title>
+        <link>http://example.org/tags/di/</link>
+        <description>DI - Tag - 👨‍💻성장중독자</description>
+        <generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>soonyubi1@naver.com (soonyubing)</managingEditor>
+            <webMaster>soonyubi1@naver.com (soonyubing)</webMaster><lastBuildDate>Sun, 16 Apr 2023 21:46:07 &#43;0900</lastBuildDate><atom:link href="http://example.org/tags/di/" rel="self" type="application/rss+xml" /><item>
+    <title>Dependency Injection (feat:Nest)</title>
+    <link>http://example.org/dependency_injection/</link>
+    <pubDate>Sun, 16 Apr 2023 21:46:07 &#43;0900</pubDate>
+    <author>홍순엽</author>
+    <guid>http://example.org/dependency_injection/</guid>
+    <description><![CDATA[<div class="featured-image">
+                <img src="/images/di.jpg" referrerpolicy="no-referrer">
+            </div>개요 Nest.js Framework(Spring, Angular 등)를 사용해서 작업을 하다보면, Dependency Injection, Inversion of Controll 같은 단어들이 자주보인다. 필자는 이 단어들이 어떤 의미를 갖는지 모르고 개발을 하다보니 계속 구렁텅이에 빠지는 기분이라 이에 대해 많은 포스트/ 비디오를 보고 정리하였다. 포스트는 다음과 같은 순서로 구성된다. Nest.js에서 DI를 어떻게 사용하는지를 Nest.js 메인테이너의 설명을 토대로 작성하였다. 그리고 DI가 개념적으로 무엇인지, 왜 사용해야 하는지, 어떻게 사용하면 되는지에 대해 포스트하려고 한다.
+Nest.js 에서 DI란? Nest를 사용하다보면 다음과 같은 코드를 자주 볼 수 있다.]]></description>
+</item>
+</channel>
+</rss>

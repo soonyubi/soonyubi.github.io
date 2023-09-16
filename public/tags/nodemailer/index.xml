@@ -1,0 +1,19 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>nodemailer - Tag - 👨‍💻성장중독자</title>
+        <link>http://example.org/tags/nodemailer/</link>
+        <description>nodemailer - Tag - 👨‍💻성장중독자</description>
+        <generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>soonyubi1@naver.com (soonyubing)</managingEditor>
+            <webMaster>soonyubi1@naver.com (soonyubing)</webMaster><lastBuildDate>Tue, 25 Apr 2023 18:01:35 &#43;0900</lastBuildDate><atom:link href="http://example.org/tags/nodemailer/" rel="self" type="application/rss+xml" /><item>
+    <title>Schedule Email With Nodemailer</title>
+    <link>http://example.org/schedule-email-with-nodemailer/</link>
+    <pubDate>Tue, 25 Apr 2023 18:01:35 &#43;0900</pubDate>
+    <author>홍순엽</author>
+    <guid>http://example.org/schedule-email-with-nodemailer/</guid>
+    <description><![CDATA[<div class="featured-image">
+                <img src="/images/schedule_email_feature.jpg" referrerpolicy="no-referrer">
+            </div>Gmail 앱 비밀번호 설정 nodemailer를 사용하기 위해선, 이메일을 보내는 주체가 필요한데, 이를 위해서 이번 포스트에서 Gmail을 사용할 예정이다. nodemailer가 Gmail에 접근할 때 인증된 사용자인지 확인하기 위해 credentail 값에 구글 아이디 / 비밀번호를 제공하는데, 이때 비밀번호는 구글 계정에서 생성한 무작위의 영문자 16자로 이루어진 앱 비밀번호이다. 이를 생성하기 위해선 다음과 같은 조건이 만족되어야 한다.
+회사, 학교, 조직의 계정이면 안된다. 2차 인증을 해야 사용할 수 있다. 이러고 나서도 화면에 표시되지 않았다면, 활성화된 2단계 인증 탭에 들어가 제일 하단에 앱 비밀번호를 생성해주면 된다.]]></description>
+</item>
+</channel>
+</rss>

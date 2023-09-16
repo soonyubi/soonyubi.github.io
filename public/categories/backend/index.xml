@@ -1,18 +1,55 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
-        <title>backend - Category - My New Hugo Site</title>
+        <title>backend - Category - 👨‍💻성장중독자</title>
         <link>http://example.org/categories/backend/</link>
-        <description>backend - Category - My New Hugo Site</description>
-        <generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 05 Apr 2023 20:50:23 &#43;0900</lastBuildDate><atom:link href="http://example.org/categories/backend/" rel="self" type="application/rss+xml" /><item>
-    <title>Nestjs: Gaurd를 이용해 Authentication/ Authorization 구현</title>
-    <link>http://example.org/nestjs-implements-authentication-and-authorization-using-guard/</link>
-    <pubDate>Wed, 05 Apr 2023 20:50:23 &#43;0900</pubDate>
-    <author>Richard</author>
-    <guid>http://example.org/nestjs-implements-authentication-and-authorization-using-guard/</guid>
+        <description>backend - Category - 👨‍💻성장중독자</description>
+        <generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>soonyubi1@naver.com (soonyubing)</managingEditor>
+            <webMaster>soonyubi1@naver.com (soonyubing)</webMaster><lastBuildDate>Mon, 29 May 2023 23:25:32 &#43;0900</lastBuildDate><atom:link href="http://example.org/categories/backend/" rel="self" type="application/rss+xml" /><item>
+    <title>Typeorm을 써보면서</title>
+    <link>http://example.org/typeorm/</link>
+    <pubDate>Mon, 29 May 2023 23:25:32 &#43;0900</pubDate>
+    <author>Author</author>
+    <guid>http://example.org/typeorm/</guid>
     <description><![CDATA[<div class="featured-image">
-                <img src="/images/guard.jpg" referrerpolicy="no-referrer">
-            </div>big picture passport와 bcrypt를 이용하여 사용자 인증 passport-local 을 이용해 local strategy 생성 local strategy 내부에서 validate() 를 호출하는데, validate 내부에서 bcrypt를 이용해 비밀번호를 암호화 1. passport와 bcrypt를 이용하여 사용자 인증 User module에 User Entity를 생성하고, User service에서 User database에 create / fetch 하는 메서드를 간단히 만들어 줍니다. UserService를 Authentication module에서 사용하길 원하기 때문에, UserService를 @Injectable() 데코레이터로 감싸주고, UserModule에서 UserService를 export해줍니다.
-password는 가장 안전해야 하는 데이터입니다. 그래서 password는 hash 해야 합니다.]]></description>
+                <img src="/images/typeorm.png" referrerpolicy="no-referrer">
+            </div>개요 최근 한달 동안 한 스타트업에서 인턴 근무를 하며, typeorm을 써본 후기를 말하고자 한다. 우리 회사는 nest.js + typeorm 쓰고 있고, 기존에 레거시 코드를 typeorm 으로 변환하면서 많은 고충도 느끼고 있지만, 꽤 괜찮은 orm이라는 생각도 들고 있다. 그래서 내가 typeorm을 쓰면서 느꼈던 괜찮은 점과 아쉬운 점에 대해 포스트하고자 한다.
+장점 QueryBuilder 를 사용해서 쿼리의 반복을 줄일 수 있다. 다음과 같은 쿼리가 있다고 가정하자.
+1 2 3 4 5 6 7 8 9 10 11 SELECT * FROM A LEFT JOIN B on A.]]></description>
+</item>
+<item>
+    <title>쿼리 성능 올리는 방법 1: CQRS</title>
+    <link>http://example.org/cqrs/</link>
+    <pubDate>Mon, 24 Apr 2023 02:12:03 &#43;0900</pubDate>
+    <author>홍순엽</author>
+    <guid>http://example.org/cqrs/</guid>
+    <description><![CDATA[<div class="featured-image">
+                <img src="/images/cqrs_feature.jpg" referrerpolicy="no-referrer">
+            </div>개요 CQRS는 사실 DB에 많은 요청이 있는 서비스를 운영해보지 않으면 경험할 수 없을 거라 생각한다. 나 또한 이번에 배우면서, 나중에 DB 성능을 높이기 위해 이런 패턴도 있었지 하면서 떠올리기 위해 포스트를 작성한다. CQRS what? 읽기와 쓰기(업데이트) 작업을 분리한 디자인 패턴을 의미한다.
+why? 하나의 DB만 운영하게 되면 겪는 비효율적인 join을 제거하고, 복잡한 쿼리를 피할 수 있다. DB에 DB서버가 처리할 수 있는 요청보다 많은 작업이 들어오게 되면 lock이 걸리게 되고, 이는 다른 작업을 처리하지 못함을 의미한다.]]></description>
+</item>
+<item>
+    <title>public/private s3 를 생성하고 파일 업로드 기능 구현</title>
+    <link>http://example.org/upload_file_to_s3/</link>
+    <pubDate>Wed, 19 Apr 2023 14:16:34 &#43;0900</pubDate>
+    <author>홍순엽</author>
+    <guid>http://example.org/upload_file_to_s3/</guid>
+    <description><![CDATA[<div class="featured-image">
+                <img src="/images/s3.jpg" referrerpolicy="no-referrer">
+            </div>개요 이번 포스팅에서는 public/private s3를 생성하고 각각 어떻게 접근하는지, 그리고 코드로서는 어떻게 구현하는지에 대해 알아보겠다.
+IAM User 생성 AWS Root user는 모든 서비스에 대한 권한을 가지고 있기 때문에 at least privilege 의 원칙에 어긋난다. 따라서 IAM User 를 생성해 S3에 대한 접근 권한만을 부여하도록 한다.
+Public/Private S3 생성 Public 모든 퍼블릭 엑세스 차단 체크박스를 해제하고 생성한다. 추가로, Bucket Policy 에 다음과 같이 작성하여, url을 통해 bucket에 접근할 수 있도록 한다.]]></description>
+</item>
+<item>
+    <title>Node.js 이벤트 루프</title>
+    <link>http://example.org/what_is_event_loop_in_nodejs/</link>
+    <pubDate>Tue, 11 Apr 2023 00:19:53 &#43;0900</pubDate>
+    <author>홍순엽</author>
+    <guid>http://example.org/what_is_event_loop_in_nodejs/</guid>
+    <description><![CDATA[<div class="featured-image">
+                <img src="/images/event_loop_thumbnail.jpg" referrerpolicy="no-referrer">
+            </div>개요 면접에서 이벤트 루프가 뭐냐는 질문에 전혀 대답하지 못해서 찾아보다가 여러 커뮤니티에서 이벤트 루프의 정확한 개념에 대해 심도 있게 생각하는 걸 보고 정리하고자 하였습니다.
+setTimeout vs setImmediate 1 2 3 4 5 6 setTimeout(() =&gt; { console.log(&#34;setTimeout&#34;) }, 0) setImmediate(() =&gt; { console.log(&#34;setImmediate&#34;) }) 위 코드를 실행하면 뭐가 먼저 결과로 출력될까? 정답은 모른다 입니다. 그 이유를 설명하기 위해선 이벤트 루프의 구조를 살펴봐야 합니다.
+Node.js 이벤트 루프 Node.js를 싱글 스레드 논 블로킹 이라고 합니다.]]></description>
 </item>
 </channel>
 </rss>

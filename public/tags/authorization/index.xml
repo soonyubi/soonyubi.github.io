@@ -1,18 +1,20 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
-        <title>authorization - Tag - My New Hugo Site</title>
+        <title>authorization - Tag - 👨‍💻성장중독자</title>
         <link>http://example.org/tags/authorization/</link>
-        <description>authorization - Tag - My New Hugo Site</description>
-        <generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 05 Apr 2023 20:50:23 &#43;0900</lastBuildDate><atom:link href="http://example.org/tags/authorization/" rel="self" type="application/rss+xml" /><item>
+        <description>authorization - Tag - 👨‍💻성장중독자</description>
+        <generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>soonyubi1@naver.com (soonyubing)</managingEditor>
+            <webMaster>soonyubi1@naver.com (soonyubing)</webMaster><lastBuildDate>Wed, 05 Apr 2023 20:50:23 &#43;0900</lastBuildDate><atom:link href="http://example.org/tags/authorization/" rel="self" type="application/rss+xml" /><item>
     <title>Nestjs: Gaurd를 이용해 Authentication/ Authorization 구현</title>
     <link>http://example.org/nestjs-implements-authentication-and-authorization-using-guard/</link>
     <pubDate>Wed, 05 Apr 2023 20:50:23 &#43;0900</pubDate>
-    <author>Richard</author>
+    <author>홍순엽</author>
     <guid>http://example.org/nestjs-implements-authentication-and-authorization-using-guard/</guid>
     <description><![CDATA[<div class="featured-image">
                 <img src="/images/guard.jpg" referrerpolicy="no-referrer">
-            </div>big picture passport와 bcrypt를 이용하여 사용자 인증 passport-local 을 이용해 local strategy 생성 local strategy 내부에서 validate() 를 호출하는데, validate 내부에서 bcrypt를 이용해 비밀번호를 암호화 1. passport와 bcrypt를 이용하여 사용자 인증 User module에 User Entity를 생성하고, User service에서 User database에 create / fetch 하는 메서드를 간단히 만들어 줍니다. UserService를 Authentication module에서 사용하길 원하기 때문에, UserService를 @Injectable() 데코레이터로 감싸주고, UserModule에서 UserService를 export해줍니다.
-password는 가장 안전해야 하는 데이터입니다. 그래서 password는 hash 해야 합니다.]]></description>
+            </div>big picture passport와 bcrypt를 이용하여 Authentication passport와 jwt를 이용하여 Authorization 1. passport와 bcrypt를 이용하여 사용자 인증 User module에 User Entity를 생성하고, User service에서 User database에 create / fetch 하는 메서드를 간단히 만들어 줍니다. UserService를 Authentication module에서 사용하길 원하기 때문에, UserService를 @Injectable() 데코레이터로 감싸주고, UserModule에서 UserService를 export해줍니다.
+password는 가장 안전해야 하는 데이터입니다. 그래서 password는 hash 해야 합니다. hash를 하는 과정에서 필요한 값은 random string 인 salt 값이 필요합니다.
+bcrypt 이 모든 과정을 bcrypt 라이브러리를 사용하면 쉽게 할 수 있습니다.]]></description>
 </item>
 </channel>
 </rss>

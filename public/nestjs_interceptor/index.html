@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>Serializing Response with Interceptor - 👨‍💻성장중독자</title><meta name="Description" content="soonyub &#43; ing (진행중이란 소리)"><meta property="og:title" content="Serializing Response with Interceptor" />
+<meta property="og:description" content="Interceptor @Injectable decorator로 표기되고, NestInterceptor interface를 구현한 클래스를 말합니다.
+AOP(Aspect Objet Programming)의 원칙에 의해 만들어진 클래스입니다.
+Interceptor는 Intercept() 라는 메서드를 수행해야하고, Intercept() 메서드에는 2개의 인자가 들어갑니다.
+Execution Context : ArgumentsHost를 상속받은 객체이고, route handler function에 전달된 argument에 접근할 수 있습니다. Call Handler : request/response를 wrapping 하고, CallHandler는 PointCut이라고 불리는 handle() 메서드를 수행하는데, route handler method에 도달할 지 말지 결정할 수 있습니다. handle() 메서드는 Rxjs의 Observable 객체를 리턴시키고 이 객체를 이용해서 route handler 가 종료되고 나서도 response 객체를 변경시킬 수 있습니다." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://example.org/nestjs_interceptor/" /><meta property="og:image" content="http://example.org/logo.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-04-16T02:39:05+09:00" />
+<meta property="article:modified_time" content="2023-04-16T03:01:07+09:00" /><meta property="og:site_name" content="soonyubing" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="http://example.org/logo.png"/>
+
+<meta name="twitter:title" content="Serializing Response with Interceptor"/>
+<meta name="twitter:description" content="Interceptor @Injectable decorator로 표기되고, NestInterceptor interface를 구현한 클래스를 말합니다.
+AOP(Aspect Objet Programming)의 원칙에 의해 만들어진 클래스입니다.
+Interceptor는 Intercept() 라는 메서드를 수행해야하고, Intercept() 메서드에는 2개의 인자가 들어갑니다.
+Execution Context : ArgumentsHost를 상속받은 객체이고, route handler function에 전달된 argument에 접근할 수 있습니다. Call Handler : request/response를 wrapping 하고, CallHandler는 PointCut이라고 불리는 handle() 메서드를 수행하는데, route handler method에 도달할 지 말지 결정할 수 있습니다. handle() 메서드는 Rxjs의 Observable 객체를 리턴시키고 이 객체를 이용해서 route handler 가 종료되고 나서도 response 객체를 변경시킬 수 있습니다."/>
+<meta name="application-name" content="soonyubing">
+<meta name="apple-mobile-web-app-title" content="soonyubing"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/nestjs_interceptor/" /><link rel="prev" href="http://example.org/what_is_event_loop_in_nodejs/" /><link rel="next" href="http://example.org/dependency_injection/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Serializing Response with Interceptor",
+        "inLanguage": "en",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/example.org\/nestjs_interceptor\/"
+        },"genre": "posts","keywords": "nest.js, interceptor","wordcount":  450 ,
+        "url": "http:\/\/example.org\/nestjs_interceptor\/","datePublished": "2023-04-16T02:39:05+09:00","dateModified": "2023-04-16T03:01:07+09:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "홍순엽"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="👨‍💻성장중독자"></a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> Posts </a><a class="menu-item" href="/tags/"> Tags </a><a class="menu-item" href="/categories/"> Categories </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="Search titles or contents..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="Search">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="Clear">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="👨‍💻성장중독자"></a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="Search titles or contents..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="Search">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="Clear">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        Cancel
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">Posts</a><a class="menu-item" href="/tags/" title="">Tags</a><a class="menu-item" href="/categories/" title="">Categories</a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">Contents</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Serializing Response with Interceptor</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>홍순엽</a></span>&nbsp;<span class="post-category">included in <a href="/categories/nest.js/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>nest.js</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2023-04-16">2023-04-16</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;450 words&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;3 minutes&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>Contents</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#interceptor">Interceptor</a></li>
+    <li><a href="#기능">기능</a></li>
+    <li><a href="#binding">Binding</a></li>
+    <li><a href="#serializing-response">Serializing Response</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="interceptor">Interceptor</h2>
+<p>@Injectable decorator로 표기되고, <code>NestInterceptor</code> interface를 구현한 클래스를 말합니다.</p>
+<p>AOP(Aspect Objet Programming)의 원칙에 의해 만들어진 클래스입니다.</p>
+<br>
+<p>Interceptor는 <code>Intercept()</code> 라는 메서드를 수행해야하고, <code>Intercept()</code> 메서드에는 2개의 인자가 들어갑니다.</p>
+<ul>
+<li><code>Execution Context</code> : <code>ArgumentsHost</code>를 상속받은 객체이고, route handler function에 전달된 argument에 접근할 수 있습니다.</li>
+<li><code>Call Handler</code> : request/response를 wrapping 하고, CallHandler는 PointCut이라고 불리는 <code>handle()</code> 메서드를 수행하는데, route handler method에 도달할 지 말지 결정할 수 있습니다. <code>handle()</code> 메서드는 Rxjs의 <code>Observable</code> 객체를 리턴시키고 이 객체를 이용해서 route handler 가 종료되고 나서도 response 객체를 변경시킬 수 있습니다.</li>
+</ul>
+<h2 id="기능">기능</h2>
+<ol>
+<li>method 실행 전 후에 추가적인 로직을 구성 : <code>tap()</code> operator를 사용</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="err">@</span><span class="nx">Injectable</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="kr">export</span> <span class="kr">class</span> <span class="nx">LoggingInterceptor</span> <span class="kr">implements</span> <span class="nx">NestInterceptor</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">intercept</span><span class="p">(</span><span class="nx">context</span><span class="o">:</span> <span class="nx">ExecutionContext</span><span class="p">,</span> <span class="nx">next</span><span class="o">:</span> <span class="nx">CallHandler</span><span class="p">)</span><span class="o">:</span> <span class="nx">Observable</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Before...&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">now</span> <span class="o">=</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">next</span>
+</span></span><span class="line"><span class="cl">      <span class="p">.</span><span class="nx">handle</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">      <span class="p">.</span><span class="nx">pipe</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">tap</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`After... </span><span class="si">${</span><span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span> <span class="o">-</span> <span class="nx">now</span><span class="si">}</span><span class="sb">ms`</span><span class="p">)),</span>
+</span></span><span class="line"><span class="cl">      <span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="2">
+<li>반환될 값을 변경 : <code>map()</code> operator를 사용</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="kr">import</span> <span class="p">{</span> <span class="nx">Injectable</span><span class="p">,</span> <span class="nx">NestInterceptor</span><span class="p">,</span> <span class="nx">ExecutionContext</span><span class="p">,</span> <span class="nx">CallHandler</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;@nestjs/common&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="p">{</span> <span class="nx">Observable</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;rxjs&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="p">{</span> <span class="nx">map</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;rxjs/operators&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kr">export</span> <span class="kr">interface</span> <span class="nx">Response</span><span class="o">&lt;</span><span class="nx">T</span><span class="o">&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">data</span><span class="o">:</span> <span class="nx">T</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 특정 객체로의 변환
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="err">@</span><span class="nx">Injectable</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="kr">export</span> <span class="kr">class</span> <span class="nx">TransformInterceptor</span><span class="o">&lt;</span><span class="nx">T</span><span class="o">&gt;</span> <span class="kr">implements</span> <span class="nx">NestInterceptor</span><span class="o">&lt;</span><span class="nx">T</span><span class="p">,</span> <span class="nx">Response</span><span class="o">&lt;</span><span class="nx">T</span><span class="o">&gt;&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">intercept</span><span class="p">(</span><span class="nx">context</span><span class="o">:</span> <span class="nx">ExecutionContext</span><span class="p">,</span> <span class="nx">next</span><span class="o">:</span> <span class="nx">CallHandler</span><span class="p">)</span><span class="o">:</span> <span class="nx">Observable</span><span class="o">&lt;</span><span class="nx">Response</span><span class="o">&lt;</span><span class="nx">T</span><span class="o">&gt;&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">next</span><span class="p">.</span><span class="nx">handle</span><span class="p">().</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">map</span><span class="p">(</span><span class="nx">data</span> <span class="p">=&gt;</span> <span class="p">({</span> <span class="nx">data</span> <span class="p">})));</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// null값에 대한 처리
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="err">@</span><span class="nx">Injectable</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="kr">export</span> <span class="kr">class</span> <span class="nx">ExcludeNullInterceptor</span> <span class="kr">implements</span> <span class="nx">NestInterceptor</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">intercept</span><span class="p">(</span><span class="nx">context</span><span class="o">:</span> <span class="nx">ExecutionContext</span><span class="p">,</span> <span class="nx">next</span><span class="o">:</span> <span class="nx">CallHandler</span><span class="p">)</span><span class="o">:</span> <span class="nx">Observable</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">next</span>
+</span></span><span class="line"><span class="cl">      <span class="p">.</span><span class="nx">handle</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">      <span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">map</span><span class="p">(</span><span class="nx">value</span> <span class="p">=&gt;</span> <span class="nx">value</span> <span class="o">===</span> <span class="kc">null</span> <span class="o">?</span> <span class="s1">&#39;&#39;</span> <span class="o">:</span> <span class="nx">value</span> <span class="p">));</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="3">
+<li>예외를 처리하는 방법 : <code>catchError()</code> operator를 사용</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="err">@</span><span class="nx">Injectable</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="kr">export</span> <span class="kr">class</span> <span class="nx">ErrorsInterceptor</span> <span class="kr">implements</span> <span class="nx">NestInterceptor</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">intercept</span><span class="p">(</span><span class="nx">context</span><span class="o">:</span> <span class="nx">ExecutionContext</span><span class="p">,</span> <span class="nx">next</span><span class="o">:</span> <span class="nx">CallHandler</span><span class="p">)</span><span class="o">:</span> <span class="nx">Observable</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">next</span>
+</span></span><span class="line"><span class="cl">      <span class="p">.</span><span class="nx">handle</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">      <span class="p">.</span><span class="nx">pipe</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">catchError</span><span class="p">(</span><span class="nx">err</span> <span class="p">=&gt;</span> <span class="nx">throwError</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="k">new</span> <span class="nx">BadGatewayException</span><span class="p">())),</span>
+</span></span><span class="line"><span class="cl">      <span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="4">
+<li>캐싱</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="kr">import</span> <span class="p">{</span> <span class="nx">Injectable</span><span class="p">,</span> <span class="nx">NestInterceptor</span><span class="p">,</span> <span class="nx">ExecutionContext</span><span class="p">,</span> <span class="nx">CallHandler</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;@nestjs/common&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="p">{</span> <span class="nx">Observable</span><span class="p">,</span> <span class="k">of</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;rxjs&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="err">@</span><span class="nx">Injectable</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="kr">export</span> <span class="kr">class</span> <span class="nx">CacheInterceptor</span> <span class="kr">implements</span> <span class="nx">NestInterceptor</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">intercept</span><span class="p">(</span><span class="nx">context</span><span class="o">:</span> <span class="nx">ExecutionContext</span><span class="p">,</span> <span class="nx">next</span><span class="o">:</span> <span class="nx">CallHandler</span><span class="p">)</span><span class="o">:</span> <span class="nx">Observable</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">isCached</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="nx">isCached</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="k">return</span> <span class="k">of</span><span class="p">([]);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">next</span><span class="p">.</span><span class="nx">handle</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="binding">Binding</h2>
+<ol>
+<li>controller/ route handler에 <code>@UseInterceptors()</code></li>
+<li>main.ts 에 <code>app.useGlobalInterceptors()</code></li>
+<li>module.provider로 다음 객체를 등록</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">{
+</span></span><span class="line"><span class="cl">    provide:APP_INTERCEPTOR,
+</span></span><span class="line"><span class="cl">    useClass:SomeInterceptor
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="serializing-response">Serializing Response</h2>
+<p>Serialization 은 user에게 response data를 보내기 전 변경하는 작업을 의미합니다.</p>
+<br>
+<p>예를 들어, 유저의 정보를 조회할 때 유저의 비밀번호는 노출시키지 않고 싶다고 한다면,<code> class-transformer</code> 의 <code>@Exclude()</code> 데코레이터를 property에 추가하기만 하면 됩니다. 그리고 나서, 컨트롤러 단에 <code>@UseInterceptors(ClassSerializeInterceptor)</code> 를 달아주거나, main.ts에 <code>app.useGlobalInterceptors(new ClassSerializeInterceptor(app.get(Reflect)))</code> 전역으로 등록해주면 됩니다.</p>
+<br>
+<p>또는, <code>@SerialzeOptions({strategy : &quot;excludeAll&quot;})</code> 을 데코레이터로 사용해주고, 노출시키고자 하는 속성만, <code>@Expose()</code> 를 사용해주면 됩니다.</p>
+<br>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="err">@</span><span class="nx">Transform</span><span class="p">(</span><span class="nx">value</span><span class="p">=&gt;{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span><span class="p">(</span><span class="nx">value</span><span class="o">!==</span><span class="kc">null</span><span class="p">)</span> <span class="k">return</span> <span class="nx">value</span>
+</span></span><span class="line"><span class="cl"><span class="p">})</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>와 같이 써주게 되면, null 값은 보여지지 않게 됩니다.</p>
+<br>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>Updated on 2023-04-16&nbsp;<a class="git-hash" href="https://github.com/soonyubi/commit/f5dcf3dd27da29f89f55ebfc693f79badd780f49" target="_blank" title="commit by soonyubi(soonyubi1@naver.com) f5dcf3dd27da29f89f55ebfc693f79badd780f49: Add / Update Post Add post : Serializing Response with Interceptors Update Post : Exceptions">
+                                    <i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>f5dcf3d</a></span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/nestjs_interceptor/index.md" target="_blank">Read Markdown</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="Share on Twitter" data-sharer="twitter" data-url="http://example.org/nestjs_interceptor/" data-title="Serializing Response with Interceptor" data-hashtags="nest.js,interceptor"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="http://example.org/nestjs_interceptor/" data-hashtag="nest.js"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Hacker News" data-sharer="hackernews" data-url="http://example.org/nestjs_interceptor/" data-title="Serializing Response with Interceptor"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Line" data-sharer="line" data-url="http://example.org/nestjs_interceptor/" data-title="Serializing Response with Interceptor"><i data-svg-src="/lib/simple-icons/icons/line.min.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="http://example.org/nestjs_interceptor/" data-title="Serializing Response with Interceptor"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/nest.js/">nest.js</a>,&nbsp;<a href="/tags/interceptor/">interceptor</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/what_is_event_loop_in_nodejs/" class="prev" rel="prev" title="Node.js 이벤트 루프"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>Node.js 이벤트 루프</a>
+            <a href="/dependency_injection/" class="next" rel="next" title="Dependency Injection (feat:Nest)">Dependency Injection (feat:Nest)<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+<div id="comments"><div id="disqus_thread" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://disqus.com/?ref_noscript">Disqus</a>.
+            </noscript><div id="commento" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://commento.io/">Commento</a>.
+            </noscript><div id="utterances" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://utteranc.es/">utterances</a>.
+            </noscript><div id="giscus" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://giscus.app">Giscus</a>.
+            </noscript></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.115.1">Hugo</a> | Theme - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2023</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">soonyubing</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="Back to Top">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/lightgallery/css/lightgallery-bundle.min.css"><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="https://.disqus.com/embed.js" defer></script><script type="text/javascript" src="https://cdn.commento.io/js/commento.js" defer></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/lightgallery/lightgallery.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/thumbnail/lg-thumbnail.min.js"></script><script type="text/javascript" src="/lib/lightgallery/plugins/zoom/lg-zoom.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{"giscus":{"category":"Announcements","categoryId":"","darkTheme":"dark","emitMetadata":"0","inputPosition":"bottom","lang":"en","lazyLoading":false,"lightTheme":"light","mapping":"pathname","reactionsEnabled":"1","repo":"","repoId":""},"utterances":{"darkTheme":"github-dark","issueTerm":"pathname","label":"Comment","lightTheme":"github-light","repo":"soonyubi/comment"}},"cookieconsent":{"content":{"dismiss":"Got it!","link":"Learn more","message":"This website uses Cookies to improve your experience."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"lightgallery":true,"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","maxResultLength":10,"noResultsFound":"No results found","snippetLength":30,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script><script type="text/javascript">
+            window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());
+            gtag('config', 'G-06522HQ23W', { 'anonymize_ip': true });
+        </script><script type="text/javascript" src="https://www.googletagmanager.com/gtag/js?id=G-06522HQ23W" async></script></body>
+</html>

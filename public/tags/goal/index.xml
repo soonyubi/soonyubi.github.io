@@ -1,0 +1,23 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>goal - Tag - 👨‍💻성장중독자</title>
+        <link>http://example.org/tags/goal/</link>
+        <description>goal - Tag - 👨‍💻성장중독자</description>
+        <generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>soonyubi1@naver.com (soonyubing)</managingEditor>
+            <webMaster>soonyubi1@naver.com (soonyubing)</webMaster><lastBuildDate>Thu, 20 Apr 2023 21:38:00 &#43;0900</lastBuildDate><atom:link href="http://example.org/tags/goal/" rel="self" type="application/rss+xml" /><item>
+    <title>2023년 목표</title>
+    <link>http://example.org/2023/</link>
+    <pubDate>Thu, 20 Apr 2023 21:38:00 &#43;0900</pubDate>
+    <author>홍순엽</author>
+    <guid>http://example.org/2023/</guid>
+    <description><![CDATA[한달에 한권의 내가 관심없는 분야의 책, 한권의 관심있는 분야의 책을 읽고 글을 작성해보기
+현재 nest.js 에 대해 배우고 있는데, 프레임워크를 잘 다루고 나서 bug report나 feature를 추가하는 등 오픈소스에 기여해보기
+다른 사람들과 어울릴 만한 공동체에 참여하기
+담배 피지 않기 (현재 9개월 째 진행중)
+알고리즘 공부도 다시 조금씩해서, 코드포스 블루 1700까지는 달성하기 (현재 1400)
+개인 어플을 하나 만들고 관리해보기
+정말 질 좋은 강의를 비싼돈을 내고 들어보기(100만원 이상짜리)
+멘토(또는 라이벌)을 정하기.]]></description>
+</item>
+</channel>
+</rss>

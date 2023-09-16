@@ -1,0 +1,19 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>interceptor - Tag - 👨‍💻성장중독자</title>
+        <link>http://example.org/tags/interceptor/</link>
+        <description>interceptor - Tag - 👨‍💻성장중독자</description>
+        <generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>soonyubi1@naver.com (soonyubing)</managingEditor>
+            <webMaster>soonyubi1@naver.com (soonyubing)</webMaster><lastBuildDate>Sun, 16 Apr 2023 02:39:05 &#43;0900</lastBuildDate><atom:link href="http://example.org/tags/interceptor/" rel="self" type="application/rss+xml" /><item>
+    <title>Serializing Response with Interceptor</title>
+    <link>http://example.org/nestjs_interceptor/</link>
+    <pubDate>Sun, 16 Apr 2023 02:39:05 &#43;0900</pubDate>
+    <author>홍순엽</author>
+    <guid>http://example.org/nestjs_interceptor/</guid>
+    <description><![CDATA[Interceptor @Injectable decorator로 표기되고, NestInterceptor interface를 구현한 클래스를 말합니다.
+AOP(Aspect Objet Programming)의 원칙에 의해 만들어진 클래스입니다.
+Interceptor는 Intercept() 라는 메서드를 수행해야하고, Intercept() 메서드에는 2개의 인자가 들어갑니다.
+Execution Context : ArgumentsHost를 상속받은 객체이고, route handler function에 전달된 argument에 접근할 수 있습니다. Call Handler : request/response를 wrapping 하고, CallHandler는 PointCut이라고 불리는 handle() 메서드를 수행하는데, route handler method에 도달할 지 말지 결정할 수 있습니다. handle() 메서드는 Rxjs의 Observable 객체를 리턴시키고 이 객체를 이용해서 route handler 가 종료되고 나서도 response 객체를 변경시킬 수 있습니다.]]></description>
+</item>
+</channel>
+</rss>

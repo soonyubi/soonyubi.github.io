@@ -1,0 +1,18 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>cache - Tag - 👨‍💻성장중독자</title>
+        <link>http://example.org/tags/cache/</link>
+        <description>cache - Tag - 👨‍💻성장중독자</description>
+        <generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>soonyubi1@naver.com (soonyubing)</managingEditor>
+            <webMaster>soonyubi1@naver.com (soonyubing)</webMaster><lastBuildDate>Mon, 24 Apr 2023 20:19:55 &#43;0900</lastBuildDate><atom:link href="http://example.org/tags/cache/" rel="self" type="application/rss+xml" /><item>
+    <title>Nest.js - Cache</title>
+    <link>http://example.org/cache/</link>
+    <pubDate>Mon, 24 Apr 2023 20:19:55 &#43;0900</pubDate>
+    <author>Author</author>
+    <guid>http://example.org/cache/</guid>
+    <description><![CDATA[개요 데이터베이스에서 데이터를 조회하는 요청 과정을 살펴보면, 다음과 같은 순서로 진행된다. middleware-guard-interceptor-endpoint-service layer-database layer 데이터베이스까지 가는 과정은 상당히 긴 편이다(사실 pipe, filter 까지 포함하면 더 길다). 똑같은 데이터를 조회하는데 이러한 과정을 계속 반복하는 것은 불필요한 일이다.
+이번 포스트에서는 interceptor layer에서 캐시를 이용해 최근에 조회된 데이터를 더 빠르게 응답하는 방법에 대해 알아보고자 한다.
+1. 내부 라이브러리를 이용한 caching CacheInterceptor 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 @Injectable() export class CacheInterceptor implements NestInterceptor { protected allowedMethods = [&#39;GET&#39;]; constructor( @Inject(CACHE_MANAGER) protected readonly cacheManager: any, @Inject(REFLECTOR) protected readonly reflector: any, ) {} async intercept( context: ExecutionContext, next: CallHandler, ): Promise&lt;Observable&lt;any&gt;&gt; { const key = this.]]></description>
+</item>
+</channel>
+</rss>

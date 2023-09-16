@@ -1,0 +1,20 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>mysql - Category - 👨‍💻성장중독자</title>
+        <link>http://example.org/categories/mysql/</link>
+        <description>mysql - Category - 👨‍💻성장중독자</description>
+        <generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>soonyubi1@naver.com (soonyubing)</managingEditor>
+            <webMaster>soonyubi1@naver.com (soonyubing)</webMaster><lastBuildDate>Sat, 08 Jul 2023 21:52:52 &#43;0900</lastBuildDate><atom:link href="http://example.org/categories/mysql/" rel="self" type="application/rss+xml" /><item>
+    <title>B-Tree index</title>
+    <link>http://example.org/b-tree-index/</link>
+    <pubDate>Sat, 08 Jul 2023 21:52:52 &#43;0900</pubDate>
+    <author>Author</author>
+    <guid>http://example.org/b-tree-index/</guid>
+    <description><![CDATA[<div class="featured-image">
+                <img src="/images/btree.png" referrerpolicy="no-referrer">
+            </div>B-Tree Index B-Tree 인덱스는 인덱싱 알고리즘 중 가장 범용적으로 사용되는 알고리즘이다. 여기서 B 는 Balanced 를 의미한다. (Binary 아님) B-Tree index는 구조체 내에서 항상 정렬된 상태를 유지한다.
+구조 및 특징 B-Tree 인덱스는 Root / Branch / Leaf 의 3가지의 노드로 구분된다. 여기서 Leaf 노드는 실제 데이터가 저장된 데이터 파일의 주소를 가르키고 있다.
+위 그림을 보면, 인덱스는 항상 정렬된 채로 유지되지만, 데이터 파일은 무작위의 순서로 저장된 것을 볼 수 있다. 이 이유는 데이터 파일의 일부 레코드가 삭제되어 빈 공간이 생기게 되면 해당 공간을 재활용하기 때문이다.]]></description>
+</item>
+</channel>
+</rss>

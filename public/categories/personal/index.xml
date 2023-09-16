@@ -1,0 +1,33 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>personal - Category - 👨‍💻성장중독자</title>
+        <link>http://example.org/categories/personal/</link>
+        <description>personal - Category - 👨‍💻성장중독자</description>
+        <generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>soonyubi1@naver.com (soonyubing)</managingEditor>
+            <webMaster>soonyubi1@naver.com (soonyubing)</webMaster><lastBuildDate>Mon, 24 Apr 2023 13:52:03 &#43;0900</lastBuildDate><atom:link href="http://example.org/categories/personal/" rel="self" type="application/rss+xml" /><item>
+    <title>Thinking1 : 입사를 앞두고 마음 정리</title>
+    <link>http://example.org/thinking1/</link>
+    <pubDate>Mon, 24 Apr 2023 13:52:03 &#43;0900</pubDate>
+    <author>Author</author>
+    <guid>http://example.org/thinking1/</guid>
+    <description><![CDATA[이번에 소셜인베스팅랩 백엔드 인턴으로 합격했다. 내가 그 회사를 지원한 이유는, 평소 주식을 좋아하기도 했고, nest.js 프레임워크를 더 깊게 파보고 싶기 때문이었다.
+입사를 일주일 앞두고 사실은 너무 불안하다. 내 실력을 객관적으로 판단할 수 없기 때문이다. 그 사람들이 요구하는 것보다 못하면 어떡하지? 라는 생각이 입사가 다가올수록 강하게 들기 시작한다.
+그런 불안한 와중에, 최근 허준이 교수가 인터뷰에서 했던 말을 곱씹어 보았다. 필즈상을 수상한 허준이 교수도 매일 문제가 풀리지 않았던 경험이 있다고 한다. 오늘도 안 풀리고, 내일도 안풀리고, 한참을 안 풀리다 어느날 문제가 풀린다고 했다.]]></description>
+</item>
+<item>
+    <title>2023년 목표</title>
+    <link>http://example.org/2023/</link>
+    <pubDate>Thu, 20 Apr 2023 21:38:00 &#43;0900</pubDate>
+    <author>홍순엽</author>
+    <guid>http://example.org/2023/</guid>
+    <description><![CDATA[한달에 한권의 내가 관심없는 분야의 책, 한권의 관심있는 분야의 책을 읽고 글을 작성해보기
+현재 nest.js 에 대해 배우고 있는데, 프레임워크를 잘 다루고 나서 bug report나 feature를 추가하는 등 오픈소스에 기여해보기
+다른 사람들과 어울릴 만한 공동체에 참여하기
+담배 피지 않기 (현재 9개월 째 진행중)
+알고리즘 공부도 다시 조금씩해서, 코드포스 블루 1700까지는 달성하기 (현재 1400)
+개인 어플을 하나 만들고 관리해보기
+정말 질 좋은 강의를 비싼돈을 내고 들어보기(100만원 이상짜리)
+멘토(또는 라이벌)을 정하기.]]></description>
+</item>
+</channel>
+</rss>

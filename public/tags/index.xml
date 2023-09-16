@@ -1,7 +1,88 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
-        <title>Tags - Tag - My New Hugo Site</title>
-        <link>http://soonyubi.github.io/tags/</link>
-        <description>Tags - Tag - My New Hugo Site</description>
-        <generator>Hugo -- gohugo.io</generator><language>en</language><atom:link href="http://soonyubi.github.io/tags/" rel="self" type="application/rss+xml" /></channel>
+        <title>Tags - Tag - 👨‍💻성장중독자</title>
+        <link>http://example.org/tags/</link>
+        <description>Tags - Tag - 👨‍💻성장중독자</description>
+        <generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>soonyubi1@naver.com (soonyubing)</managingEditor>
+            <webMaster>soonyubi1@naver.com (soonyubing)</webMaster><lastBuildDate>Sat, 08 Jul 2023 21:52:52 &#43;0900</lastBuildDate><atom:link href="http://example.org/tags/" rel="self" type="application/rss+xml" /><item>
+    <title>btree</title>
+    <link>http://example.org/tags/btree/</link>
+    <pubDate>Sat, 08 Jul 2023 21:52:52 &#43;0900</pubDate>
+    <author>soonyubing</author>
+    <guid>http://example.org/tags/btree/</guid>
+    <description><![CDATA[]]></description>
+</item>
+<item>
+    <title>index</title>
+    <link>http://example.org/tags/index/</link>
+    <pubDate>Sat, 08 Jul 2023 21:52:52 &#43;0900</pubDate>
+    <author>soonyubing</author>
+    <guid>http://example.org/tags/index/</guid>
+    <description><![CDATA[]]></description>
+</item>
+<item>
+    <title>mysql</title>
+    <link>http://example.org/tags/mysql/</link>
+    <pubDate>Sat, 08 Jul 2023 21:52:52 &#43;0900</pubDate>
+    <author>soonyubing</author>
+    <guid>http://example.org/tags/mysql/</guid>
+    <description><![CDATA[]]></description>
+</item>
+<item>
+    <title>cron-job</title>
+    <link>http://example.org/tags/cron-job/</link>
+    <pubDate>Tue, 25 Apr 2023 18:01:35 &#43;0900</pubDate>
+    <author>soonyubing</author>
+    <guid>http://example.org/tags/cron-job/</guid>
+    <description><![CDATA[]]></description>
+</item>
+<item>
+    <title>nest.js</title>
+    <link>http://example.org/tags/nest.js/</link>
+    <pubDate>Tue, 25 Apr 2023 18:01:35 &#43;0900</pubDate>
+    <author>soonyubing</author>
+    <guid>http://example.org/tags/nest.js/</guid>
+    <description><![CDATA[]]></description>
+</item>
+<item>
+    <title>nodemailer</title>
+    <link>http://example.org/tags/nodemailer/</link>
+    <pubDate>Tue, 25 Apr 2023 18:01:35 &#43;0900</pubDate>
+    <author>soonyubing</author>
+    <guid>http://example.org/tags/nodemailer/</guid>
+    <description><![CDATA[]]></description>
+</item>
+<item>
+    <title>cache</title>
+    <link>http://example.org/tags/cache/</link>
+    <pubDate>Mon, 24 Apr 2023 20:19:55 &#43;0900</pubDate>
+    <author>soonyubing</author>
+    <guid>http://example.org/tags/cache/</guid>
+    <description><![CDATA[]]></description>
+</item>
+<item>
+    <title>cqrs</title>
+    <link>http://example.org/tags/cqrs/</link>
+    <pubDate>Mon, 24 Apr 2023 02:12:03 &#43;0900</pubDate>
+    <author>soonyubing</author>
+    <guid>http://example.org/tags/cqrs/</guid>
+    <description><![CDATA[]]></description>
+</item>
+<item>
+    <title>nestjs</title>
+    <link>http://example.org/tags/nestjs/</link>
+    <pubDate>Mon, 24 Apr 2023 02:12:03 &#43;0900</pubDate>
+    <author>soonyubing</author>
+    <guid>http://example.org/tags/nestjs/</guid>
+    <description><![CDATA[]]></description>
+</item>
+<item>
+    <title>goal</title>
+    <link>http://example.org/tags/goal/</link>
+    <pubDate>Thu, 20 Apr 2023 21:38:00 &#43;0900</pubDate>
+    <author>soonyubing</author>
+    <guid>http://example.org/tags/goal/</guid>
+    <description><![CDATA[]]></description>
+</item>
+</channel>
 </rss>
