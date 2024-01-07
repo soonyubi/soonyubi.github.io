@@ -4,7 +4,7 @@ baseURL = "http://example.org/"
 theme = "LoveIt"
 
 # website title
-title = "👨‍💻성장중독자"
+title = "👨‍💻 shy's blog"
 
 # language code ["en", "zh-CN", "fr", "pl", ...]
 languageCode = "en"
@@ -32,7 +32,7 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
 
 # Author config
 [author]
-name = "soonyubing"
+name = "shy"
 email = "soonyubi1@naver.com"
 link = ""
 
@@ -187,9 +187,9 @@ gravatarEmail = ""
 # URL of avatar shown in home page
 avatarURL = "/images/profile.png"
 #  title shown in home page (HTML format is supported)
-title = "soonyubing"
+title = "Hi i'am shy."
 # subtitle shown in home page (HTML format is supported)
-subtitle = "soonyub + ing"
+subtitle = "Not every problem deserves an equal amount of attention."
 # whether to use typeit animation for subtitle
 typeit = true
 # whether to show social links
