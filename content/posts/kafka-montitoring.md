@@ -16,8 +16,8 @@ categories: ["kafka"]
 featuredImage: ""
 featuredImagePreview: ""
 
-hiddenFromHomePage: false
-hiddenFromSearch: false
+hiddenFromHomePage: true
+hiddenFromSearch: true
 twemoji: false
 lightgallery: true
 ruby: true
