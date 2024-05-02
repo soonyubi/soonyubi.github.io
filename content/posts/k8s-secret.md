@@ -175,3 +175,82 @@ kubectl certificate approve jane
 위와 같은 인증서 관련 작업은 마스터 노드의 controller manager 에 의해 수행된다.
 인증서에 인증을 하기 위해서는 루트 인증서와 비밀키가 필요하다. 따라서, controller manager 서버를 까보면
 --cluster-signing-cert-file / cluster-signing-key-file 옵션이 들어있는것을 확인할 수 있다.
+
+## kube config
+
+쿠버네티스 관리자가 여러 쿠버네티스 클러스터와의 연결 인증을 관리할 수 있도록 kubeconfig를 이용한다.
+관리자가 kubectl명령을 입력하면 기본적으로 --kubeconfig 옵션이 특정 디렉토리에 정의되어 있는 kubeconfig 파일을 참조하여 인증서 정보 등등을 가져와 클러스터와 통신을 하게 된다.
+
+kubeconfig 에는 3개의 섹션이 존재하는데, cluster/ context/ user 섹션이 존재한다. 클러스터 섹션에는 쿠버네티스 하 존재하는 클러스터에 대한 정의이고, 유저 섹션에는 클러스터에 접속하는 유저의 config를 정의한 공간이다.
+context 는 클러스터와 유저를 조합하여 여러 클러스터와 여러 사용자 계정을 오가면 작업할 때 편리하게 해준다.
+
+추가로 namespace 같은 옵션도 kubeconfig 에 정의하여 편리하게 제공할 수 있다.
+
+## api groups
+
+쿠버네티스 관리자는 api 를 통해 kube apiserver와 통신하고 클러스터의 정보를 얻을 수 있다.
+다음은 쿠버네티스 내부 정보를 알 수 있는 rest api 이다.
+
+curl https://kube-master:6443/version
+curl https://kube-master:6443/api/v1/pods
+
+쿠버네티스는 특정 목적에 맞게 version, api, metrics, healthz, logs .. 와 같이 api를 그룹화해놓는다.
+
+kube apiserver로 api를 호출하기 위해서 kubectl proxy 서버를 생성한다. 이렇게 하면 proxy 서버가 kubeapi server와 통신하기 위해 적절히 인증관련 정보를 생성한다.
+kube proxy 없이 kube apiserver를 호출하기 위해선, certification / key 파일을 건네야 한다.
+
+kube proxy != kubectl proxy
+
+## authorization
+
+- node authorizer
+  kubelet은 kube apiserver에 접근해서, pods/nodes/services/endpoints 같은 것들을 읽을 수 있고 또 pods/node의 상태를 쓰거나, 특정 이벤트를 쓰도록 할 수 있다.
+  이러한 권한을 관리하는 것은 node authorizer 이다.
+
+- ABAC (attribute based Access Control)
+  개발자1 이 pod에 행할 수 있는 행동에 대해 json 포맷으로 정의
+  개발자2가 pod에 행할 수 있는 행동에 대해 json 포맷으로 정의 ...
+  위와 같이 특정 유저가 행할 수 있는 행동에 대해 json 포맷으로 정의하고 서비스를 재시작해야되므로 관리하기 힘듬
+
+- RBAC
+  role based access control은 특정 그룹군에 특정 행동에 대한 규칙을 적용하는 것을 의미
+
+- webhook
+  위 3가지 방법처럼 쿠버네티스 내에서 권한에 대한 관리를 하는 것이 아닌 외부에서 권한을 관리하게 하고 외부에서 이를 승인하게 하고 싶다면 웹훅을 사용한다.
+
+위와 같은 인증방법 모드는 kubeapi server를 설치할 때 authorization-mode 옵션을 통해 지정할 수 있따. 이 모드에는 여러개를 적용할 수 있는데 적용한 순서대로 chaining 되어 권한을 승인할지 거부할지 결정한다
+만약 node, rbac, webhook 의 순서로 되어 있었다면, node를 먼저 거치고 거부가 일어나면 다음 rbac에서 권한을 부여 받고 만약 여기서 승인이 된다면 해당 유저는 특정 권한을 부여받게 된다.
+
+rbac 모드로 권한을 승인하기 위해선 다음과 같은 단계를 거치면 된다.
+
+1. role 객체 생성
+2. role binding 객체 생성
+
+특정 유저가 특정 객체에 대한 권한을 확인하고 싶다면 다음 명령어를 사용하면 된다.
+kubectl auth can-i create deployments
+kubectl auth can-i create pods --as dev-user --namespace test
+
+## cluster role
+
+## service account
+
+쿠버네티스에는 2가지의 account가 존재하는데 user account /service account 이다.
+user account 는 사람이 사용하고, service account 는 프로그램이 사용한다.
+user account에는 admin / developer 가 될 수 있고
+service account는 prometheus, jenkins 같은 것이 될 수 있다.
+
+service account 를 생성하려면
+kubectl create serviceaccount [service account name]
+service account 가 생성되면 내부적으로 토큰이 생성된다. 따라서 외부 프로그램이 kube apiservier를 통해 요청을 보내게 되면 토큰을 사용해서 인증을하게 된다.
+
+네임스페이스마다 default service account 가 존재한다. 포드가 생성될 때 마다 default service account 과 토큰이 볼륨 마운트로 자동으로 마운트된다.
+
+토큰은 pod 내에 /var/run/secrets/kubernetes.io/serviceaccount 에 생성된다.
+해당 디렉터리를 까보면, ca.crt namespace token 이 존재하고 token을 이용해서 kube apiserver 와 인증을하는데 사용한다.
+
+이미 생성된 pod의 service account를 새로 등록하려면 pod를 삭제하고 재실행해야 한다. 하지만 deployment의 경우 새로운 service account를 등록하면 새로운 rollout이 발생하고 해당 rollout에 새롭게 등록된 service account 가 등록된채로 배포된다.
+(1.24 버전 부터는 기본적으로 token을 생성하지 않음)
+
+이제는 tokenrequest api를 이용하는것을 권장한다.
+
+## secure image
