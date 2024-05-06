@@ -305,3 +305,84 @@ default via 172.19.0.1 dev eth0
 172.19.0.0/16 dev eth0 scope link  src 172.19.0.4
 172.20.0.0/16 dev eth1 scope link  src 172.20.0.4
 ```
+
+위와 같이 구성을 하고 나면, 서로 다른 LAN 에 위치한 컨테이너들이 서로 통신을 할 수 있게 된다.
+
+### DNS
+
+다음으로 해볼 것은 dns 서버를 구성하여 `docker exec red ping green` 처럼 green ip를 통해 통신을 하는 것이 아닌, domain 이름을 사용해서 통신을 하려고 한다.
+dns의 대한 설명은 [여기](https://aws.amazon.com/ko/route53/what-is-dns/) 를 참고한다.
+
+<p align='center'>
+<img src="/images/network/dns.png" width="100%" />
+</p>
+
+red -> green 으로 요청을 보낼 때, red 는 green이란 도메인을 ip로 바꾸기 위해 /etc/hosts 파일을 참조하여 ip로 변환하는 작업을 수행할 것이다.
+하지만, red는 green을 해석할 수 없어, ping 요청은 실패할 것이다.
+
+red container의 /etc/hosts 파일에 green 172.29.0.2 를 적고, ping 요청을 하면 성공적으로 응답이 떨어지는 것을 확인할 수 있다.
+하지만, 우리가 통신해야 되는 ip 들이 많아지게 되면, 관리하기가 힘들기 때문에 이를 중앙에서 제어해주는 서버를 dns server라고 한다.
+
+dns server의 역할은 도메인을 ip로 변환해주거나, ip를 도메인으로 변환(PTR), 캐싱, 부하 분산, 보안, 도메인관리등이 있다.
+도메인을 ip로 변환해주는 간단한 dns server를 생성하는 실습을 해보고자 한다.
+
+```conf
+# dnsmasq.conf 정의
+# dnsmasq.conf
+interface=eth0
+domain-needed
+bogus-priv
+expand-hosts
+
+# 컨테이너 이름에 대한 정적 DNS 매핑
+address=/red/172.28.0.2
+address=/blue/172.28.0.3
+address=/green/172.29.0.2
+address=/orange/172.29.0.3
+```
+
+```bash
+# dns server 생성
+docker run -d --name dns-server --network bridge1 --cap-add=NET_ADMIN andyshinn/dnsmasq
+docker network connect bridge2 dns-server
+
+docker cp dnsmasq.conf dns-server:/etc/dnsmasq.conf
+docker restart dns-server
+
+dns_server_ip=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' dns-server)
+echo $dns_server_ip
+
+docker run -dit --name red --network bridge1 --ip 172.28.0.2 --dns $dns_server_ip alpine ash
+docker run -dit --name blue --network bridge1 --ip 172.28.0.3 --dns $dns_server_ip alpine ash
+docker run -dit --name green --network bridge2 --ip 172.29.0.2 --dns $dns_server_ip alpine ash
+docker run -dit --name orange --network bridge2 --ip 172.29.0.3 --dns $dns_server_ip alpine ash
+```
+
+dns 서버 설정 파일에 각각의 호스트가 어떤 ip를 가지고 있는지 정의하고 dns-server를 실행시켜준 후
+기존에 운영중인 red,green,blue,orange 에 dns_server ip를 적용시키기 위해 모두 중지하고 재실행 시켜줬다.
+
+위와 같이 구성을 하게 되면, 서로 다른 LAN 에 속해있는 red->green, green->blue .. 로 요청을 보낼 때 ip를 쓰지않고 도메인 이름을 사용하여 보내는 것이 가능하다.
+`docker exec red traceroute green`명령을 호출할 때, 정말로 dns server 에서 응답을 받는지 확인하기 위해, `tcpdump` 패키지를 사용하여, dns 쿼리를 캡쳐해보자.
+
+```bash
+docker exec -it red apk add --no-cache tcpdump
+docker exec -it red tcpdump -i any -n 'udp port 53'
+docker exec red traceroute green
+```
+
+<br>
+위와 같이 53번 port로 리스닝하고 있는 서버를 그대로 두고, 새로운 탭을 열어 `docker exec red traceroute green` 하게 되면 아래와 같이 dns server로 부터 적절히 응답을 받는 것을 볼 수 있다.
+
+<br>
+<p align='center'>
+<img src="/images/network/dns-query.png" width="100%" />
+</p>
+
+{{< admonition type=note title="" open=false >}}
+
+- AAAA 및 A 쿼리: red 컨테이너가 green의 IP 주소를 얻기 위해 DNS 쿼리를 보냄.
+- 응답: DNS 서버가 IPv4 주소에 대해서만 응답을 제공하고, IPv6 주소에 대해서는 응답하지 않음.
+- PTR 쿼리: IP 주소로부터 호스트 이름을 얻기 위한 요청이 있었으나, 적절한 응답을 받지 못함 (NXDomain).
+- 로컬호스트 DNS 캐시: 127.0.0.11는 도커 내부적으로 사용하는 로컬 DNS 캐시 주소로, 컨테이너 내부의 DNS 요청 처리를 담당.
+
+{{< /admonition >}}
