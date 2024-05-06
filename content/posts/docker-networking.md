@@ -1,5 +1,5 @@
 ---
-title: "[Network] 컨테이너 수준에서 네트워킹에 관하여"
+title: "[Network] docker network 구성"
 subtitle: ""
 date: 2024-05-04T17:26:01+09:00
 lastmod: 2024-05-04T17:26:01+09:00
@@ -308,7 +308,7 @@ default via 172.19.0.1 dev eth0
 
 위와 같이 구성을 하고 나면, 서로 다른 LAN 에 위치한 컨테이너들이 서로 통신을 할 수 있게 된다.
 
-### DNS
+### DNS :
 
 다음으로 해볼 것은 dns 서버를 구성하여 `docker exec red ping green` 처럼 green ip를 통해 통신을 하는 것이 아닌, domain 이름을 사용해서 통신을 하려고 한다.
 dns의 대한 설명은 [여기](https://aws.amazon.com/ko/route53/what-is-dns/) 를 참고한다.
