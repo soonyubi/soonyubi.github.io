@@ -98,8 +98,14 @@ udemy 의 이 [강의](https://www.udemy.com/course/certified-kubernetes-adminis
 기출문제는 나보다 더 잘하는 사람들이 정리한 곳을 추천해드림
 
 [피터의 개발이야기](https://peterica.tistory.com/348)
+<br>
+
 [dm911](https://velog.io/@dm911/2024-kubernetes-CKA-%EC%9E%90%EA%B2%A9%EC%A6%9D-%EC%B7%A8%EB%93%9D-%ED%9B%84%EA%B8%B0)
+<br>
+
 [희원이 블로그](https://heewon0704.tistory.com/28)
+<br>
+
 [dm9111-killer.sh풀이](https://velog.io/@dm911/kubernetes-CKA-study-36-CKA-%EC%8B%9C%ED%97%98%EC%A0%91%EC%88%98-%EB%B0%8F-killer.sh-%ED%92%80%EC%9D%B4)
 
 ## 인증
