@@ -11,7 +11,7 @@ license: ""
 images: []
 
 tags: []
-categories: []
+categories: ["infrastructure-operations"]
 
 featuredImage: ""
 featuredImagePreview: ""

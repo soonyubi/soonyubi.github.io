@@ -8,10 +8,13 @@ author: "홍순엽"
 authorLink: ""
 description: ""
 license: ""
-images: ["/images/JWT-Refresh-Token-workflow-diagram-aspnet-core_637779427789390135.png"]
+images:
+  [
+    "/images/JWT-Refresh-Token-workflow-diagram-aspnet-core_637779427789390135.png",
+  ]
 
-tags: ["nest.js","jwt","refresh-token"]
-categories: ["nest.js"]
+tags: ["nest.js", "jwt", "refresh-token"]
+categories: ["application-development"]
 
 featuredImage: ""
 featuredImagePreview: ""
@@ -71,17 +74,18 @@ seo:
 `refresh-token` 은 `stateless` 이기 때문에 가장 간단하게 생각해볼 수 있는 방법으로는, secret 값을 변경해서 모든 토큰을 무효화 할 수 있다. 하지만 이 방법은 모든 유저에게 다시 로그인하게 하는 대참사가 일어날 수 있기 때문에 현명한 방법은 아니다. <br>
 
 하나의 해결책은 `refresh-token` 을 db에 저장해서 관리하고 로그인할 때마다 변경하면 된다. 이런 방법을 채택하면, 다음과 같은 문제도 해결할 수 있다. <br>
-예를 들어, 여러 사용자가 하나의 계정을 공유한다고 했을 때, 모든 사람이 갑자기 해당 계정으로 동시에 접속해 어플리케이션을 이용한다면, 비지니스에 안좋은 영향을 끼칠 수 있다. `refresh-token` 을 로그인할 때마다 변경한다면, 이전에 로그인한 사용자는 유효하지 않은 `refresh-token`을 갖게 될 것이고, 재로그인을 유도할 것이다. 
+예를 들어, 여러 사용자가 하나의 계정을 공유한다고 했을 때, 모든 사람이 갑자기 해당 계정으로 동시에 접속해 어플리케이션을 이용한다면, 비지니스에 안좋은 영향을 끼칠 수 있다. `refresh-token` 을 로그인할 때마다 변경한다면, 이전에 로그인한 사용자는 유효하지 않은 `refresh-token`을 갖게 될 것이고, 재로그인을 유도할 것이다.
 <br>
 
 그럼 `refresh-token`이 db에서 유출되는 문제는 어떻게 해결해야 할까? <br>
-password 처럼 `hash` 해서 저장하면 된다. 
+password 처럼 `hash` 해서 저장하면 된다.
 
 {{< image src="/images/JWT-Refresh-Token-workflow-diagram-aspnet-core_637779427789390135.jpg" caption="" width="100%" >}}
 
 ## 구현
 
 ### configuration
+
 ```
 // .env
 JWT_ACCESS_TOKEN_SECRET=access-secret
@@ -101,7 +105,9 @@ JWT_REFRESH_TOKEN_EXPIRATION_TIME=3600
 위와 같이 `access token` / `refresh token` 에 대해 변수를 생성해주고, 필요하다면 이를 validation까지 하는 로직을 구현해주면 된다.
 
 ### /login
-##### access token 발급 
+
+##### access token 발급
+
 ```javascript
 async getJwtAccessToken(userId: number){
   const payload : TokenPayload = {userId};
@@ -111,7 +117,9 @@ async getJwtAccessToken(userId: number){
   });
 }
 ```
+
 ##### refresh token 발급
+
 ```javascript
 async getJwtRefreshToken(userId: number){
   const payload : TokenPayload = {userId};
@@ -125,7 +133,6 @@ async getJwtRefreshToken(userId: number){
 {{< admonition note "signOptions" >}}
 현재 위 두 로직에서 sign() 메서드를 실행할 때 `signOption`에 `secret` 값이 들어가있는 걸 볼 수 있다. 이렇게 함으로써 다른 secret값에 따라 다르게 토큰을 생성하는데 관련 기능은 `@nest/jwt@^7.1.0` 에서부터 가능하다.
 {{< /admonition >}}
-
 
 ##### user db에 현재 토큰을 hash 하고 저장
 
@@ -142,6 +149,7 @@ async setCurrentRefreshToken(refreshToken: string, userId: number) {
 ```
 
 ##### cookie에 access token, refresh token을 넣고 response
+
 ```javascript
 @HttpCode(200)
   @UseGuards(LocalAuthenticationGuard)
@@ -150,9 +158,9 @@ async setCurrentRefreshToken(refreshToken: string, userId: number) {
     const {user} = request;
     const accessTokenCookie = this.authenticationService.getCookieWithJwtAccessToken(user.id);
     const refreshTokenCookie = this.authenticationService.getCookieWithJwtRefreshToken(user.id);
- 
+
     await this.usersService.setCurrentRefreshToken(refreshToken, user.id);
- 
+
     request.res.setHeader('Set-Cookie', [accessTokenCookie, refreshTokenCookie]);
     return user;
   }
@@ -160,10 +168,12 @@ async setCurrentRefreshToken(refreshToken: string, userId: number) {
 
 ### /refresh
 
-##### refresh token validation 
-현재 refresh token이 validate 하는지 확인하기 위해서, 새로운 strategy를 생성해야 한다. 이 strategy를 `JwtRefreshStrategy` 라 한다면, 이 strategy에서는 user service에 현재 들어온 token이 유저 db에 저장된 토큰과 똑같은 지 비교한다. 이 과정을 통해서, token이 갈취되거나 동일한 사용자가 동시에 접속하는 문제를 해결할 수 있다. 
+##### refresh token validation
+
+현재 refresh token이 validate 하는지 확인하기 위해서, 새로운 strategy를 생성해야 한다. 이 strategy를 `JwtRefreshStrategy` 라 한다면, 이 strategy에서는 user service에 현재 들어온 token이 유저 db에 저장된 토큰과 똑같은 지 비교한다. 이 과정을 통해서, token이 갈취되거나 동일한 사용자가 동시에 접속하는 문제를 해결할 수 있다.
+
 ```javascript
-// 
+//
 @Injectable()
 export class JwtRefreshTokenStrategy extends PassportStrategy(
   Strategy,
@@ -181,25 +191,26 @@ export class JwtRefreshTokenStrategy extends PassportStrategy(
       passReqToCallback: true,
     });
   }
- 
+
   async validate(request: Request, payload: TokenPayload) {
     const refreshToken = request.cookies?.Refresh;
     return this.userService.getUserIfRefreshTokenMatches(refreshToken, payload.userId);
   }
 }
 ```
-`passReqToCallback` 을 통해 `validate` 메서드에서 cookie에 접근할 수 있게 되었다. 
+
+`passReqToCallback` 을 통해 `validate` 메서드에서 cookie에 접근할 수 있게 되었다.
 
 ```javascript
-// user service 
+// user service
 async getUserIfRefreshTokenMatches(refreshToken: string, userId: number) {
     const user = await this.getById(userId);
- 
+
     const isRefreshTokenMatching = await bcrypt.compare(
       refreshToken,
       user.currentHashedRefreshToken
     );
- 
+
     if (isRefreshTokenMatching) {
       return user;
     }
@@ -211,17 +222,18 @@ async getUserIfRefreshTokenMatches(refreshToken: string, userId: number) {
   @Get('refresh')
   refresh(@Req() request: RequestWithUser) {
     const accessTokenCookie = this.authenticationService.getCookieWithJwtAccessToken(request.user.id);
- 
+
     request.res.setHeader('Set-Cookie', accessTokenCookie);
     return request.user;
   }
 ```
 
 ### /logout
-로그아웃은 유저db에 저장된 refresh token을 없애고, response로 token을 무효화하는 정보를 저장해 응답한다. 
+
+로그아웃은 유저db에 저장된 refresh token을 없애고, response로 token을 무효화하는 정보를 저장해 응답한다.
 
 ```javascript
-// authentication service 
+// authentication service
 public getCookiesForLogOut() {
     return [
       'Authentication=; HttpOnly; Path=/; Max-Age=0',
@@ -229,14 +241,14 @@ public getCookiesForLogOut() {
     ];
   }
 
-// user service 
+// user service
 async removeRefreshToken(userId: number) {
     return this.usersRepository.update(userId, {
       currentHashedRefreshToken: null
     });
   }
 
-// authentication controller 
+// authentication controller
 @UseGuards(JwtAuthenticationGuard)
   @Post('log-out')
   @HttpCode(200)

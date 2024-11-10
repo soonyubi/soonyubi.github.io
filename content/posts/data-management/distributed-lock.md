@@ -11,7 +11,7 @@ license: ""
 images: []
 
 tags: []
-categories: ["database"]
+categories: ["data-management"]
 
 featuredImage: ""
 featuredImagePreview: ""
