@@ -11,7 +11,7 @@ license: ""
 images: []
 
 tags: ["mysql", "btree", "index"]
-categories: ["database", "mysql"]
+categories: ["database"]
 
 featuredImage: "/images/btree.png"
 featuredImagePreview: ""

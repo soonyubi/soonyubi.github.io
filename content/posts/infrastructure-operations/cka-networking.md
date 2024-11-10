@@ -10,8 +10,8 @@ description: ""
 license: ""
 images: []
 
-tags: []
-categories: []
+tags: ["kubernetes"]
+categories: ["infrastructure-operations"]
 
 featuredImage: ""
 featuredImagePreview: ""
