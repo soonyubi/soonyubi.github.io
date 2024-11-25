@@ -1,6 +1,6 @@
 [build]
 publish = "public"
-command = "hugo --gc --minify -b $https://soonyubi.github.io/"
+command = "hugo --gc --minify -b https://soonyubi.github.io/"
 
 [build.environment]
 HUGO_VERSION = "0.132.2"
