@@ -7,4 +7,4 @@ sidebar:
   open: true
 ---
 
-monitoring 관련 페이지 입니다.
+monitoring 관련 디렉터리 입니다.
