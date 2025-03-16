@@ -41,7 +41,7 @@ test_set_x_flatten = test_set_x_orig.reshape(test_set_x_orig.shape[0],-1).T
 데이터의 스케일이 너무 크면, 경사하강법을 적용할 때 기울기가 너무 빠르게 커지거나 너무빠르게 작아져 가중치의 업데이트 속도가 느려진다.
 다음의 예시에서 정규화가 된 데이터의 손실함수 변화와 정규화가 되지 않은 데이터의 손실함수 변화를 보면 정규화된 데이터의 경우 손실함수가 매끄럽게 작아지는 것을 볼 수 있지만, 정규화가 되지 않은 손실함수는 손실함수 크기가 비이상적으로 변화하는 것을 확인할 수 있다.
 
-![figure1](Figure_1.png)
+![figure1](./assets/Figure_1.png)
 
 {{% details title="Code Example" closed="true" %}}
 
