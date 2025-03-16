@@ -1,5 +1,5 @@
 ---
-title: coursera - Neural Networks and Deep Learning - (1) hidden layer
+title: coursera - Neural Networks and Deep Learning - (2) hidden layer
 type: blog
 prev: /
 next: docs/folder/
