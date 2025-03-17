@@ -6,6 +6,10 @@ module:
   imports:
     - path: github.com/imfing/hextra
 
+services:
+  googleAnalytics:
+    ID: G-06522HQ23W
+
 markup:
   # allow raw html
   goldmark:
