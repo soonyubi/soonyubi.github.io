@@ -1,5 +1,5 @@
 ---
-title: LGTM stack 으로 모니터링 환경 구축 - nest.js setup
+title: LGTM stack 으로 모니터링 환경 구축 - nest.js setup - 1
 type: blog
 prev: /
 next: docs/folder/
@@ -7,8 +7,10 @@ next: docs/folder/
 
 # 개론
 
-이번 포스트에서는 opentelemetry sdk 를 통해 nestjs 어플리케이션이 수집하는 로그, 메트릭, 트레이스 정보를 otel collector로 내보내고,
-내보낸 관측값들을 docker로 띄운 Loki, Tempo, Prometheus로 보낸 후 하나의 통합 대시보드인 grafana에서 확인하는 방법을 설명하고자 합니다.
+이번 포스팅에서는 이러한 LGTM 스택을 활용해  
+NestJS 애플리케이션에서 수집한 로그, 메트릭, 트레이스를 **OpenTelemetry SDK를 통해 수집하고,**  
+**OTel Collector를 통해 Loki / Tempo / Prometheus로 전송**한 후,  
+**Grafana 대시보드에서 모든 데이터를 통합적으로 분석하는 흐름**을 소개합니다.
 
 # LGTM 스택 소개 – Grafana가 밀고 있는 새로운 Observability 흐름
 
@@ -172,4 +174,85 @@ OpenTelemetry는 **표준화된 수집기**입니다.
 OpenTelemetry는 `SDK + Collector` 구조로,  
 앱 쪽 코드와 수집기 설정을 분리해서 운영할 수 있다는 장점도 있습니다.
 
-# 환경설정:
+## Use case:
+
+### Latency 가 높게 나온 메트릭을 통해 trace와 log를 한번에 조회하고 싶을 경우
+
+#### 1. Prometheus 메트릭에서 Exemplars 확인
+
+- Prometheus 데이터 소스가 활성화된 상태에서, 메트릭 그래프 상에 **★ 아이콘**으로 Exemplars가 표시됩니다.
+- 마우스를 올리면 `traceID`가 나타나고, 옆에 있는 버튼을 클릭하면 Tempo 등 연동된 trace 뷰어로 이동할 수 있습니다.
+
+![exemplar](./assets/screenshot-exemplar-details.png)
+
+#### 2. Explore 뷰에서 Trace 분석
+
+- ★ 아이콘을 클릭하면, 해당 trace에 대한 **전체 요청 경로와 span 정보**가 우측 패널에 시각적으로 표시됩니다.
+- 예를 들어 요청 처리 중 어느 단계(클라이언트, 어플리케이션, 데이터베이스 등)에서 지연이 발생했는지를 한눈에 파악할 수 있습니다.
+- 특정 span을 클릭하면, 해당 요청에 포함된 메타데이터를 자세히 볼 수 있습니다.
+
+![exemplar-explore-view](./assets/screenshot-exemplar-explore-view.png)
+
+#### 3. Loki 로그와 연동
+
+- Loki 로그에 traceID가 포함되어 있다면, `Derived field`를 설정하여 해당 ID를 링크로 만들 수 있습니다.
+- 로그 내에서 traceID를 클릭하면 Tempo에서 동일한 요청에 대한 trace 정보를 확인할 수 있습니다.
+- 이를 통해 로그 ↔ Trace 간의 원활한 이동이 가능합니다.
+
+![exemplar-explore-loki](./assets/screenshot-exemplar-loki-logs.png)
+
+- [Grafana 공식 문서 - Exemplars](https://grafana.com/docs/grafana/latest/fundamentals/exemplars/)
+
+### 5xx 오류가 발생한 Trace에서 관련 로그를 함께 조회하고 싶을 때
+
+운영 중인 시스템에서 5xx 오류가 간헐적으로 발생할 때, 단순히 메트릭이나 Trace만 보는 것만으로는 원인을 파악하기 어려운 경우가 많습니다.  
+이때 **Trace와 연결된 로그**를 바로 확인할 수 있다면, 훨씬 빠르게 문제의 원인을 파악할 수 있습니다.
+
+Grafana에서는 Tempo + Loki 연동을 통해 **Trace → Logs로 점프(Jump)** 할 수 있는 기능을 지원합니다.
+
+---
+
+#### Grafana에서 Trace → Logs 설정 방법
+
+##### 1. Tempo 데이터 소스 설정
+
+Grafana에서 **Tempo 데이터 소스**를 설정할 때 `tracesToLogs` 구문을 추가합니다.
+
+```yaml
+tracesToLogs:
+  datasourceUid: "loki_uid"
+  tags: ["app", "namespace"]
+  spanStartTimeShift: "-5m"
+  spanEndTimeShift: "10m"
+```
+
+### Trace를 조회하던 중 서비스의 특정 Span에 대한 평균 Latency를 조회하고 싶을 때
+
+운영 중인 서비스를 모니터링하다 보면, **특정 Trace 내 Span이 과도하게 느린 경우**, 그 Span에 대해 평균적인 Latency나 요청 수 등의 메트릭을 추가로 확인하고 싶을 때가 있습니다.
+
+Grafana 9.1부터 새로 도입된 **Trace to Metrics** 기능을 사용하면, Trace에서 바로 관련 메트릭으로 점프할 수 있어 **상황에 대한 맥락을 더 풍부하게 이해**할 수 있습니다.
+
+---
+
+#### Trace to Metrics란?
+
+- Trace의 각 Span에서 해당 서비스나 컨텍스트에 맞는 **메트릭 데이터(Prometheus)** 로 링크를 연결할 수 있는 기능입니다.
+- Span의 attribute 값을 기반으로 한 쿼리를 구성해, **해당 Span에 관련된 메트릭 추이**를 바로 확인할 수 있습니다.
+- 예를 들어 특정 Pod, Service, Cluster 등과 연관된 `latency`, `error rate`, `request count` 등을 실시간으로 조회할 수 있습니다.
+
+---
+
+#### Trace to Metrics 설정 방법
+
+##### 1. Grafana 설정에서 기능 활성화
+
+Grafana 설정 파일에서 아래 옵션을 추가하여 기능을 활성화합니다.
+
+```ini
+[feature_toggles]
+enable = ["traceToMetrics"]
+```
+
+## 마무리
+
+**다음 포스팅에서는 실제로 NestJS 프로젝트에서 LGTM 스택을 셋업하는 방법을 구체적으로 설명**합니다.
